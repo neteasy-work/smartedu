@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="18dp"
+                
+                android:id="@+id/listview_root">
+
+    <com.engc.smartedu.support.lib.PerformanceImageView
+        android:id="@+id/img_friends_face"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="1px"
+        android:background="@drawable/bg_border1"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginRight="25dp"/>
+
+
+    <TextView
+        android:id="@+id/txtfriendname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="username"
+        android:layout_toRightOf="@id/img_friends_face"
+       
+        />
+    
+
+
+    <TextView
+        android:id="@+id/txtfriendcontent"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+         android:layout_marginTop="5dp"
+        android:text="content"
+        android:layout_below="@id/txtfriendname"
+        android:layout_toRightOf="@id/img_friends_face"
+        android:layerType="software"
+        android:ellipsize="end"
+        android:singleLine="true"/>
+
+</RelativeLayout>

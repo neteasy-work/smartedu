@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.engc.smartedu"
+    android:versionCode="25"
+    android:versionName="0.483" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:name="com.engc.smartedu.support.utils.GlobalContext"
+        android:icon="@drawable/app_icon"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme_Four" >
+        <activity
+            android:name="com.engc.smartedu.ui.login.DummyActivity"
+            android:uiOptions="splitActionBarWhenNarrow" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- login activity -->
+        <activity
+            android:name="com.engc.smartedu.ui.login.AccountActivity"
+            android:uiOptions="splitActionBarWhenNarrow" />
+        <activity android:name="com.engc.smartedu.ui.login.OAuthActivity" />
+
+        <!-- chat activity -->
+        <activity
+            android:name="com.engc.smartedu.ui.chat.ChatActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+        </activity>
+        
+
+        <!-- main activity -->
+        <activity
+            android:name="com.engc.smartedu.ui.main.MainTimeLineActivity"
+            android:launchMode="singleTop"
+            android:uiOptions="splitActionBarWhenNarrow" />
+
+        <!-- send activity -->
+        <activity
+            android:name="com.engc.smartedu.ui.send.WriteWeiboActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.engc.smartedu.ui.send.WriteRepostActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name="com.engc.smartedu.ui.send.WriteCommentActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name="com.engc.smartedu.ui.send.WriteReplyToCommentActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+
+        <!-- browser activity -->
+        <activity
+            android:name="com.engc.smartedu.ui.browser.BrowserWeiboMsgActivity"
+            android:label="@string/detail" />
+        <activity
+            android:name="com.engc.smartedu.ui.browser.BrowserCommentActivity"
+            android:label="@string/comment_detail" />
+        <activity
+            android:name="com.engc.smartedu.ui.browser.BrowserBigPicActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name="com.engc.smartedu.ui.browser.BrowserLocalPicActivity"
+            android:launchMode="singleTop" />
+
+        <!-- topic activity -->
+        <activity
+            android:name="com.engc.smartedu.ui.topic.SearchTopicByNameActivity"
+            android:label="@string/search_topic"
+            android:uiOptions="splitActionBarWhenNarrow" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <data android:scheme="com.engc.smartedu.topic" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.engc.smartedu.ui.topic.UserTopicListActivity" />
+
+        <!-- user activity -->
+        <activity android:name="com.engc.smartedu.ui.userinfo.UserInfoActivity" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <data android:scheme="com.engc.smartedu" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/com.engc.smartedu.beam" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.engc.smartedu.ui.userinfo.MyInfoActivity" />
+        <activity android:name="com.engc.smartedu.ui.userinfo.FriendListActivity" />
+        <activity android:name="com.engc.smartedu.ui.userinfo.FanListActivity" />
+        <activity android:name="com.engc.smartedu.ui.userinfo.MyFavActivity" />
+
+        <!-- search activity -->
+        <activity android:name="com.engc.smartedu.ui.search.SearchMainActivity" />
+        <activity android:name="com.engc.smartedu.ui.search.SearchableActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity android:name="com.engc.smartedu.ui.search.AtUserActivity" />
+
+        <!-- preference activity -->
+        <activity android:name="com.engc.smartedu.ui.preference.SettingActivity" />
+        <activity android:name="com.engc.smartedu.ui.preference.ControlActivity" />
+        <activity android:name="com.engc.smartedu.ui.preference.NotificationActivity" />
+        <activity
+            android:name="com.engc.smartedu.ui.preference.DraftActivity"
+            android:uiOptions="splitActionBarWhenNarrow" />
+        <activity
+            android:name="com.engc.smartedu.ui.preference.FilterActivity"
+            android:uiOptions="splitActionBarWhenNarrow" />
+        <activity
+            android:name="com.engc.smartedu.ui.preference.AppearanceActivity"
+            android:uiOptions="splitActionBarWhenNarrow" />
+        <activity android:name="com.engc.smartedu.ui.preference.PerformanceActivity" />
+        <activity android:name="com.engc.smartedu.ui.preference.AboutActivity" />
+
+        <!-- service -->
+        <service android:name="com.engc.smartedu.othercomponent.FetchNewMsgService" />
+        <service android:name="com.engc.smartedu.othercomponent.DownloadEmotionsService" />
+        <service android:name="com.engc.smartedu.othercomponent.SendWeiboService" />
+        <service android:name="com.engc.smartedu.othercomponent.SaveToDBService" />
+        <service android:name="com.engc.smartedu.othercomponent.chat.AppService" >
+        </service>
+
+        <!-- -broadcast receiver -->
+        <receiver android:name="com.engc.smartedu.othercomponent.notification.UnreadMsgReceiver" >
+            <intent-filter>
+                <action android:name="com.enc.smartedu.newmsg" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.engc.smartedu.othercomponent.ConnectionChangeReceiver"
+            android:label="NetworkConnection" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.engc.smartedu.othercomponent.chat.AppBroadcastReceive" >
+
+            <!-- 开机广播 -->
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <!-- 关机广播 -->
+            <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+            <!-- 网络连接变化的广播 -->
+            <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+        </receiver>
+        <!-- -System Provider -->
+        <provider
+            android:name="com.engc.smartedu.support.database.ChatProvider"
+            android:authorities="com.engc.smartedu.provider.Chats" />
+        <provider
+            android:name="com.engc.smartedu.support.database.RosterProvider"
+            android:authorities="com.engc.smartedu.support.database.RosterProvider" />
+
+        <!-- black magic -->
+        <activity android:name="com.engc.smartedu.ui.blackmagic.BlackMagicActivity" />
+
+        <!-- dm -->
+        <activity android:name="com.engc.smartedu.ui.dm.DMActivity" />
+    </application>
+
+</manifest>

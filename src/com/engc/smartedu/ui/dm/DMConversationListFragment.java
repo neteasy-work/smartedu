@@ -1,0 +1,123 @@
+package com.engc.smartedu.ui.dm;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+
+import com.engc.smartedu.bean.DMListBean;
+import com.engc.smartedu.bean.UserBean;
+import com.engc.smartedu.dao.dm.DMConversationDao;
+import com.engc.smartedu.support.error.WeiboException;
+import com.engc.smartedu.support.utils.GlobalContext;
+import com.engc.smartedu.ui.adapter.DMConversationAdapter;
+import com.engc.smartedu.ui.basefragment.AbstractTimeLineFragment;
+import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
+
+/**
+ * User: qii
+ * Date: 12-11-15
+ */
+public class DMConversationListFragment extends AbstractTimeLineFragment<DMListBean> {
+
+    private UserBean userBean;
+
+    private int page = 1;
+
+    private DMListBean bean = new DMListBean();
+
+    @Override
+    public DMListBean getList() {
+        return bean;
+    }
+
+    public DMConversationListFragment(UserBean userBean) {
+        this.userBean = userBean;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("bean", bean);
+        outState.putSerializable("userBean", userBean);
+        outState.putInt("page",page);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                getPullToRefreshListView().startRefreshNow();
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(getList());
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                getList().addNewData((DMListBean) savedInstanceState.getSerializable("bean"));
+                userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+                page=savedInstanceState.getInt("page");
+                getAdapter().notifyDataSetChanged();
+                refreshLayout(bean);
+                break;
+        }
+
+    }
+
+    @Override
+    protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
+
+    }
+
+
+    @Override
+    protected void buildListAdapter() {
+        timeLineAdapter = new DMConversationAdapter(this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView());
+        getListView().setAdapter(timeLineAdapter);
+    }
+
+
+    @Override
+    protected void newMsgOnPostExecute(DMListBean newValue) {
+        if (newValue != null && newValue.getSize() > 0 && getActivity() != null) {
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+        }
+
+    }
+
+    @Override
+    protected void oldMsgOnPostExecute(DMListBean newValue) {
+        if (newValue != null && newValue.getSize() > 0) {
+            getList().addOldData(newValue);
+            getAdapter().notifyDataSetChanged();
+            page++;
+        }
+    }
+
+    @Override
+    protected DMListBean getDoInBackgroundNewData() throws WeiboException {
+        page = 1;
+        return new DMConversationDao(GlobalContext.getInstance().getSpecialToken())
+                .setUid(userBean.getId())
+                .setPage(page).getConversationList();
+    }
+
+    @Override
+    protected DMListBean getDoInBackgroundOldData() throws WeiboException {
+        DMConversationDao dao = new DMConversationDao(GlobalContext.getInstance().getSpecialToken())
+                .setUid(userBean.getId())
+                .setPage(page + 1);
+        DMListBean result = dao.getConversationList();
+        return result;
+    }
+
+    @Override
+    protected DMListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+        return null;
+    }
+}

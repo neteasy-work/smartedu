@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/tools_box_bg"
+    android:scrollbars="none" >
+
+    <LinearLayout
+        android:id="@+id/llRoot"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <com.engc.smartedu.widget.RoundedImageView
+            android:id="@+id/headImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25.0dip"
+            android:adjustViewBounds="true"
+            android:maxHeight="80dip"
+            android:maxWidth="80dip"
+            android:src="@drawable/honey_face" />
+
+        <TextView
+            android:id="@+id/nickNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10.0dip"
+            android:text="小迷糊"
+            android:textColor="#ffccccc6"
+            android:textSize="16.0sp" />
+
+        <TextView
+            android:id="@+id/yixinCodeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+          
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginRight="10.0dip"
+          
+            android:textColor="#ffa8a8a3"
+            android:textSize="12.0sp" />
+
+        <include
+            android:id="@+id/homeBtnLayout"
+            layout="@layout/toolbox_item_home" />
+
+        <include
+            android:id="@+id/friendBtnLayout"
+            layout="@layout/toolbox_item_friend" />
+        
+            <include
+            android:id="@+id/uitlsmodemBtnLayout"
+            layout="@layout/toolbox_item_convenient" />
+
+       <!--  <include
+            android:id="@+id/appcenterBtnLayout"
+            layout="@layout/toolbox_item_appcenter" /> -->
+         <include
+            android:id="@+id/setupBtnLayout"
+            layout="@layout/toolbox_item_setup" />
+
+        <View 
+            android:layout_width="fill_parent"
+            android:layout_height="1.3299866dip"
+            android:background="#ff1c1c1b" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1.0px"
+            android:background="#ff474745" />
+
+        <!-- <TextView
+            android:id="@+id/inviteFriendBtnLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginTop="70.0dip"
+            android:background="@drawable/tools_box_invite_btn_selector"
+            android:gravity="center"
+            android:text="邀请好友"
+            android:textColor="#ff999994"
+            android:textSize="12.0sp" /> -->
+    </LinearLayout>
+
+</ScrollView>

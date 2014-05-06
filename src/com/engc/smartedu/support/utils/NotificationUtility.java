@@ -1,0 +1,66 @@
+package com.engc.smartedu.support.utils;
+
+import com.engc.smartedu.R;
+
+import com.engc.smartedu.bean.UnreadBean;
+import com.engc.smartedu.support.settinghelper.SettingUtility;
+
+/**
+ * User: qii
+ * Date: 12-12-5
+ */
+public class NotificationUtility {
+
+    private NotificationUtility() {
+        // Forbidden being instantiated.
+    }
+
+    public static int getCount(UnreadBean unreadBean) {
+        int count = 0;
+
+        if (SettingUtility.allowMentionToMe()) {
+            count += unreadBean.getMention_status();
+        }
+
+        if (SettingUtility.allowCommentToMe()) {
+            count += unreadBean.getCmt();
+        }
+
+        if (SettingUtility.allowMentionCommentToMe()) {
+            count += unreadBean.getMention_cmt();
+        }
+
+        return count;
+
+    }
+
+    public static String getTicker(UnreadBean unreadBean) {
+        int mentionCmt = unreadBean.getMention_cmt();
+        int mentionStatus = unreadBean.getMention_status();
+        int mention = 0;
+        if (SettingUtility.allowMentionToMe()) {
+            mention += mentionStatus;
+        }
+        if (SettingUtility.allowMentionCommentToMe()) {
+            mention += mentionCmt;
+        }
+
+        int cmt = unreadBean.getCmt();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (mention > 0) {
+            String txt = String.format(GlobalContext.getInstance().getString(R.string.new_mentions), String.valueOf(mention));
+            stringBuilder.append(txt);
+        }
+
+        if (cmt > 0 && SettingUtility.allowCommentToMe()) {
+            if (mention > 0)
+                stringBuilder.append("、");
+            String txt = String.format(GlobalContext.getInstance().getString(R.string.new_comments), String.valueOf(cmt));
+            stringBuilder.append(txt);
+        }
+        return stringBuilder.toString();
+    }
+
+
+}
