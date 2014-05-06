@@ -378,6 +378,7 @@
     <string name="leftslidingmenu_appcenter">应用中心</string>
     <string name="leftslidingmenu_uitlsmodem">常用功能</string>
     <string name="leftslidingmenu_setup">设置</string>
+    <string name="leftslidingmenu_exit">退出登陆</string>
 
      <!-- 聊天状态 -->
      <string name="status_available">在线</string>

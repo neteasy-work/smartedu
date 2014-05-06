@@ -3,8 +3,12 @@ package com.engc.smartedu.ui.utilsmodem;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -36,7 +40,6 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_uitlsmodem, container, false);
 		initView();
-		
 
 		return view;
 	}
@@ -45,7 +48,17 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		initGridData(0);
-		
+
+	}
+
+	@SuppressLint("NewApi")
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.actionbar_menu_commentnewactivity, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+		ActionBar ab=getActivity().getActionBar();
+		ab.hide();
+
 	}
 
 	private void initView() {
@@ -72,7 +85,8 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 		imgList.add(R.drawable.icon_lost);
 		imgList.add(R.drawable.icon_holdday);
 		imgList.add(R.drawable.icon_more);
-		gvUtilsModem.setAdapter(new GridViewModemAdapter(imgtitleList, imgList));
+		gvUtilsModem
+				.setAdapter(new GridViewModemAdapter(imgtitleList, imgList));
 
 	}
 
@@ -98,7 +112,9 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 			// LayoutInflater inflater = (LayoutInflater)
 			// UtitlsModemFragment.this
 			// .getSystemService(LAYOUT_INFLATER_SERVICE);
-			//View view=LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.grid_apps_item, null);
+			// View
+			// view=LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.grid_apps_item,
+			// null);
 			LayoutInflater inflater = LayoutInflater.from(getActivity()
 					.getApplicationContext());
 			View itemView = inflater.inflate(R.layout.grid_apps_item, null);

@@ -15,7 +15,7 @@
         android:gravity="center"
         android:singleLine="true"
         android:text="@string/leftslidingmenu_home"
-        android:textColor="#ffccccc6"
+        android:textColor="@color/white"
         android:textSize="16.0sp"
         android:textStyle="bold" />
 
@@ -25,8 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10.0dip"
+        android:layout_marginLeft="15.0dip"
         android:contentDescription="@string/empty"
-        android:src="@drawable/tool_box_fragment_settings_icon" />
+        android:src="@drawable/slidingmenu_home" />
 
 </RelativeLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="65.0dip"
+    android:layout_marginTop="150dp"
+    android:background="@drawable/tool_box_fragment_bg_selector" >
+
+    <TextView
+        android:id="@+id/toolbox_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="70.0dip"
+        android:drawablePadding="20.0dip"
+        android:text="@string/leftslidingmenu_exit"
+        android:textColor="@color/white"
+        android:paddingBottom="20dp"
+        android:textSize="16.0sp"
+        android:textStyle="bold" />
+    <!--   android:gravity="center"
+        android:singleLine="true"
+         android:layout_centerInParent="true"
+        android:layout_centerVertical="true" -->
+
+    <ImageView
+        android:id="@+id/notification_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15.0dip"
+        android:contentDescription="@string/empty"
+        android:src="@drawable/slidingmenu_exit" />
+   <!--  android:layout_centerVertical="true" -->
+
+</RelativeLayout>
