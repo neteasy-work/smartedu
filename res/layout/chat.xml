@@ -18,7 +18,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="50.0dip"
+            android:layout_marginBottom="60.0dip"
             android:divider="@null"
             android:listSelector="@android:color/transparent"
             android:transcriptMode="normal" />
@@ -26,9 +26,9 @@
         <RelativeLayout
             android:id="@+id/inputBar"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_gravity="bottom"
-            android:background="@drawable/skin_aio_input_bar_bg" >
+            android:background="@drawable/chat_bar_bg" >
 
             <ImageView
                 android:id="@+id/skin_input_bg"
@@ -44,6 +44,8 @@
                 android:layout_alignBottom="@+id/inputarea_layout"
                 android:layout_alignTop="@+id/inputarea_layout"
                 android:layout_marginRight="2.0dip"
+                android:layout_marginLeft="5.0dp"
+                android:layout_marginTop="8.0dp"
                 android:background="@drawable/trans"
                 android:src="@drawable/qzone_edit_face_drawable" />
 
@@ -75,6 +77,8 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/aio_send_btn"
                             android:minHeight="34.0dip"
+                            android:layout_marginTop="5.0dp"
+                            android:layout_marginRight="5.0dp"
                             android:text="@string/chat_send_button"
                             android:textColor="@color/skin_aio_send_button"
                             android:textSize="14.0sp" />
@@ -86,10 +90,10 @@
                         android:layout_height="40dip"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginBottom="8.0dip"
-                        android:layout_marginTop="8.0dip"
+                        android:layout_marginBottom="6.0dip"
+                        android:layout_marginTop="10.0dip"
                         android:layout_toLeftOf="@id/send_layout"
-                        android:background="@drawable/skin_aio_input_bg"
+                        android:hint="   请输入内容"
                         android:imeActionLabel="@string/aio_ime_action_label"
                         android:inputType="textMultiLine"
                         android:textColor="@color/black"

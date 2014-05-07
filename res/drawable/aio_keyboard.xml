@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true" android:drawable="@drawable/skin_aio_keyboard_pressed" />
-    <item android:drawable="@drawable/skin_aio_keyboard_nor" />
+    <item android:state_pressed="true" android:drawable="@drawable/publisher_btn_keypad_pressdown" />
+    <item android:drawable="@drawable/publisher_btn_keypad_normal" />
 </selector>

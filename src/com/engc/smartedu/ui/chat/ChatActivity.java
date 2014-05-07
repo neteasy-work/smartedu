@@ -23,9 +23,6 @@ import com.engc.smartedu.ui.msglistview.MsgListView;
 import com.engc.smartedu.ui.msglistview.MsgListView.IXListViewListener;
 import com.engc.smartedu.widget.CirclePageIndicator;
 
-
-
-
 import android.app.Activity;
 import android.content.AsyncQueryHandler;
 import android.content.ComponentName;
@@ -69,8 +66,10 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ChatActivity extends AbstractAppActivity implements OnTouchListener,OnClickListener, IXListViewListener, IConnectionStatusCallback {
-	
+public class ChatActivity extends AbstractAppActivity implements
+		OnTouchListener, OnClickListener, IXListViewListener,
+		IConnectionStatusCallback {
+
 	public static final String INTENT_EXTRA_USERNAME = ChatActivity.class
 			.getName() + ".username";// 昵称对应的key
 	private MsgListView mMsgListView;// 对话ListView
@@ -80,7 +79,7 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 	private Button mSendMsgBtn;// 发送消息button
 	private ImageButton mFaceSwitchBtn;// 切换键盘和表情的button
 	private TextView mTitleNameView;// 标题栏
-	//private ImageView mTitleStatusView;
+	// private ImageView mTitleStatusView;
 	private EditText mChatEditText;// 消息输入框
 	private LinearLayout mFaceRoot;// 表情父容器
 	private WindowManager.LayoutParams mWindowNanagerParams;
@@ -94,9 +93,10 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 			ChatProvider.ChatConstants.JID, ChatProvider.ChatConstants.MESSAGE,
 			ChatProvider.ChatConstants.DELIVERY_STATUS };// 查询字段
 
-	//private ContentObserver mContactObserver = new ContactObserver();// 联系人数据监听，主要是监听对方在线状态
+	// private ContentObserver mContactObserver = new ContactObserver();//
+	// 联系人数据监听，主要是监听对方在线状态
 	private AppService appService;// Main服务
-	
+
 	ServiceConnection mServiceConnection = new ServiceConnection() {
 
 		@Override
@@ -141,19 +141,20 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 		mServiceIntent.setData(chatURI);
 		bindService(mServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.chat);
-		//initData();// 初始化数据
+		 initData();// 初始化数据
+
 		initView();// 初始化view
-		initFacePage();// 初始化表情
-		//setChatWindowAdapter();// 初始化对话数据
-		//getContentResolver().registerContentObserver(
-				//RosterProvider.CONTENT_URI, true, mContactObserver);// 开始监听联系人数据库
+		// initFacePage();// 初始化表情
+		// setChatWindowAdapter();// 初始化对话数据
+		// getContentResolver().registerContentObserver(
+		// RosterProvider.CONTENT_URI, true, mContactObserver);// 开始监听联系人数据库
 	}
-	
+
 	private void initView() {
 		mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 		mWindowNanagerParams = getWindow().getAttributes();
@@ -170,7 +171,7 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 		mFaceViewPager = (ViewPager) findViewById(R.id.face_pager);
 		mChatEditText.setOnTouchListener(this);
 		mTitleNameView = (TextView) findViewById(R.id.ivTitleName);
-		//mTitleStatusView = (ImageView) findViewById(R.id.ivTitleStatus);
+		// mTitleStatusView = (ImageView) findViewById(R.id.ivTitleStatus);
 		mChatEditText.setOnKeyListener(new OnKeyListener() {
 
 			@Override
@@ -216,7 +217,7 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 		mFaceSwitchBtn.setOnClickListener(this);
 		mSendMsgBtn.setOnClickListener(this);
 	}
-	
+
 	/**
 	 * 初始化聊天对象 数据
 	 */
@@ -227,7 +228,7 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 		mFaceMapKeys = new ArrayList<String>();
 		mFaceMapKeys.addAll(keySet);
 	}
-	
+
 	/**
 	 * 初始化表情
 	 */
@@ -262,7 +263,7 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 		});
 
 	}
-	
+
 	/**
 	 * 设置聊天的Adapter
 	 */
@@ -293,6 +294,7 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 		// mMsgListView.setAdapter(adapter);
 		// mMsgListView.setSelection(adapter.getCount() - 1);
 	}
+
 	private GridView getGridView(int i) {
 		// TODO Auto-generated method stub
 		GridView gv = new GridView(this);
@@ -384,13 +386,13 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 		});
 		return gv;
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		if (hasWindowFocus())
 			unbindXMPPService();// 解绑服务
-		//getContentResolver().unregisterContentObserver(mContactObserver);
+		// getContentResolver().unregisterContentObserver(mContactObserver);
 	}
 
 	@Override
@@ -402,6 +404,7 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 		else
 			unbindXMPPService();
 	}
+
 	// 防止乱pageview乱滚动
 	private OnTouchListener forbidenScroll() {
 		return new OnTouchListener() {
@@ -417,13 +420,13 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 	@Override
 	public void onRefresh() {
 		mMsgListView.stopRefresh();
-		
+
 	}
 
 	@Override
 	public void onLoadMore() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -455,8 +458,9 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 		default:
 			break;
 		}
-		
+
 	}
+
 	private void sendMessageIfNotNull() {
 		if (mChatEditText.getText().length() >= 1) {
 			if (appService != null) {
@@ -470,11 +474,10 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 		}
 	}
 
-
 	@Override
 	public void connectionStatusChanged(int connectedState, String reason) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -501,8 +504,5 @@ public class ChatActivity extends AbstractAppActivity implements OnTouchListener
 		}
 		return false;
 	}
-	
-	
-	
-	
+
 }

@@ -1,5 +1,11 @@
 package com.engc.smartedu.ui.main;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
@@ -7,10 +13,14 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -23,10 +33,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.engc.smartedu.R;
-
-import com.engc.smartedu.bean.*;
+import com.engc.smartedu.bean.AccountBean;
+import com.engc.smartedu.bean.UnreadBean;
+import com.engc.smartedu.bean.UserBean;
 import com.engc.smartedu.dao.unread.UnreadDao;
 import com.engc.smartedu.othercomponent.ClearCacheTask;
+import com.engc.smartedu.othercomponent.chat.AppBroadcastReceiver.EventHandler;
+import com.engc.smartedu.othercomponent.chat.AppService;
+import com.engc.smartedu.othercomponent.chat.IConnectionStatusCallback;
 import com.engc.smartedu.othercomponent.notification.UnreadMsgReceiver;
 import com.engc.smartedu.support.error.WeiboException;
 import com.engc.smartedu.support.lib.AppFragmentPagerAdapter;
@@ -34,17 +48,20 @@ import com.engc.smartedu.support.lib.MyAsyncTask;
 import com.engc.smartedu.support.settinghelper.SettingUtility;
 import com.engc.smartedu.support.utils.AppLogger;
 import com.engc.smartedu.support.utils.GlobalContext;
+import com.engc.smartedu.support.utils.PreferenceConstants;
+import com.engc.smartedu.support.utils.PreferenceUtils;
 import com.engc.smartedu.support.utils.Utility;
+import com.engc.smartedu.support.utils.XMPPHelper;
 import com.engc.smartedu.ui.basefragment.AbstractTimeLineFragment;
 import com.engc.smartedu.ui.dm.DMUserListFragment;
 import com.engc.smartedu.ui.fragment.LeftMenuFragment;
 import com.engc.smartedu.ui.fragment.RightMenuFragment;
 import com.engc.smartedu.ui.home.HomeFragment;
-import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
 import com.engc.smartedu.ui.interfaces.IAccountInfo;
 import com.engc.smartedu.ui.interfaces.IUserInfo;
 import com.engc.smartedu.ui.interfaces.MainTitmeLineAppActivity;
 import com.engc.smartedu.ui.login.AccountActivity;
+import com.engc.smartedu.ui.login.LoginActivity;
 import com.engc.smartedu.ui.maintimeline.CommentsTimeLineFragment;
 import com.engc.smartedu.ui.maintimeline.FriendsTimeLineFragment;
 import com.engc.smartedu.ui.maintimeline.MentionsTimeLineFragment;
@@ -53,13 +70,6 @@ import com.engc.smartedu.ui.preference.SettingActivity;
 import com.engc.smartedu.ui.search.SearchMainActivity;
 import com.engc.smartedu.ui.userinfo.MyInfoActivity;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 
@@ -72,7 +82,7 @@ import java.util.concurrent.TimeUnit;
  */
 @SuppressLint("NewApi")
 public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
-		IUserInfo, IAccountInfo, OnClickListener {
+		IUserInfo, IAccountInfo, OnClickListener,IConnectionStatusCallback,EventHandler {
 
 	private ViewPager mViewPager;
 
@@ -90,6 +100,42 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 	private android.support.v4.app.Fragment mContent;
 	public static TextView titleText; // 标题
 	private int mScreenWidth; // 当前设备屏幕宽度
+	
+	private Handler mainHandler = new Handler();
+	private AppService appService;
+	
+	
+	
+	ServiceConnection mServiceConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			appService = ((AppService.AppBinder) service).getService();
+			appService.registerConnectionStatusCallback(MainTimeLineActivity.this);
+			// 开始连接xmpp服务器
+			if (!appService.isAuthenticated()) {
+				String usr = PreferenceUtils.getPrefString(MainTimeLineActivity.this,
+						PreferenceConstants.ACCOUNT, "");
+				String password = PreferenceUtils.getPrefString(
+						MainTimeLineActivity.this, PreferenceConstants.PASSWORD, "");
+				appService.Login(usr, password);
+				
+				AppLogger.i("当前的链接状态为"+"未连接");
+			} else {
+				AppLogger.i("当前的链接状态为"+XMPPHelper
+						.splitJidAndServer(PreferenceUtils.getPrefString(
+								MainTimeLineActivity.this, PreferenceConstants.ACCOUNT,
+								"")));
+			}
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			appService.unRegisterConnectionStatusCallback();
+			appService = null;
+		}
+
+	};
 
 	public String getToken() {
 		return accountBean.getAccess_token();
@@ -103,6 +149,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		startService(new Intent(MainTimeLineActivity.this, AppService.class)); //开启服务
 		initSlidingMenu();
 		setContentView(R.layout.viewpager_layout);
 
@@ -497,7 +544,40 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 				getUnreadCount();
 			}
 		}, 10, 50, TimeUnit.SECONDS);
+		
+		bindXMPPService();
+		/*getContentResolver().registerContentObserver(
+			RosterProvider.CONTENT_URI, true, mRosterObserver);
+		setStatusImage(isConnected());
+		if (!isConnected())
+			mTitleNameView.setText(R.string.login_prompt_no);
+		mRosterAdapter.requery();
+		XXBroadcastReceiver.mListeners.add(this);
+		if (NetUtil.getNetworkState(this) == NetUtil.NETWORN_NONE)
+			mNetErrorView.setVisibility(View.VISIBLE);
+		else
+			mNetErrorView.setVisibility(View.GONE);
+		ChangeLog cl = new ChangeLog(this);
+		if (cl != null && cl.firstRun()) {
+			cl.getFullLogDialog().show();
+		}*/
 
+	}
+	
+	private void unbindXMPPService() {
+		try {
+			unbindService(mServiceConnection);
+			AppLogger.i(LoginActivity.class, "[SERVICE] Unbind*****************服务绑定");
+		} catch (IllegalArgumentException e) {
+			AppLogger.e(LoginActivity.class, "Service wasn't bound**************服务未能绑定!");
+		}
+	}
+
+	private void bindXMPPService() {
+		AppLogger.i(LoginActivity.class, "[SERVICE] Unbind");
+		bindService(new Intent(MainTimeLineActivity.this, AppService.class),
+				mServiceConnection, Context.BIND_AUTO_CREATE
+						+ Context.BIND_DEBUG_UNBIND);
 	}
 
 	@Override
@@ -641,6 +721,18 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 			break;
 		}
 
+	}
+
+	@Override
+	public void onNetChange() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void connectionStatusChanged(int connectedState, String reason) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

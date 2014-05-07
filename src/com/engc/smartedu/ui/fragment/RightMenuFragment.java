@@ -8,6 +8,7 @@ import java.util.Map;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -31,6 +32,7 @@ import com.engc.smartedu.support.utils.XMPPHelper;
 import com.engc.smartedu.ui.chat.ChatActivity;
 import com.engc.smartedu.ui.interfaces.FixedOnActivityResultBugFragment;
 
+
 /**
  * 右侧侧滑菜单
  * 
@@ -42,9 +44,9 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 
 	private Handler mainHandler = new Handler();
 	private AppService appService;
-	private TextView mTitleNameView;
-
-	ServiceConnection mServiceConnection = new ServiceConnection() {
+	
+	
+	/*ServiceConnection mServiceConnection = new ServiceConnection() {
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
@@ -77,7 +79,7 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 			appService = null;
 		}
 
-	};
+	};*/
 
 	@Override
 	public void onClick(View v) {
