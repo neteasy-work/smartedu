@@ -39,6 +39,7 @@ public class AccountActivity extends AbstractAppActivity {
     private RemoveAccountDBTask removeTask = null;
 
     private final int ADD_ACCOUNT_REQUEST_CODE = 0;
+    public static int actionBarHeight;
 
 
     @Override
@@ -117,6 +118,7 @@ public class AccountActivity extends AbstractAppActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_accountactivity, menu);
+        actionBarHeight=getActionBar().getHeight();
         return true;
     }
 

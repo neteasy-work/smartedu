@@ -5,33 +5,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.content.ComponentName;
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 import com.engc.smartedu.R;
 import com.engc.smartedu.othercomponent.chat.AppBroadcastReceiver.EventHandler;
 import com.engc.smartedu.othercomponent.chat.AppService;
 import com.engc.smartedu.othercomponent.chat.IConnectionStatusCallback;
-import com.engc.smartedu.support.utils.PreferenceConstants;
-import com.engc.smartedu.support.utils.PreferenceUtils;
-import com.engc.smartedu.support.utils.XMPPHelper;
 import com.engc.smartedu.ui.chat.ChatActivity;
 import com.engc.smartedu.ui.interfaces.FixedOnActivityResultBugFragment;
-
+import com.engc.smartedu.ui.login.AccountActivity;
+import com.engc.smartedu.ui.main.MainTimeLineActivity;
 
 /**
  * 右侧侧滑菜单
@@ -39,58 +37,58 @@ import com.engc.smartedu.ui.interfaces.FixedOnActivityResultBugFragment;
  * @author Administrator
  * 
  */
+@SuppressLint("NewApi")
 public class RightMenuFragment extends FixedOnActivityResultBugFragment
 		implements OnClickListener, IConnectionStatusCallback, EventHandler {
 
 	private Handler mainHandler = new Handler();
 	private AppService appService;
-	
-	
-	/*ServiceConnection mServiceConnection = new ServiceConnection() {
+	private RelativeLayout fragementHeaderLayout;
 
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			appService = ((AppService.AppBinder) service).getService();
-			appService.registerConnectionStatusCallback(RightMenuFragment.this);
-			// 开始连接xmpp服务器
-			if (!appService.isAuthenticated()) {
-				String usr = PreferenceUtils.getPrefString(getActivity()
-						.getApplicationContext(), PreferenceConstants.ACCOUNT,
-						"");
-				String password = PreferenceUtils.getPrefString(getActivity()
-						.getApplicationContext(), PreferenceConstants.PASSWORD,
-						"");
-				appService.Login(usr, password);
-				// mTitleNameView.setText(R.string.login_prompt_msg);
-				// setStatusImage(false);
-				// mTitleProgressBar.setVisibility(View.VISIBLE);
-			} else {
-				mTitleNameView.setText(XMPPHelper
-						.splitJidAndServer(PreferenceUtils.getPrefString(
-								getActivity().getApplicationContext(),
-								PreferenceConstants.ACCOUNT, "")));
-				setStatusImage(true);
-			}
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			appService.unRegisterConnectionStatusCallback();
-			appService = null;
-		}
-
-	};*/
+	/*
+	 * ServiceConnection mServiceConnection = new ServiceConnection() {
+	 * 
+	 * @Override public void onServiceConnected(ComponentName name, IBinder
+	 * service) { appService = ((AppService.AppBinder) service).getService();
+	 * appService.registerConnectionStatusCallback(RightMenuFragment.this); //
+	 * 开始连接xmpp服务器 if (!appService.isAuthenticated()) { String usr =
+	 * PreferenceUtils.getPrefString(getActivity() .getApplicationContext(),
+	 * PreferenceConstants.ACCOUNT, ""); String password =
+	 * PreferenceUtils.getPrefString(getActivity() .getApplicationContext(),
+	 * PreferenceConstants.PASSWORD, ""); appService.Login(usr, password); //
+	 * mTitleNameView.setText(R.string.login_prompt_msg); //
+	 * setStatusImage(false); // mTitleProgressBar.setVisibility(View.VISIBLE);
+	 * } else { mTitleNameView.setText(XMPPHelper
+	 * .splitJidAndServer(PreferenceUtils.getPrefString(
+	 * getActivity().getApplicationContext(), PreferenceConstants.ACCOUNT,
+	 * ""))); setStatusImage(true); } }
+	 * 
+	 * @Override public void onServiceDisconnected(ComponentName name) {
+	 * appService.unRegisterConnectionStatusCallback(); appService = null; }
+	 * 
+	 * };
+	 */
 
 	@Override
 	public void onClick(View v) {
 
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.main_right_fragment, container,
 				false);
+		int height=AccountActivity.actionBarHeight;
+		/*
+		 * fragementHeaderLayout = (RelativeLayout) view
+		 * .findViewById(R.id.relayout_chat_fragment);
+		 * RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+		 * fragementHeaderLayout.getLayoutParams().width, getActivity()
+		 * .getActionBar().getHeight());
+		 * fragementHeaderLayout.setLayoutParams(params);
+		 */
 
 		ListView firendsList = (ListView) view
 				.findViewById(R.id.friends_display);
@@ -100,15 +98,15 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 						R.id.txtfriendcontent, R.id.img_friends_face });
 		firendsList.setAdapter(adapter);
 
-		
 		firendsList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
-				 Intent intent=new Intent(getActivity().getApplicationContext(),ChatActivity.class);
-				 startActivity(intent);
+
+				Intent intent = new Intent(getActivity()
+						.getApplicationContext(), ChatActivity.class);
+				startActivity(intent);
 
 			}
 		});
@@ -126,6 +124,29 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 		 * System.out.println();
 		 */
 		return view;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		ActionBar actionBar=getActivity().getActionBar();
+		int height=AccountActivity.actionBarHeight;
+        
+	}
+
+	@SuppressLint("NewApi")
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater infalter) {
+
+		// Inflate the menu; this adds items to the action bar if it is present.
+		// getMenuInflater().inflate(null, menu);
+		/*
+		 * RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+		 * fragementHeaderLayout.getLayoutParams().width, getActivity()
+		 * .getActionBar().getHeight());
+		 * fragementHeaderLayout.setLayoutParams(params);
+		 */
+
 	}
 
 	private List<Map<String, Object>> getData() {

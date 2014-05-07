@@ -99,6 +99,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 
 	private android.support.v4.app.Fragment mContent;
 	public static TextView titleText; // 标题
+	public static int actionBarHeight;
 	private int mScreenWidth; // 当前设备屏幕宽度
 	
 	private Handler mainHandler = new Handler();
@@ -181,6 +182,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		// getMenuInflater().inflate(null, menu);
 		ActionBar actionBar = getActionBar();
+		actionBarHeight=actionBar.getHeight();
 		ActionBar.LayoutParams params = new ActionBar.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT,
 				Gravity.CENTER);
@@ -211,7 +213,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		FragementTransaction.replace(R.id.main_right_fragment, mFragRight);
 		FragementTransaction.commit();
 		mSlidingMenu.setRightMenuOffset(mScreenWidth / 6);
-		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.shadow);
+		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_fragment_shadow);
 	}
 
 	private void getUnreadCount() {
@@ -246,7 +248,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 
 		mSlidingMenu.setFadeDegree(0.35f);// 设置淡入淡出的比例
 		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);// 设置手势模式
-		mSlidingMenu.setShadowDrawable(R.drawable.shadow);// 设置左菜单阴影图片
+		//mSlidingMenu.setShadowDrawable(R.drawable.shadow);// 设置左菜单阴影图片
 		mSlidingMenu.setFadeEnabled(true);// 设置滑动时菜单的是否淡入淡出
 		mSlidingMenu.setBehindScrollScale(0.333f);// 设置滑动时拖拽效果
 
