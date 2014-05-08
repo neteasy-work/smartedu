@@ -20,16 +20,22 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 
 import com.engc.smartedu.R;
+import com.engc.smartedu.bean.User;
 import com.engc.smartedu.othercomponent.chat.AppBroadcastReceiver.EventHandler;
 import com.engc.smartedu.othercomponent.chat.AppService;
 import com.engc.smartedu.othercomponent.chat.IConnectionStatusCallback;
+import com.engc.smartedu.support.database.MessageDB;
+import com.engc.smartedu.support.database.RecentDB;
+import com.engc.smartedu.support.database.UserDB;
+import com.engc.smartedu.support.utils.AppLogger;
+import com.engc.smartedu.support.utils.GlobalContext;
+import com.engc.smartedu.support.utils.SharePreferenceUtil;
+import com.engc.smartedu.ui.adapter.FriendsAdapter;
 import com.engc.smartedu.ui.chat.ChatActivity;
 import com.engc.smartedu.ui.interfaces.FixedOnActivityResultBugFragment;
 import com.engc.smartedu.ui.login.AccountActivity;
-import com.engc.smartedu.ui.main.MainTimeLineActivity;
 
 /**
  * 右侧侧滑菜单
@@ -44,6 +50,13 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 	private Handler mainHandler = new Handler();
 	private AppService appService;
 	private RelativeLayout fragementHeaderLayout;
+
+    private GlobalContext global;
+	private UserDB mUserDB;
+	private RecentDB mRecentDB;
+	private MessageDB mMsgDB;
+	private SharePreferenceUtil mSpUtil;
+	private ListView firendsList;
 
 	/*
 	 * ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -69,6 +82,13 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 	 * };
 	 */
 
+	public void updateAdapter() {
+		if (firendsList != null) {
+			AppLogger.i("update friend...");
+			initUserData();
+		}
+		
+	}
 	@Override
 	public void onClick(View v) {
 
@@ -80,7 +100,7 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.main_right_fragment, container,
 				false);
-		int height=AccountActivity.actionBarHeight;
+		int height = AccountActivity.actionBarHeight;
 		/*
 		 * fragementHeaderLayout = (RelativeLayout) view
 		 * .findViewById(R.id.relayout_chat_fragment);
@@ -90,13 +110,7 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 		 * fragementHeaderLayout.setLayoutParams(params);
 		 */
 
-		ListView firendsList = (ListView) view
-				.findViewById(R.id.friends_display);
-		SimpleAdapter adapter = new SimpleAdapter(getActivity(), getData(),
-				R.layout.firends_listview_item, new String[] { "title", "info",
-						"img" }, new int[] { R.id.txtfriendname,
-						R.id.txtfriendcontent, R.id.img_friends_face });
-		firendsList.setAdapter(adapter);
+		firendsList = (ListView) view.findViewById(R.id.friends_display);
 
 		firendsList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -127,11 +141,48 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		global=GlobalContext.getInstance();
+		mUserDB = global.getUserDB();
+		mMsgDB = global.getMessageDB();
+		mRecentDB = global.getRecentDB();
+		mSpUtil = global.getSpUtil();
+
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		initUserData();
+	}
+
+	/**
+	 * 初始化好友数据
+	 */
+	private void initUserData() {
+		// TODO Auto-generated method stub
+		List<User> dbUsers = mUserDB.getUser();// 查询本地数据库所有好友
+		FriendsAdapter adapter = new FriendsAdapter(getActivity()
+				.getApplicationContext(), dbUsers, 0);
+		firendsList.setAdapter(adapter);
+
+		/*
+		 * // 初始化组名和child for (int i = 0; i < groups.length; ++i) {
+		 * mGroup.add(groups[i]);// 组名 List<User> childUsers = new
+		 * ArrayList<User>();// 每一组的child mChildren.put(i, childUsers); } //
+		 * 给每一组添加数据 for (User u : dbUsers) { for (int i = 0; i < mGroup.size();
+		 * ++i) { if (u.getGroup() == i) { mChildren.get(i).add(u); } } }
+		 */
+
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		ActionBar actionBar=getActivity().getActionBar();
-		int height=AccountActivity.actionBarHeight;
-        
+		ActionBar actionBar = getActivity().getActionBar();
+		int height = AccountActivity.actionBarHeight;
+
 	}
 
 	@SuppressLint("NewApi")

@@ -213,7 +213,6 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		FragementTransaction.replace(R.id.main_right_fragment, mFragRight);
 		FragementTransaction.commit();
 		mSlidingMenu.setRightMenuOffset(mScreenWidth / 6);
-		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_fragment_shadow);
 	}
 
 	private void getUnreadCount() {
