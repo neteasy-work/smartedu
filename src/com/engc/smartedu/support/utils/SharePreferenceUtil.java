@@ -28,13 +28,13 @@ public class SharePreferenceUtil {
 	}
 
 	// user_id
-	public void setUserId(String userId) {
-		editor.putString("userId", userId);
+	public void setUserCode(String userCode) {
+		editor.putString("userCode", userCode);
 		editor.commit();
 	}
 
-	public String getUserId() {
-		return sp.getString("userId", "");
+	public String getUserCode() {
+		return sp.getString("userCode", "");
 	}
 
 	// channel_id
@@ -48,22 +48,22 @@ public class SharePreferenceUtil {
 	}
 
 	// nick
-	public void setNick(String nick) {
-		editor.putString("nick", nick);
+	public void setUserName(String userName) {
+		editor.putString("userName", userName);
 		editor.commit();
 	}
 
-	public String getNick() {
-		return sp.getString("nick", "");
+	public String getUserName() {
+		return sp.getString("userName", "");
 	}
 
 	// 头像图标
-	public int getHeadIcon() {
-		return sp.getInt("headIcon", 0);
+	public String getHeadIcon() {
+		return sp.getString("headIcon", "");
 	}
 
-	public void setHeadIcon(int icon) {
-		editor.putInt("headIcon", icon);
+	public void setHeadIcon(String icon) {
+		editor.putString("headIcon", icon);
 		editor.commit();
 	}
 

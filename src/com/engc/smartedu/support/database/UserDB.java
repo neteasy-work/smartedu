@@ -23,10 +23,9 @@ public class UserDB {
 		Cursor c = db.rawQuery("select * from user where userId=?",
 				new String[] { userId + "" });
 		if (c.moveToFirst()) {
-			u.setHeadIcon(c.getInt(c.getColumnIndex("img")));
-			u.setNick(c.getString(c.getColumnIndex("nick")));
+			u.setHeadpic(c.getString(c.getColumnIndex("img")));
+			u.setUsername(c.getString(c.getColumnIndex("nick")));
 			u.setChannelId(c.getString(c.getColumnIndex("channelId")));
-			u.setGroup(c.getInt(c.getColumnIndex("_group")));
 		} else {
 			return null;
 		}
@@ -38,22 +37,22 @@ public class UserDB {
 		for (User u : list) {
 			db.execSQL(
 					"insert into user (userId,nick,img,channelId,_group) values(?,?,?,?,?)",
-					new Object[] { u.getUserId(), u.getNick(), u.getHeadIcon(),
-							u.getChannelId(), u.getGroup() });
+					new Object[] { u.getUsercode(), u.getUsername(), u.getHeadpic(),
+							u.getChannelId(), 0 });
 		}
 		db.close();
 	}
 
 	public void addUser(User u) {
-		if (selectInfo(u.getUserId()) != null) {
+		if (selectInfo(u.getUsercode()) != null) {
 			update(u);
 			return;
 		}
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL(
 				"insert into user (userId,nick,img,channelId,_group) values(?,?,?,?,?)",
-				new Object[] { u.getUserId(), u.getNick(), u.getHeadIcon(),
-						u.getChannelId(), u.getGroup() });
+				new Object[] { u.getUsercode(), u.getUsername(), u.getHeadpic(),
+						u.getChannelId(), 0 });
 		db.close();
 
 	}
@@ -64,11 +63,10 @@ public class UserDB {
 				new String[] { userId });
 		User u = new User();
 		if (c.moveToNext()) {
-			u.setUserId(c.getString(c.getColumnIndex("userId")));
-			u.setNick(c.getString(c.getColumnIndex("nick")));
-			u.setHeadIcon(c.getInt(c.getColumnIndex("img")));
+			u.setUsercode(c.getString(c.getColumnIndex("userId")));
+			u.setUsername(c.getString(c.getColumnIndex("nick")));
+			u.setHeadpic(c.getString(c.getColumnIndex("img")));
 			u.setChannelId(c.getString(c.getColumnIndex("channelId")));
-			u.setGroup(c.getInt(c.getColumnIndex("_group")));
 		}
 		return u;
 	}
@@ -86,11 +84,10 @@ public class UserDB {
 		Cursor c = db.rawQuery("select * from user", null);
 		while (c.moveToNext()) {
 			User u = new User();
-			u.setUserId(c.getString(c.getColumnIndex("userId")));
-			u.setNick(c.getString(c.getColumnIndex("nick")));
-			u.setHeadIcon(c.getInt(c.getColumnIndex("img")));
+			u.setUsercode(c.getString(c.getColumnIndex("userId")));
+			u.setUsername(c.getString(c.getColumnIndex("nick")));
+			u.setHeadpic(c.getString(c.getColumnIndex("img")));
 			u.setChannelId(c.getString(c.getColumnIndex("channelId")));
-			u.setGroup(c.getInt(c.getColumnIndex("_group")));
 			list.add(u);
 		}
 		c.close();
@@ -102,8 +99,8 @@ public class UserDB {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL(
 				"update user set nick=?,img=?,_group=? where userId=?",
-				new Object[] { u.getNick(), u.getHeadIcon(), u.getGroup(),
-						u.getUserId() });
+				new Object[] { u.getUsername(), u.getHeadpic(), 0,
+						u.getUsercode() });
 		db.close();
 	}
 
@@ -112,11 +109,10 @@ public class UserDB {
 		Cursor c = db.rawQuery("select * from user", null);
 		User u = new User();
 		while (c.moveToLast()) {
-			u.setUserId(c.getString(c.getColumnIndex("userId")));
-			u.setNick(c.getString(c.getColumnIndex("nick")));
-			u.setHeadIcon(c.getInt(c.getColumnIndex("img")));
+			u.setUsercode(c.getString(c.getColumnIndex("userId")));
+			u.setUsername(c.getString(c.getColumnIndex("nick")));
+			u.setHeadpic(c.getString(c.getColumnIndex("img")));
 			u.setChannelId(c.getString(c.getColumnIndex("channelId")));
-			u.setGroup(c.getInt(c.getColumnIndex("_group")));
 		}
 		c.close();
 		db.close();
@@ -126,7 +122,7 @@ public class UserDB {
 	public void delUser(User u) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL("delete from user where userId=?",
-				new Object[] { u.getUserId() });
+				new Object[] { u.getUsercode() });
 		db.close();
 	}
 

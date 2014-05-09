@@ -66,8 +66,8 @@ public class DummyActivity extends AbstractAppActivity implements PushMessageRec
 	}
     
     private void initView(){
-    	mSpUtil.setNick("小强");
-		mSpUtil.setHeadIcon(R.drawable.honey_face);
+    	mSpUtil.setUserName("小强");
+		mSpUtil.setHeadIcon("http://www.baidu.com");
 		mSpUtil.setTag("man");
 		PushManager.startWork(getApplicationContext(),
 				PushConstants.LOGIN_TYPE_API_KEY, GlobalContext.API_KEY);// 无baidu帐号登录,以apiKey随机获取一个id
@@ -91,8 +91,8 @@ public class DummyActivity extends AbstractAppActivity implements PushMessageRec
 	@Override
 	public void onBind(String method, int errorCode, String content) {
 		if (errorCode == 0) {// 如果绑定账号成功，由于第一次运行，给同一tag的人推送一条新人消息
-			User u = new User(mSpUtil.getUserId(), mSpUtil.getChannelId(),
-					mSpUtil.getNick(), mSpUtil.getHeadIcon(), 0);
+			User u = new User(mSpUtil.getUserCode(), mSpUtil.getChannelId(),
+					mSpUtil.getUserName(), mSpUtil.getHeadIcon());
 			mUserDB.addUser(u);// 把自己添加到数据库
 			Message msgItem = new Message(
 					System.currentTimeMillis(), "hi", mSpUtil.getTag());

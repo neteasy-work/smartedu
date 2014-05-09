@@ -52,7 +52,7 @@ public class RecentDB {
 		while (c.moveToNext()) {
 			String userId = c.getString(c.getColumnIndex("userId"));
 			String name = c.getString(c.getColumnIndex("name"));
-			int icon = c.getInt(c.getColumnIndex("img"));
+			String icon = c.getString(c.getColumnIndex("img"));
 			long time = c.getLong(c.getColumnIndex("time"));
 			int num = c.getInt(c.getColumnIndex("num"));
 			String message = c.getString(c.getColumnIndex("message"));

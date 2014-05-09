@@ -5,6 +5,7 @@
     android:layout_height="fill_parent"
     android:background="@drawable/login_bg" >
     
+    <include layout="@layout/net_status_bar" />
 
      <AutoCompleteTextView
         android:id="@+id/login_account"

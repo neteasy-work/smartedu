@@ -119,19 +119,19 @@ public class PushMessageReceiver extends BroadcastReceiver {
 		// Message msg = gson.fromJson(message, Message.class);
 		AppLogger.i("gson ====" + msg.toString());
 		String tag = msg.getTag();
-		String userId = msg.getUser_id();
-		int headId = msg.getHead_id();
+		String userCode = msg.getUsercode();
+		String headId = msg.getHead_icon();
 		// try {
 		// headId = Integer.parseInt(JsonUtil.getFromUserHead(message));
 		// } catch (Exception e) {
 		// L.e("head is not a Integer....");
 		// }
 		if (!TextUtils.isEmpty(tag)) {// 如果是带有tag的消息
-			if (userId.equals(GlobalContext.getInstance().getSpUtil()
-					.getUserId()))
+			if (userCode.equals(GlobalContext.getInstance().getSpUtil()
+					.getUserCode()))
 				return;
-			User u = new User(userId, msg.getChannel_id(), msg.getNick(),
-					headId, 0);
+			User u = new User(userCode, msg.getChannel_id(), msg.getUsername(),
+					headId);
 			GlobalContext.getInstance().getUserDB().addUser(u);// 存入或更新好友
 			for (EventHandler handler : ehList)
 				handler.onNewFriend(u);
@@ -146,7 +146,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
 				AppLogger.i("response start");
 				Message item = new Message(System.currentTimeMillis(), "hi",
 						PushMessageReceiver.RESPONSE);
-				new SendMsgAsyncTask(gson.toJson(item), userId).send();// 同时也回一条消息给对方1
+				new SendMsgAsyncTask(gson.toJson(item), userCode).send();// 同时也回一条消息给对方1
 				AppLogger.i("response end");
 			}
 		} else {// 普通消息，
@@ -160,14 +160,14 @@ public class PushMessageReceiver extends BroadcastReceiver {
 				// show notify
 				showNotify(msg);
 				MessageItem item = new MessageItem(
-						MessageItem.MESSAGE_TYPE_TEXT, msg.getNick(),
+						MessageItem.MESSAGE_TYPE_TEXT, msg.getUsername(),
 						System.currentTimeMillis(), msg.getMessage(), headId,
 						true, 1);
-				RecentItem recentItem = new RecentItem(userId, headId,
-						msg.getNick(), msg.getMessage(), 0,
+				RecentItem recentItem = new RecentItem(userCode, headId,
+						msg.getUsername(), msg.getMessage(), 0,
 						System.currentTimeMillis());
 				GlobalContext.getInstance().getMessageDB()
-						.saveMsg(userId, item);
+						.saveMsg(userCode, item);
 				GlobalContext.getInstance().getRecentDB()
 						.saveRecent(recentItem);
 			}
@@ -182,7 +182,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
 		GlobalContext application = GlobalContext.getInstance();
 
 		int icon = R.drawable.notify_newmessage;
-		CharSequence tickerText = message.getNick() + ":"
+		CharSequence tickerText = message.getUsername() + ":"
 				+ message.getMessage();
 		long when = System.currentTimeMillis();
 		Notification notification = new Notification(icon, tickerText, when);
@@ -198,7 +198,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
 		PendingIntent contentIntent = PendingIntent.getActivity(application, 0,
 				intent, 0);
 		notification.setLatestEventInfo(GlobalContext.getInstance(),
-				application.getSpUtil().getNick() + " (" + mNewNum + "条新消息)",
+				application.getSpUtil().getUserName() + " (" + mNewNum + "条新消息)",
 				tickerText, contentIntent);
 		// 下面是4.0通知栏api
 		// Bitmap headBm = BitmapFactory.decodeResource(
@@ -232,7 +232,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
 		if (errorCode == 0) {
 			String appid = "";
 			String channelid = "";
-			String userid = "";
+			String userCode = "";
 
 			try {
 				JSONObject jsonContent = new JSONObject(content);
@@ -240,7 +240,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
 						.getJSONObject("response_params");
 				appid = params.getString("appid");
 				channelid = params.getString("channel_id");
-				userid = params.getString("user_id");
+				userCode = params.getString("user_id");
 			} catch (JSONException e) {
 				AppLogger.e(TAG, "Parse bind json infos error: " + e);
 			}
@@ -248,7 +248,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
 					.getSpUtil();
 			util.setAppId(appid);
 			util.setChannelId(channelid);
-			util.setUserId(userid);
+			util.setUserCode(userCode);
 		} else {
 			if (NetUtility.isConnected(context)) {
 				if (errorCode == 30607) {

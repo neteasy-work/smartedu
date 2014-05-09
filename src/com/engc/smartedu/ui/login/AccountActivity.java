@@ -102,7 +102,7 @@ public class AccountActivity extends AbstractAppActivity {
                 if (!TextUtils.isEmpty(id)) {
                     AccountBean bean = DatabaseManager.getInstance().getAccount(id);
                     if (bean != null) {
-                        Intent start = new Intent(AccountActivity.this, MainTimeLineActivity.class);
+                        Intent start = new Intent(AccountActivity.this, LoginActivity.class);
                         start.putExtra("account", bean);
                         startActivity(start);
                         finish();

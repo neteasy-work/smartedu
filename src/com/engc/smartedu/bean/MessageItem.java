@@ -13,7 +13,7 @@ public class MessageItem {
 	private String name;// 消息来自
 	private long time;// 消息日期
 	private String message;// 消息内容
-	private int headImg;
+	private String headImg;
 	private boolean isComMeg = true;// 是否为收到的消息
 
 	private int isNew;
@@ -23,7 +23,7 @@ public class MessageItem {
 	}
 
 	public MessageItem(int msgType, String name, long date, String message,
-			int headImg, boolean isComMeg, int isNew) {
+			String headImg, boolean isComMeg, int isNew) {
 		super();
 		this.msgType = msgType;
 		this.name = name;
@@ -62,17 +62,19 @@ public class MessageItem {
 		return message;
 	}
 
+	public String getHeadImg() {
+		return headImg;
+	}
+
+	public void setHeadImg(String headImg) {
+		this.headImg = headImg;
+	}
+
 	public void setMessage(String message) {
 		this.message = message;
 	}
 
-	public int getHeadImg() {
-		return headImg;
-	}
-
-	public void setHeadImg(int headImg) {
-		this.headImg = headImg;
-	}
+	
 
 	public boolean isComMeg() {
 		return isComMeg;

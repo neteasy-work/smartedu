@@ -13,13 +13,13 @@ public class Message implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Expose
-	private String user_id;
+	private String usercode;
 	@Expose
 	private String channel_id;
 	@Expose
-	private String nick;
+	private String username;
 	@Expose
-	private int head_id;
+	private String head_icon;
 	@Expose
 	private long time_samp;
 	@Expose
@@ -30,22 +30,55 @@ public class Message implements Serializable{
 	public Message(long time_samp, String message, String tag) {
 		super();
 		SharePreferenceUtil util = GlobalContext.getInstance().getSpUtil();
-		this.user_id = util.getUserId();
+		this.usercode = util.getUserCode();
 		this.channel_id = util.getChannelId();
-		this.nick = util.getNick();
-		this.head_id = util.getHeadIcon();
+		this.username = util.getUserName();
+		this.head_icon = util.getHeadIcon();
 		this.time_samp = time_samp;
 		this.message = message;
 		this.tag = tag;
 	}
 
-	public String getUser_id() {
-		return user_id;
+	
+
+	public String getUsercode() {
+		return usercode;
 	}
 
-	public void setUser_id(String user_id) {
-		this.user_id = user_id;
+
+
+	public void setUsercode(String usercode) {
+		this.usercode = usercode;
 	}
+
+
+
+	public String getUsername() {
+		return username;
+	}
+
+
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+
+
+	
+
+
+	public String getHead_icon() {
+		return head_icon;
+	}
+
+
+
+	public void setHead_icon(String head_icon) {
+		this.head_icon = head_icon;
+	}
+
+
 
 	public String getChannel_id() {
 		return channel_id;
@@ -55,21 +88,7 @@ public class Message implements Serializable{
 		this.channel_id = channel_id;
 	}
 
-	public String getNick() {
-		return nick;
-	}
-
-	public void setNick(String nick) {
-		this.nick = nick;
-	}
-
-	public int getHead_id() {
-		return head_id;
-	}
-
-	public void setHead_id(int head_id) {
-		this.head_id = head_id;
-	}
+	
 
 	public long getTime_samp() {
 		return time_samp;
@@ -97,8 +116,8 @@ public class Message implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Message [user_id=" + user_id + ", channel_id=" + channel_id
-				+ ", nick=" + nick + ", head_id=" + head_id + ", time_samp="
+		return "Message [usercode=" + usercode + ", channel_id=" + channel_id
+				+ ", username=" + username + ", head_icon=" + head_icon + ", time_samp="
 				+ time_samp + ", message=" + message + ", tag=" + tag + "]";
 	}
 

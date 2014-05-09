@@ -2,8 +2,6 @@ package com.engc.smartedu.support.utils;
 
 
 
-import com.engc.smartedu.R;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.util.DisplayMetrics;
@@ -12,6 +10,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import com.engc.smartedu.R;
 
 public class DialogUtil {
 	public static Dialog getMenuDialog(Activity context, View view) {
@@ -28,22 +28,25 @@ public class DialogUtil {
 		//window.setWindowAnimations(R.style.MenuDialogAnimation); // 添加动画
 		return dialog;
 	}
+   
+	public static Dialog getRequestDialog(Activity context,String displayMessage) {
 
-	public static Dialog getLoginDialog(Activity context) {
-
-	/*	final Dialog dialog = new Dialog(context, R.style.DialogStyle);
-		dialog.setCancelable(false);
-		dialog.setContentView(R.layout.custom_progress_dialog);
+		final Dialog dialog = new Dialog(context, R.style.Dialog);
+		dialog.setContentView(R.layout.wait_dialog_view);
 		Window window = dialog.getWindow();
 		WindowManager.LayoutParams lp = window.getAttributes();
 
 		int screenW = getScreenWidth(context);
 		lp.width = (int) (0.6 * screenW);
 
-		TextView titleTxtv = (TextView) dialog.findViewById(R.id.dialogText);
-		titleTxtv.setText(R.string.login_prompt);
-		return dialog;*/
-		return  null;
+		TextView titleTxtv = (TextView) dialog.findViewById(R.id.tvLoad);
+		titleTxtv.setText(displayMessage);
+		return dialog;
+	}
+
+	public static Dialog getCustomDialog(Activity context) {
+		final Dialog dialog = new Dialog(context, R.style.Dialog);
+		return dialog;
 	}
 
 	public static int getScreenWidth(Activity context) {

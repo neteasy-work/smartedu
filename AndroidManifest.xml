@@ -50,6 +50,9 @@
             android:name="com.engc.smartedu.ui.login.AccountActivity"
             android:uiOptions="splitActionBarWhenNarrow" />
         <activity android:name="com.engc.smartedu.ui.login.OAuthActivity" />
+        <activity
+            android:name="com.engc.smartedu.ui.login.LoginActivity"
+            android:uiOptions="splitActionBarWhenNarrow" />
 
         <!-- chat activity -->
         <activity
@@ -177,23 +180,24 @@
         <service android:name="com.engc.smartedu.othercomponent.DownloadEmotionsService" />
         <service android:name="com.engc.smartedu.othercomponent.SendWeiboService" />
         <service android:name="com.engc.smartedu.othercomponent.SaveToDBService" />
-        <!-- <service android:name="com.engc.smartedu.othercomponent.chat.AppService" >
-        </service> -->
-         <!-- 消息预处理的intenService -->
+        <!--
+        <service android:name="com.engc.smartedu.othercomponent.chat.AppService" >
+        </service>
+        -->
+        <!-- 消息预处理的intenService -->
         <service android:name="com.engc.smartedu.baidupush." >
         </service>
         <!-- -百度推送 服务 -->
-          <service
+        <service
             android:name="com.baidu.android.pushservice.PushService"
             android:exported="true"
             android:process=":bdservice_v1" />
 
-       
         <meta-data
             android:name="api_key"
             android:value="H9BPGKapVqbztGCrVDO5c1U2" />
-        
-         <!-- push service client -->
+
+        <!-- push service client -->
         <receiver android:name="com.engc.smartedu.baidupush.client.PushMessageReceiver" >
             <intent-filter>
 
@@ -231,7 +235,6 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-        
 
         <!-- -broadcast receiver -->
         <receiver android:name="com.engc.smartedu.othercomponent.notification.UnreadMsgReceiver" >
@@ -246,7 +249,8 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-      <!--   <receiver android:name="com.engc.smartedu.othercomponent.chat.AppBroadcastReceive" >
+        <!--
+        <receiver android:name="com.engc.smartedu.othercomponent.chat.AppBroadcastReceive" >
 
             开机广播
             <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -254,8 +258,10 @@
             <action android:name="android.intent.action.ACTION_SHUTDOWN" />
             网络连接变化的广播
             <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-        </receiver> -->
-        
+        </receiver>
+        -->
+
+
         <!-- -System Provider -->
         <provider
             android:name="com.engc.smartedu.support.database.ChatProvider"

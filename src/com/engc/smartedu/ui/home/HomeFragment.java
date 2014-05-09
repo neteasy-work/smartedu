@@ -95,10 +95,10 @@ public class HomeFragment extends BaseSlidingFragment implements IUserInfo,
 			case NEW_MESSAGE:
 				// String message = (String) msg.obj;
 				com.engc.smartedu.bean.Message msgItem = (com.engc.smartedu.bean.Message) msg.obj;
-				String userId = msgItem.getUser_id();
-				String nick = msgItem.getNick();
+				String userId = msgItem.getUsercode();
+				String nick = msgItem.getUsername();
 				String content = msgItem.getMessage();
-				int headId = msgItem.getHead_id();
+				String headId = msgItem.getHead_icon();
 				// try {
 				// headId = Integer
 				// .parseInt(JsonUtil.getFromUserHead(message));
@@ -107,7 +107,7 @@ public class HomeFragment extends BaseSlidingFragment implements IUserInfo,
 				// }
 				if (mUserDB.selectInfo(userId) == null) {// 如果不存在此好友，则添加到数据库
 					User user = new User(userId, msgItem.getChannel_id(), nick,
-							headId, 0);
+							headId);
 					mUserDB.addUser(user);
 					rightFragment = (RightMenuFragment) getFragmentManager()
 							.findFragmentById(R.id.main_left_fragment);

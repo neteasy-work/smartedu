@@ -3,7 +3,7 @@ package com.engc.smartedu.bean;
 
 public class RecentItem implements Comparable<RecentItem> {
 	private String userId;
-	private int headImg;// 头像
+	private String headImg;// 头像
 	private String name;// 消息来自
 	private String message;// 消息内容
 	private int newNum;// 新消息数目
@@ -13,7 +13,7 @@ public class RecentItem implements Comparable<RecentItem> {
 	public RecentItem() {
 	}
 
-	public RecentItem(String userId, int headImg, String name, String message,
+	public RecentItem(String userId, String headImg, String name, String message,
 			int newNum, long time) {
 		super();
 		this.userId = userId;
@@ -32,11 +32,11 @@ public class RecentItem implements Comparable<RecentItem> {
 		this.userId = userId;
 	}
 
-	public int getHeadImg() {
+	public String getHeadImg() {
 		return headImg;
 	}
 
-	public void setHeadImg(int headImg) {
+	public void setHeadImg(String headImg) {
 		this.headImg = headImg;
 	}
 

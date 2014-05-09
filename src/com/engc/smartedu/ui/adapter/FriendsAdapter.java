@@ -84,7 +84,7 @@ public class FriendsAdapter extends BaseAdapter  {
 				holder.alpha.setVisibility(View.GONE);
 				holder.alpha_line.setVisibility(View.GONE);
 			}*/
-			holder.name.setText(user.getNick());
+			holder.name.setText(user.getUsername());
 			holder.avatar.setImageResource(R.drawable.honey_face);
 			holder.arrow.setVisibility(View.GONE);
 		//} else {
