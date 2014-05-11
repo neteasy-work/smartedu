@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @date: 2014-5-9 下午3:36:18
  */
 
-public class User implements Serializable {
+public class User extends Entity implements Serializable {
 
 	private String usercode;
 	private String username;
@@ -27,8 +27,36 @@ public class User implements Serializable {
 	private String orgid;
 	private static final long serialVersionUID = 1L;
 	private String channelId;
+	
+	private String sonname;
+	private String soncode;
+	private String parentphone;
 
 	
+
+	public String getSonname() {
+		return sonname;
+	}
+
+	public void setSonname(String sonname) {
+		this.sonname = sonname;
+	}
+
+	public String getSoncode() {
+		return soncode;
+	}
+
+	public void setSoncode(String soncode) {
+		this.soncode = soncode;
+	}
+
+	public String getParentphone() {
+		return parentphone;
+	}
+
+	public void setParentphone(String parentphone) {
+		this.parentphone = parentphone;
+	}
 
 	public User(String usercode, String channelId, String username, String headicon) {
 		this.usercode = usercode;

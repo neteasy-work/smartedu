@@ -9,6 +9,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 
@@ -25,13 +26,14 @@ import com.engc.smartedu.support.exception.AppException;
 import com.engc.smartedu.support.utils.AppLogger;
 import com.engc.smartedu.support.utils.DialogUtil;
 import com.engc.smartedu.support.utils.GlobalContext;
+import com.engc.smartedu.support.utils.IntentHelper;
 import com.engc.smartedu.support.utils.PreferenceConstants;
 import com.engc.smartedu.support.utils.PreferenceUtils;
 import com.engc.smartedu.support.utils.SharePreferenceUtil;
 import com.engc.smartedu.support.utils.Utility;
 import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
+import com.engc.smartedu.ui.main.MainTimeLineActivity;
 import com.google.gson.Gson;
-
 
 /**
  * 
@@ -44,49 +46,23 @@ import com.google.gson.Gson;
  * @date: 2014-3-18 上午9:25:41
  */
 @SuppressLint("NewApi")
-public class LoginActivity extends AbstractAppActivity implements OnClickListener,PushMessageReceiver.EventHandler
-		 {
+public class LoginActivity extends AbstractAppActivity implements
+		OnClickListener, PushMessageReceiver.EventHandler {
 
 	private static final int LOGIN_OUT_TIME = 0;
 	public static final String LOGIN_ACTION = "com.engc.smartedu.action.LOGIN";
 	private Dialog mLoginDialog;
-	private ConnectionOutTimeProcess mLoginOutTimeProcess;
-	
+
 	private AutoCompleteTextView actAccountName, actPassWord;
 	private ImageView imgLogin;
-	private String mAccount;
-	private String mPassword;
 	private GlobalContext global;
 	private Gson mGson;
 	private UserDB mUserDB;
 	private SharePreferenceUtil mSpUtil;
 	private View mNetErrorView;
-	private String userCode,passWord;
-
-	private Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			switch (msg.what) {
-			case LOGIN_OUT_TIME:
-				if (mLoginOutTimeProcess != null
-						&& mLoginOutTimeProcess.running)
-					mLoginOutTimeProcess.stop();
-				if (mLoginDialog != null && mLoginDialog.isShowing())
-					mLoginDialog.dismiss();
-				Utility.ToastMessage(LoginActivity.this, R.string.timeout_try_again);
-				break;
-			
-			
-
-			default:
-				break;
-			}
-		}
-
-	};
-	
-
+	private String userCode, passWord;
+	private Dialog loginDialog;
+	private Animation mRotate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +71,7 @@ public class LoginActivity extends AbstractAppActivity implements OnClickListene
 		initData();
 		initView();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -108,16 +84,13 @@ public class LoginActivity extends AbstractAppActivity implements OnClickListene
 	/**
 	 * 初始化推送数据
 	 */
-	private void initData(){
-		global=GlobalContext.getInstance();
-		mLoginOutTimeProcess=new ConnectionOutTimeProcess();
-		mSpUtil=global.getSpUtil();
-		mGson=global.getGson();
-		mUserDB=global.getUserDB();
-	    PushMessageReceiver.ehList.add(this); //监听推送消息
-	    
-		
-		
+	private void initData() {
+		global = GlobalContext.getInstance();
+		mSpUtil = global.getSpUtil();
+		mGson = global.getGson();
+		mUserDB = global.getUserDB();
+		// PushMessageReceiver.ehList.add(this); //监听推送消息
+
 	}
 
 	@Override
@@ -129,39 +102,82 @@ public class LoginActivity extends AbstractAppActivity implements OnClickListene
 		PushMessageReceiver.ehList.remove(this);// 注销推送的消息
 	}
 
-
-
-
-
 	/**
 	 * 初始化 视图
 	 */
 	private void initView() {
 		mNetErrorView = findViewById(R.id.net_status_bar_top);
+		mNetErrorView.setOnClickListener(this);
 		actAccountName = (AutoCompleteTextView) findViewById(R.id.login_account);
-		actPassWord= (AutoCompleteTextView) findViewById(R.id.login_password);
+		actPassWord = (AutoCompleteTextView) findViewById(R.id.login_password);
 		imgLogin = (ImageView) findViewById(R.id.btnlogin);
-		String account = PreferenceUtils.getPrefString(this,	
-				PreferenceConstants.ACCOUNT, "");
-		String password = PreferenceUtils.getPrefString(this,
-				PreferenceConstants.PASSWORD, "");
-		imgLogin.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				try {
-					User user=LoginDao.Login(userCode, passWord);
-				} catch (AppException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+		imgLogin.setOnClickListener(this);
+
 	}
 
-	private Dialog mConnectServerDialog;
-	
+	/**
+	 * 登陆 handler
+	 * 
+	 * @param accountName
+	 * @param accountPwd
+	 */
+	private void login(final String accountName, final String accountPwd) {
+		final Handler handler = new Handler() {
+			public void handleMessage(Message msg) {
+				if (msg.what == 1) {
+
+					User user = (User) msg.obj;
+					LoginDao.saveLoginInfo(user);
+					// save2Preferences();
+				   loginDialog.cancel();
+					Intent intent = new Intent(LoginActivity.this,
+							MainTimeLineActivity.class);
+					startActivity(intent);
+					if (user != null) {
+
+					}
+				} else if (msg.what == 0) {
+					Utility.ToastMessage(LoginActivity.this,
+							String.valueOf(msg.obj));
+					loginDialog.cancel();
+
+				} else if (msg.what == -1) {
+					loginDialog.cancel();
+
+				}
+			}
+		};
+		new Thread() {
+			public void run() {
+				Message msg = new Message();
+
+				try {
+					User user = LoginDao.Login(accountName, accountPwd);
+					if (user != null) {
+						if (user.getUsercode() != null) {
+							//LoginDao.saveLoginInfo(user);
+							msg.what = 1;// 成功
+							msg.obj = user;
+
+						} else {
+							msg.what = 0;
+							msg.obj = user.getMessage();
+						}
+					} else {
+						msg.what = 0;
+						msg.obj = getString(R.string.http_exception_error);
+					}
+				} catch (AppException e) {
+					e.printStackTrace();
+					msg.what = -1;
+					msg.obj = e;
+				}
+
+				handler.sendMessage(msg);
+			}
+		}.start();
+	}
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -171,25 +187,28 @@ public class LoginActivity extends AbstractAppActivity implements OnClickListene
 				Utility.ToastMessage(this, R.string.network_not_connected);
 				return;
 			}
-			 userCode = actAccountName.getText().toString();
+			userCode = actAccountName.getText().toString();
 			if (TextUtils.isEmpty(userCode)) {
-				Utility.ToastMessage(getApplicationContext(), R.string.login_user_name_hint);
+				Utility.ToastMessage(getApplicationContext(),
+						R.string.login_user_name_hint);
 				return;
 			}
-		     passWord=actPassWord.getText().toString();
-			if(TextUtils.isEmpty(passWord)){
-				Utility.ToastMessage(getApplicationContext(), R.string.login_password_hint);
+			passWord = actPassWord.getText().toString();
+			if (TextUtils.isEmpty(passWord)) {
+				Utility.ToastMessage(getApplicationContext(),
+						R.string.login_password_hint);
 				return;
 			}
-			
-			
+
+			loginDialog = DialogUtil.getRequestDialog(LoginActivity.this,
+					"正在登陆中");
+			loginDialog.show();
+			Utility.initAnim(v.getContext(), (ImageView) loginDialog
+					.findViewById(R.id.auth_loading_icon), R.anim.rotate);
+			login(userCode, passWord);
 			PushManager.startWork(getApplicationContext(),
 					PushConstants.LOGIN_TYPE_API_KEY, GlobalContext.API_KEY);// 无baidu帐号登录,以apiKey随机获取一个id
-			mConnectServerDialog = DialogUtil.getRequestDialog(this, "正在登陆中...");
-			mConnectServerDialog.show();
-			mConnectServerDialog.setCancelable(false);// 返回键不能取消
-			if (mLoginOutTimeProcess != null && !mLoginOutTimeProcess.running)
-				mLoginOutTimeProcess.start();
+
 			break;
 		case R.id.net_status_bar_info_top:
 			// 跳转到网络设置
@@ -200,106 +219,27 @@ public class LoginActivity extends AbstractAppActivity implements OnClickListene
 			break;
 		}
 	}
-	
 
-
-
-
-	
-	
+	/**
+	 * 保存用户名和密码
+	 */
 	private void save2Preferences() {
-		/*boolean isAutoSavePassword = mAutoSavePasswordCK.isChecked();
-		boolean isUseTls = mUseTlsCK.isChecked();
-		boolean isSilenceLogin = mSilenceLoginCK.isChecked();
-		boolean isHideLogin = mHideLoginCK.isChecked();*/
+
 		PreferenceUtils.setPrefString(this, PreferenceConstants.ACCOUNT,
-				mAccount);// 帐号是一直保存的
-		//if (isAutoSavePassword)
-			PreferenceUtils.setPrefString(this, PreferenceConstants.PASSWORD,
-					mPassword);
-		//else
-			//PreferenceUtils.setPrefString(this, PreferenceConstants.PASSWORD,
-			//		"");
+				userCode);// 帐号是一直保存的
 
-		//PreferenceUtils.setPrefBoolean(this, PreferenceConstants.REQUIRE_TLS,
-			//	isUseTls);
-		//PreferenceUtils.setPrefBoolean(this, PreferenceConstants.SCLIENTNOTIFY,
-			//	isSilenceLogin);
-		//if (isHideLogin)
-		//	PreferenceUtils.setPrefString(this,
-			//		PreferenceConstants.STATUS_MODE, PreferenceConstants.XA);
-		//else
-			//PreferenceUtils.setPrefString(this,
-				//	PreferenceConstants.STATUS_MODE,
-				//	PreferenceConstants.AVAILABLE);
-	}
-
-
-	
-
-	// 登录超时处理线程
-	class ConnectionOutTimeProcess implements Runnable {
-		public boolean running = false;
-		private long startTime = 0L;
-		private Thread thread = null;
-
-		public ConnectionOutTimeProcess() {
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		public void run() {
-			while (true) {
-				if (!this.running)
-					return;
-				if (System.currentTimeMillis() - startTime > 20 * 1000L) {
-					mHandler.sendEmptyMessage(LOGIN_OUT_TIME);
-				}
-				try {
-
-					User user=LoginDao.Login(userCode, passWord);
-					
-
-				} catch (Exception e) {
-
-				}
-			}
-
-		}
-
-		public void start() {
-			this.thread = new Thread(this);
-			this.running = true;
-			this.startTime = System.currentTimeMillis();
-			this.thread.start();
-		}
-
-		public void stop() {
-			this.running = false;
-			this.thread = null;
-			this.startTime = 0L;
-
-		}
+		PreferenceUtils.setPrefString(this, PreferenceConstants.PASSWORD,
+				userCode);
 
 	}
-
-
-
 
 	@Override
 	public void onMessage(com.engc.smartedu.bean.Message message) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	private SendMsgAsyncTask task;
-
-
-
-
-
-
-
 
 	@Override
 	public void onBind(String method, int errorCode, String content) {
@@ -316,39 +256,20 @@ public class LoginActivity extends AbstractAppActivity implements OnClickListene
 				public void sendScuess() {
 					startActivity(new Intent(LoginActivity.this,
 							DummyActivity.class));
-					if (mConnectServerDialog != null
-							&& mConnectServerDialog.isShowing())
-						mConnectServerDialog.dismiss();
-
-					if (mLoginOutTimeProcess != null
-							&& mLoginOutTimeProcess.running)
-						mLoginOutTimeProcess.stop();
-					AppLogger.d("Set Tag","连接服务器成功");
+					AppLogger.d("Set Tag", "连接服务器成功");
 					finish();
 				}
 			});
 			task.send();
 		}
-		
+
 	}
-
-
-
-
-
-
 
 	@Override
 	public void onNotify(String title, String content) {
 		// TODO Auto-generated method stub
-		
+
 	}
-
-
-
-
-
-
 
 	@Override
 	public void onNetChange(boolean isNetConnected) {
@@ -361,16 +282,10 @@ public class LoginActivity extends AbstractAppActivity implements OnClickListene
 		}
 	}
 
-
-
-
-
-
-
 	@Override
 	public void onNewFriend(User u) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

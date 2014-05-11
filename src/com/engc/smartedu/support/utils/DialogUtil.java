@@ -33,6 +33,8 @@ public class DialogUtil {
 
 		final Dialog dialog = new Dialog(context, R.style.Dialog);
 		dialog.setContentView(R.layout.wait_dialog_view);
+		dialog.setCancelable(false);
+		dialog.setCanceledOnTouchOutside(false);
 		Window window = dialog.getWindow();
 		WindowManager.LayoutParams lp = window.getAttributes();
 

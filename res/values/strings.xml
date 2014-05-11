@@ -406,6 +406,8 @@
     <!--  chat 聊天 窗口 -->
     <string name="chat_send_button">发送</string>
     <string name="aio_ime_action_label">完成</string>
-
-
+<!-- 日历控件  -->
+   <string name="day_name_format">EEE</string>
+    <string name="invalid_date">Date must be between %1$s and %2$s.</string>
+    <string name="month_name_format">MMMM yyyy</string>
 </resources>

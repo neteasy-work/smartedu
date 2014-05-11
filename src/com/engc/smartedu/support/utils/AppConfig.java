@@ -1,5 +1,7 @@
 package com.engc.smartedu.support.utils;
 
+import android.content.Context;
+
 /**
  * User: Jiang Qi
  * Date: 12-8-1
@@ -28,4 +30,16 @@ public class AppConfig {
 
     //swipe to close
     public static final int SWIPE_MIN_DISTANCE = 30;
+    
+	private Context mContext;
+	private static AppConfig appConfig;
+	
+	public static AppConfig getAppConfig(Context context)
+	{
+		if(appConfig == null){
+			appConfig = new AppConfig();
+			appConfig.mContext = context;
+		}
+		return appConfig;
+	}
 }

@@ -1,5 +1,27 @@
 package com.engc.smartedu.support.utils;
 
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InvalidClassException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
@@ -9,14 +31,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Bitmap.Config;
-import android.graphics.PorterDuff.Mode;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,27 +50,24 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MotionEvent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
 
 import com.engc.smartedu.bean.GeoBean;
 import com.engc.smartedu.support.lib.MyAsyncTask;
 import com.engc.smartedu.support.settinghelper.SettingUtility;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 
 @SuppressLint("NewApi")
 public class Utility {
+	private final static Pattern onlyDitital=Pattern.compile("^[0-9]+(.[0-9]{0,1})?$");
+	
+	private Hashtable<String, Object> memCacheRegion = new Hashtable<String, Object>();
+
 
     private Utility() {
         // Forbidden being instantiated.
@@ -384,6 +403,30 @@ public class Utility {
 	public static void ToastMessage(Context cont, String msg, int time) {
 		Toast.makeText(cont, msg, time).show();
 	}
+	
+	/**
+	 * 初始化动画
+	 * @param context
+	 * @param img
+	 */
+	public static void initAnim(Context context,ImageView img,int animId){
+		Animation anim=AnimationUtils.loadAnimation(context, animId);
+		img.startAnimation(anim);
+		
+	}
+	/**
+	 * 判断只能输入数字
+	 * @param text
+	 * @return
+	 */
+	public static boolean isOnlyDigital(String text){
+		if(text==null||text.trim().length()==0)
+			return false;
+		return onlyDitital.matcher(text).matches();
+		
+	}
+	
+	
 
 }
 

@@ -1,13 +1,22 @@
 package com.engc.smartedu.support.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.InvalidClassException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -89,6 +98,7 @@ public final class GlobalContext extends Application {
 	private NotificationManager mNotificationManager;
 	private Notification mNotification;
 	private Gson mGson;
+	private static final int CACHE_TIME = 60 * 60000;// 缓存失效时间
 
 
    
@@ -498,6 +508,131 @@ public final class GlobalContext extends Application {
 
 		mFaceMap.put("[右太极]", R.drawable.f105);
 		mFaceMap.put("[闭嘴]", R.drawable.f106);
+	}
+    
+    /**
+	 * 保存对象
+	 * 
+	 * @param ser
+	 * @param file
+	 * @throws IOException
+	 */
+	public boolean saveObject(Serializable ser, String file) {
+		FileOutputStream fos = null;
+		ObjectOutputStream oos = null;
+		try {
+			fos = openFileOutput(file, MODE_PRIVATE);
+			oos = new ObjectOutputStream(fos);
+			oos.writeObject(ser);
+			oos.flush();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				oos.close();
+			} catch (Exception e) {
+			}
+			try {
+				fos.close();
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	/**
+	 * 读取对象
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public Serializable readObject(String file) {
+		if (!isExistDataCache(file))
+			return null;
+		FileInputStream fis = null;
+		ObjectInputStream ois = null;
+		try {
+			fis = openFileInput(file);
+			ois = new ObjectInputStream(fis);
+			return (Serializable) ois.readObject();
+		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
+			// 反序列化失败 - 删除缓存文件
+			if (e instanceof InvalidClassException) {
+				File data = getFileStreamPath(file);
+				data.delete();
+			}
+		} finally {
+			try {
+				ois.close();
+			} catch (Exception e) {
+			}
+			try {
+				fis.close();
+			} catch (Exception e) {
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 判断缓存是否存在
+	 * 
+	 * @param cachefile
+	 * @return
+	 */
+	private boolean isExistDataCache(String cachefile) {
+		boolean exist = false;
+		File data = getFileStreamPath(cachefile);
+		if (data.exists())
+			exist = true;
+		return exist;
+	}
+
+	/**
+	 * 判断缓存是否失效
+	 * 
+	 * @param cachefile
+	 * @return
+	 */
+	public boolean isCacheDataFailure(String cachefile) {
+		boolean failure = false;
+		File data = getFileStreamPath(cachefile);
+		if (data.exists()
+				&& (System.currentTimeMillis() - data.lastModified()) > CACHE_TIME)
+			failure = true;
+		else if (!data.exists())
+			failure = true;
+		return failure;
+	}
+	
+	public boolean containsProperty(String key) {
+		Properties props = getProperties();
+		return props.containsKey(key);
+	}
+
+	public void setProperties(Properties ps) {
+		globalContext.setProperties(ps);
+		
+	}
+
+	public Properties getProperties() {
+		return globalContext.getProperties();
+	}
+
+	public void setProperty(String key, String value) {
+		globalContext.setProperty(key, value);
+	}
+
+	public String getProperty(String key) {
+		return globalContext.getProperty(key);
+	}
+
+	public void removeProperty(String... key) {
+		globalContext.removeProperty(key);
 	}
 
 }

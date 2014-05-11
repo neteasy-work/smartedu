@@ -54,7 +54,7 @@ public class HomeFragment extends BaseSlidingFragment implements IUserInfo,
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.viewpager_layout, container, false);
+		//view = inflater.inflate(R.layout.viewpager_layout, container, false);
 		return view;
 	}
 	

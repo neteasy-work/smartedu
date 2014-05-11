@@ -185,8 +185,8 @@
         </service>
         -->
         <!-- 消息预处理的intenService -->
-        <service android:name="com.engc.smartedu.baidupush." >
-        </service>
+       <!--  <service android:name="com.engc.smartedu.baidupush." >
+        </service> -->
         <!-- -百度推送 服务 -->
         <service
             android:name="com.baidu.android.pushservice.PushService"

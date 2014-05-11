@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="2dip"
+    android:paddingRight="7dip" >
+
+    <!--
+         <ImageView
+        android:id="@+id/btn_calendar_back"
+        style="@style/button_click_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/head_back"
+        android:clickable="true" />
+    -->
+
+
+
+    <TextView
+        android:id="@+id/tweet_pub_head_title"
+        style="@style/A1_Font"
+        android:layout_centerInParent="true"
+        android:text="请选择日期" />
+
+</RelativeLayout>

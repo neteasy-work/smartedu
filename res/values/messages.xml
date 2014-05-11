@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 请假 -->
+    <string name="message_validate_holidaytype_null">请假类型不能为空</string>
+    <string name="message_validate_holidaystartdate_null">请假开始时间不能为空</string>
+    <string name="message_validate_holidayenddate_null">请假结束时间不能为空</string>
+    <string name="message_validate_holidaydays_null">请假天数不能为空</string>
+    <string name="message_validate_holidaysremark_null">请假理由不能为空</string>
+     <string name="message_validate_holidaysleavemantelno_null">联系电话不能为空</string>
+     <string name="message_validate_holidays_startdate_enddate_normal">请假结束时间不能小于开始时间</string>
+     <string name="message_validate_holidays_isdigital">请输入正确的天数</string>
+     <string name="message_validate_holidays_more_zero">请假天数必须大于0</string>
+</resources>

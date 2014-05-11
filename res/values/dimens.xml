@@ -69,5 +69,14 @@
     <dimen name="space_3">3.0dip</dimen>
     <dimen name="space_2">2.0dip</dimen>
     <dimen name="space_1">1.0dip</dimen>
+    
+       <!--日历控件 弹出框 -->
+    <dimen name="popupWindow_width">120dp</dimen>
+    <dimen name="popupWindow_margin">20dp</dimen>
+    <dimen name="calendar_day_headers_paddingbottom">4dp</dimen>
+    <dimen name="calendar_month_topmargin">16dp</dimen>
+    <dimen name="calendar_month_title_bottommargin">4dp</dimen>
+    <dimen name="calendar_text_medium">18sp</dimen>
+    <dimen name="calendar_text_small">14sp</dimen>
 
 </resources>

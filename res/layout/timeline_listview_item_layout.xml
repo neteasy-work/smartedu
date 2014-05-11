@@ -4,6 +4,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
+                android:background="@drawable/listview_item_background_selector"
                 android:id="@+id/listview_root">
 
     <com.engc.smartedu.support.lib.TimeLineAvatarImageView

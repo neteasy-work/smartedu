@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout"
+    android:layout_width="200.0dip"
+    android:layout_height="80.0dip"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="10.0dip"
+        android:paddingTop="10.0dip"
+        android:text="事假"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_18" />
+
+</LinearLayout>

@@ -1,5 +1,6 @@
 package com.engc.smartedu.support.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,6 +15,12 @@ import android.annotation.SuppressLint;
 @SuppressLint("SimpleDateFormat")
 public class TimeUtil {
 
+	private final static ThreadLocal<SimpleDateFormat> dateFormater2 = new ThreadLocal<SimpleDateFormat>() {
+		@Override
+		protected SimpleDateFormat initialValue() {
+			return new SimpleDateFormat("yyyy-MM-dd");
+		}
+	};
 	public static String getTime(long time) {
 		SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm");
 		return format.format(new Date(time));
@@ -50,5 +57,21 @@ public class TimeUtil {
 		}
 
 		return result;
+	}
+	
+	/**
+	 * 将字符串转位日期类型
+	 * 
+	 * @param sdate
+	 * @return
+	 */
+	public static Date toDate(String sdate) {
+		try {
+
+			return dateFormater2.get().parse(sdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

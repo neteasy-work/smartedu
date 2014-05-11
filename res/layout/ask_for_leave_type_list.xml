@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/exit_bg_2"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical"
+    android:paddingLeft="15.0dip"
+    android:paddingRight="15.0dip" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5.0dip"
+        android:paddingTop="10dip" >
+
+        <TextView
+            android:id="@+id/txt_longclick_app_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70.0dip"
+            android:paddingBottom="5.0dip"
+            android:text="请选择请假类型"
+            android:textColor="@color/detail_node_title"
+            android:textSize="@dimen/text_size_20" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginTop="5dip"
+        android:background="@drawable/line"
+        android:paddingLeft="10.0dip"
+        android:paddingRight="10.0dip" />
+
+    <ListView
+        android:id="@+id/listleavetype"
+        android:layout_width="100.0dip"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+</LinearLayout>
