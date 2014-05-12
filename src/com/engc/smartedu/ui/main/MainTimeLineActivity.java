@@ -1,6 +1,7 @@
 package com.engc.smartedu.ui.main;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -16,9 +17,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -28,25 +29,37 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.baidu.android.pushservice.PushManager;
 import com.engc.smartedu.R;
+import com.engc.smartedu.baidupush.client.PushMessageReceiver;
 import com.engc.smartedu.bean.AccountBean;
+import com.engc.smartedu.bean.MessageItem;
+import com.engc.smartedu.bean.RecentItem;
 import com.engc.smartedu.bean.UnreadBean;
+import com.engc.smartedu.bean.User;
 import com.engc.smartedu.bean.UserBean;
 import com.engc.smartedu.dao.unread.UnreadDao;
 import com.engc.smartedu.othercomponent.ClearCacheTask;
-import com.engc.smartedu.othercomponent.chat.AppBroadcastReceiver.EventHandler;
 import com.engc.smartedu.othercomponent.chat.AppService;
 import com.engc.smartedu.othercomponent.chat.IConnectionStatusCallback;
 import com.engc.smartedu.othercomponent.notification.UnreadMsgReceiver;
+import com.engc.smartedu.support.database.MessageDB;
+import com.engc.smartedu.support.database.RecentDB;
+import com.engc.smartedu.support.database.UserDB;
 import com.engc.smartedu.support.error.WeiboException;
 import com.engc.smartedu.support.lib.AppFragmentPagerAdapter;
 import com.engc.smartedu.support.lib.MyAsyncTask;
 import com.engc.smartedu.support.settinghelper.SettingUtility;
 import com.engc.smartedu.support.utils.AppLogger;
 import com.engc.smartedu.support.utils.GlobalContext;
+import com.engc.smartedu.support.utils.HomeWatcher;
+import com.engc.smartedu.support.utils.HomeWatcher.OnHomePressedListener;
+import com.engc.smartedu.support.utils.SharePreferenceUtil;
 import com.engc.smartedu.support.utils.Utility;
+import com.engc.smartedu.ui.adapter.RecentAdapter;
 import com.engc.smartedu.ui.basefragment.AbstractTimeLineFragment;
 import com.engc.smartedu.ui.dm.DMUserListFragment;
 import com.engc.smartedu.ui.fragment.LeftMenuFragment;
@@ -56,7 +69,6 @@ import com.engc.smartedu.ui.interfaces.IAccountInfo;
 import com.engc.smartedu.ui.interfaces.IUserInfo;
 import com.engc.smartedu.ui.interfaces.MainTitmeLineAppActivity;
 import com.engc.smartedu.ui.login.AccountActivity;
-import com.engc.smartedu.ui.login.LoginActivity;
 import com.engc.smartedu.ui.maintimeline.CommentsTimeLineFragment;
 import com.engc.smartedu.ui.maintimeline.FriendsTimeLineFragment;
 import com.engc.smartedu.ui.maintimeline.MentionsTimeLineFragment;
@@ -65,6 +77,7 @@ import com.engc.smartedu.ui.preference.SettingActivity;
 import com.engc.smartedu.ui.search.SearchMainActivity;
 import com.engc.smartedu.ui.userinfo.MyInfoActivity;
 import com.engc.smartedu.widget.PathView;
+import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 /**
@@ -80,7 +93,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 @SuppressLint("NewApi")
 public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		IUserInfo, IAccountInfo, OnClickListener, IConnectionStatusCallback,
-		EventHandler {
+		PushMessageReceiver.EventHandler,OnHomePressedListener {
 
 	private ViewPager mViewPager;
 
@@ -101,10 +114,74 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 	private int mScreenWidth; // 当前设备屏幕宽度
 
 	private Handler mainHandler = new Handler();
-	private AppService appService;
 
+	public static final int NEW_MESSAGE = 0x000;// 有新消息
+	public static final int NEW_FRIEND = 0x001;// 有好友加入
 	
+	private TextView mEmpty;
+	private LinkedList<RecentItem> mRecentDatas;
+	private RecentAdapter mAdapter;
+	private GlobalContext global;
+	private UserDB mUserDB;
+	private MessageDB mMsgDB;
+	private RecentDB mRecentDB;
+	private SharePreferenceUtil mSpUtil;
+	private Gson mGson;
+	private View mNetErrorView;
+	private RightMenuFragment mRightFragment;
+	private HomeWatcher mHomeWatcher;
+	private ListView mListView;
 
+	private Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case NEW_FRIEND:
+				User u = (User) msg.obj;
+				// mUserDB.addUser(u);
+				if (mRightFragment == null)
+					mRightFragment = (RightMenuFragment) getSupportFragmentManager()
+							.findFragmentById(R.id.main_right_fragment);
+				mRightFragment.updateAdapter();// 更新
+				Utility.ToastMessage(global, "好友列表已更新!");
+				break;
+			case NEW_MESSAGE:
+				// String message = (String) msg.obj;
+				com.engc.smartedu.bean.Message msgItem = (com.engc.smartedu.bean.Message) msg.obj;
+				String userId = msgItem.getUsercode();
+				String nick = msgItem.getUsername();
+				String content = msgItem.getMessage();
+				//int headId = msgItem.getHead_id();
+				// try {
+				// headId = Integer
+				// .parseInt(JsonUtil.getFromUserHead(message));
+				// } catch (Exception e) {
+				// L.e("head is not integer  " + e);
+				// }
+				if (mUserDB.selectInfo(userId) == null) {// 如果不存在此好友，则添加到数据库
+					User user = new User(userId, msgItem.getChannel_id(), nick,
+							"");
+					mUserDB.addUser(user);
+					mRightFragment = (RightMenuFragment) getSupportFragmentManager()
+							.findFragmentById(R.id.main_right_fragment);
+					mRightFragment.updateAdapter();// 更新一下好友列表
+				}
+				// TODO Auto-generated method stub
+				MessageItem item = new MessageItem(
+						MessageItem.MESSAGE_TYPE_TEXT, nick,
+						System.currentTimeMillis(), content, "", true, 1);
+				mMsgDB.saveMsg(userId, item);
+				// 保存到最近会话列表
+				RecentItem recentItem = new RecentItem(userId, "", nick,
+						content, 0, System.currentTimeMillis());
+				mRecentDB.saveRecent(recentItem);
+				mAdapter.addFirst(recentItem);
+				Utility.ToastMessage(global, nick + ":" + content);
+				break;
+			default:
+				break;
+			}
+		}
+	};
 	public String getToken() {
 		return accountBean.getAccess_token();
 	}
@@ -138,7 +215,8 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		SettingUtility.setDefaultAccountId(accountBean.getUid());
 
 		initRightSlidingMenuView();
-
+		initData();  //初始化本地sqlite 数据 
+        initView(); //初始化  网络异常视图
 		buildPhoneInterface();
 		initConvenientView();
 
@@ -528,6 +606,23 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 				getUnreadCount();
 			}
 		}, 10, 50, TimeUnit.SECONDS);
+		
+		if (!PushManager.isPushEnabled(this))
+			PushManager.resumeWork(this);
+		mHomeWatcher = new HomeWatcher(this);
+		mHomeWatcher.setOnHomePressedListener(this);
+		mHomeWatcher.startWatch();
+		if (!Utility.isConnected(this))
+			mNetErrorView.setVisibility(View.VISIBLE);
+		else {
+			mNetErrorView.setVisibility(View.GONE);
+		}
+		PushMessageReceiver.ehList.add(this);
+		//initRecentData();
+		global.getNotificationManager().cancel(
+				PushMessageReceiver.NOTIFY_ID);
+		PushMessageReceiver.mNewNum = 0;
+		
 
 		/*
 		 * getContentResolver().registerContentObserver(
@@ -544,6 +639,38 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 
 	}
 
+	/**
+	 * 初始化 本地SQLite 数据库 中 数据 
+	 */
+	private void initData() {
+		global = GlobalContext.getInstance();
+		mSpUtil = global.getSpUtil();
+		mGson = global.getGson();
+		mUserDB = global.getUserDB();
+		mMsgDB = global.getMessageDB();
+		mRecentDB = global.getRecentDB();
+	}
+	
+	private void initRecentData() {
+		// TODO Auto-generated method stub
+		mRecentDatas = mRecentDB.getRecentList();
+		mAdapter = new RecentAdapter(this, mRecentDatas, mListView);
+		mListView.setAdapter(mAdapter);
+
+	}
+	
+
+	public void upDateList() {
+		initRecentData();
+	}
+	
+	/**
+	 * 初始化 网络异常视图
+	 */
+	private void initView(){
+		mNetErrorView = findViewById(R.id.net_status_bar_top);
+		mNetErrorView.setOnClickListener(this);
+	}
 	
 	@Override
 	protected void onPause() {
@@ -552,6 +679,9 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		newMsgScheduledExecutorService.shutdownNow();
 		if (getUnreadCountTask != null)
 			getUnreadCountTask.cancel(true);
+		mHomeWatcher.setOnHomePressedListener(null);
+		mHomeWatcher.stopWatch();
+		PushMessageReceiver.ehList.remove(this);// 暂停就移除监听
 	}
 
 	private class TimeLinePagerAdapter extends AppFragmentPagerAdapter {
@@ -688,16 +818,64 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 
 	}
 
-	@Override
-	public void onNetChange() {
-		// TODO Auto-generated method stub
 
-	}
 
 	@Override
 	public void connectionStatusChanged(int connectedState, String reason) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void onMessage(com.engc.smartedu.bean.Message message) {
+		Message handlerMsg = handler.obtainMessage(NEW_MESSAGE);
+		handlerMsg.obj = message;
+		handler.sendMessage(handlerMsg);
+		
+	}
+
+	@Override
+	public void onBind(String method, int errorCode, String content) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onNotify(String title, String content) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onNetChange(boolean isNetConnected) {
+		if (!isNetConnected) {
+			Utility.ToastMessage(this, R.string.network_not_connected);
+			mNetErrorView.setVisibility(View.VISIBLE);
+		} else {
+			mNetErrorView.setVisibility(View.GONE);
+		}
+		
+	}
+
+	@Override
+	public void onNewFriend(User u) {
+		Message handlerMsg = handler.obtainMessage(NEW_FRIEND);
+		handlerMsg.obj = u;
+		handler.sendMessage(handlerMsg);
+		
+	}
+
+	@Override
+	public void onHomePressed() {
+		// 先判断应用是否在运行，
+				global.showNotification();
+		
+	}
+
+	@Override
+	public void onHomeLongPressed() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

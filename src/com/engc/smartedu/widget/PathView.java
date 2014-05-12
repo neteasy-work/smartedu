@@ -70,8 +70,8 @@ public class PathView extends RelativeLayout {
 		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		params.addRule(RelativeLayout.ALIGN_END);
 		//params.rightMargin = MARGIN_RIGHT;
-		params.bottomMargin = MARGIN_BOTTOM;
-		params.topMargin = MARGIN_TOP;
+		//params.bottomMargin = MARGIN_BOTTOM;
+		//params.topMargin = MARGIN_TOP;
 		addView(view, params);
 		this.startMenu = view;
 		startMenu.setId(66666);

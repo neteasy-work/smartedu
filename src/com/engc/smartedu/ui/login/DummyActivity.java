@@ -36,17 +36,12 @@ import com.google.gson.Gson;
  */
 public class DummyActivity extends AbstractAppActivity {
 	
-	private GlobalContext global;
-	private SharePreferenceUtil mSpUtil;
-	private Gson mGson;
-	private UserDB mUserDB;
-	private SendMsgAsyncTask task;
+	
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initData();
         if (!GlobalContext.getInstance().startedApp) {
             Intent intent = new Intent(this, AccountActivity.class);
             startActivity(intent);
@@ -55,13 +50,7 @@ public class DummyActivity extends AbstractAppActivity {
         finish();
     }
     
-    private void initData() {
-		// TODO Auto-generated method stub
-    	global=GlobalContext.getInstance();
-		mSpUtil = global.getSpUtil();
-		mGson = global.getGson();
-		mUserDB = global.getUserDB();
-	}
+    
     
    
     

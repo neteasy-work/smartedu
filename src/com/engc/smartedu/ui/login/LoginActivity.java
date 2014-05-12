@@ -89,7 +89,7 @@ public class LoginActivity extends AbstractAppActivity implements
 		mSpUtil = global.getSpUtil();
 		mGson = global.getGson();
 		mUserDB = global.getUserDB();
-		// PushMessageReceiver.ehList.add(this); //监听推送消息
+		PushMessageReceiver.ehList.add(this); //监听推送消息
 
 	}
 
@@ -129,9 +129,10 @@ public class LoginActivity extends AbstractAppActivity implements
 					User user = (User) msg.obj;
 					//LoginDao.saveLoginInfo(LoginActivity.this,user);
 					 //save2Preferences();
+					mSpUtil.setUserCode(user.getUsercode());
 					mSpUtil.setUserName(user.getUsername());
 					mSpUtil.setTag("man");
-					//mSpUtil.setHeadIcon()
+					mSpUtil.setHeadIcon(user.getHeadpic());
 				    loginDialog.cancel();
 					Intent intent = new Intent(LoginActivity.this,
 							MainTimeLineActivity.class);
@@ -259,7 +260,7 @@ public class LoginActivity extends AbstractAppActivity implements
 				@Override
 				public void sendScuess() {
 					startActivity(new Intent(LoginActivity.this,
-							DummyActivity.class));
+							MainTimeLineActivity.class));
 					AppLogger.d("Set Tag", "连接服务器成功");
 					finish();
 				}

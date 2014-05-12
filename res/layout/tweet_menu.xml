@@ -67,14 +67,14 @@
         android:layout_height="wrap_content"
            android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:background="@drawable/composer_button" >
+        android:background="@drawable/white_weibo_menuitem_button" >
 
         <ImageView
             android:id="@+id/imgPlusLB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/composer_icn_plus" />
+            android:src="@drawable/tl_compose_plus" />
     </RelativeLayout>
 
     <!-- Right Bottom -->

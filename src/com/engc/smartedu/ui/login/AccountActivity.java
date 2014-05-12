@@ -17,6 +17,7 @@ import com.engc.smartedu.support.lib.MyAsyncTask;
 import com.engc.smartedu.support.lib.changelogdialog.ChangeLogDialog;
 import com.engc.smartedu.support.settinghelper.SettingUtility;
 import com.engc.smartedu.support.utils.GlobalContext;
+import com.engc.smartedu.support.utils.SharePreferenceUtil;
 import com.engc.smartedu.ui.blackmagic.BlackMagicActivity;
 import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
 import com.engc.smartedu.ui.main.MainTimeLineActivity;
@@ -29,283 +30,308 @@ import java.util.Set;
 @SuppressLint("NewApi")
 public class AccountActivity extends AbstractAppActivity {
 
-    private ListView listView = null;
+	private ListView listView = null;
 
-    private AccountAdapter listAdapter = null;
+	private AccountAdapter listAdapter = null;
 
-    private List<AccountBean> accountList = new ArrayList<AccountBean>();
+	private List<AccountBean> accountList = new ArrayList<AccountBean>();
 
-    private GetAccountListDBTask getTask = null;
-    private RemoveAccountDBTask removeTask = null;
+	private GetAccountListDBTask getTask = null;
+	private RemoveAccountDBTask removeTask = null;
 
-    private final int ADD_ACCOUNT_REQUEST_CODE = 0;
-    public static int actionBarHeight;
+	private final int ADD_ACCOUNT_REQUEST_CODE = 0;
+	public static int actionBarHeight;
+	private SharePreferenceUtil spUtil;
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+		GlobalContext.getInstance().startedApp = true;
+		spUtil = GlobalContext.getInstance().getSpUtil();
+		jumpToHomeActivity();
 
-        GlobalContext.getInstance().startedApp = true;
-        jumpToHomeActivity();
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.accountactivity_layout);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.accountactivity_layout);
+		listAdapter = new AccountAdapter();
+		listView = (ListView) findViewById(R.id.listView);
+		listView.setOnItemClickListener(new AccountListItemClickListener());
+		listView.setAdapter(listAdapter);
+		listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+		listView.setMultiChoiceModeListener(new AccountMultiChoiceModeListener());
 
-        listAdapter = new AccountAdapter();
-        listView = (ListView) findViewById(R.id.listView);
-        listView.setOnItemClickListener(new AccountListItemClickListener());
-        listView.setAdapter(listAdapter);
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(new AccountMultiChoiceModeListener());
+		getTask = new GetAccountListDBTask();
+		getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
-        getTask = new GetAccountListDBTask();
-        getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+		if (SettingUtility.firstStart())
+			showChangeLogDialog();
+	}
 
-        if (SettingUtility.firstStart())
-            showChangeLogDialog();
-    }
+	@Override
+	public void onBackPressed() {
+		GlobalContext.getInstance().startedApp = false;
+		super.onBackPressed();
+	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		cancelAllTask();
+	}
 
-    @Override
-    public void onBackPressed() {
-        GlobalContext.getInstance().startedApp = false;
-        super.onBackPressed();
-    }
+	private void cancelAllTask() {
+		if (getTask != null)
+			getTask.cancel(true);
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        cancelAllTask();
-    }
+		if (removeTask != null)
+			removeTask.cancel(true);
+	}
 
-    private void cancelAllTask() {
-        if (getTask != null)
-            getTask.cancel(true);
+	private void showChangeLogDialog() {
+		ChangeLogDialog changeLogDialog = new ChangeLogDialog(this);
+		changeLogDialog.show();
+	}
 
-        if (removeTask != null)
-            removeTask.cancel(true);
-    }
+	private void jumpToHomeActivity() {
+		Intent intent = getIntent();
+		if (intent != null) {
+			boolean launcher = intent.getBooleanExtra("launcher", true);
+			if (launcher) {
+				SharedPreferences sharedPref = PreferenceManager
+						.getDefaultSharedPreferences(this);
+				String id = sharedPref.getString("id", "");
+				if (!TextUtils.isEmpty(id)) {
+					AccountBean bean = DatabaseManager.getInstance()
+							.getAccount(id);
+					if (bean != null) {
+						if (!TextUtils.isEmpty(spUtil.getUserCode())) {
+							Intent start = new Intent(AccountActivity.this,
+									MainTimeLineActivity.class);
+							start.putExtra("account", bean);
+							startActivity(start);
+							finish();
+						} else {
+							Intent start = new Intent(AccountActivity.this,
+									LoginActivity.class);
+							start.putExtra("account", bean);
+							startActivity(start);
+							finish();
+						}
+					}
+				}
+			}
+		}
 
-    private void showChangeLogDialog() {
-        ChangeLogDialog changeLogDialog = new ChangeLogDialog(this);
-        changeLogDialog.show();
-    }
+	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.actionbar_menu_accountactivity, menu);
+		actionBarHeight = getActionBar().getHeight();
+		return true;
+	}
 
-    private void jumpToHomeActivity() {
-        Intent intent = getIntent();
-        if (intent != null) {
-            boolean launcher = intent.getBooleanExtra("launcher", true);
-            if (launcher) {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-                String id = sharedPref.getString("id", "");
-                if (!TextUtils.isEmpty(id)) {
-                    AccountBean bean = DatabaseManager.getInstance().getAccount(id);
-                    if (bean != null) {
-                        Intent start = new Intent(AccountActivity.this, LoginActivity.class);
-                        start.putExtra("account", bean);
-                        startActivity(start);
-                        finish();
-                    }
-                }
-            }
-        }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_add_account:
+			addAccount();
+			break;
+		case R.id.menu_hack_login:
+			Intent intent = new Intent(this, BlackMagicActivity.class);
+			startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
+			break;
+		}
+		return true;
+	}
 
+	public void addAccount() {
 
-    }
+		Intent intent = new Intent(this, OAuthActivity.class);
+		startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
+	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == ADD_ACCOUNT_REQUEST_CODE && resultCode == RESULT_OK) {
+			refresh();
+		}
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.actionbar_menu_accountactivity, menu);
-        actionBarHeight=getActionBar().getHeight();
-        return true;
-    }
+	private void refresh() {
+		if (getTask == null
+				|| getTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+			getTask = new GetAccountListDBTask();
+			getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+		}
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_add_account:
-                addAccount();
-                break;
-            case R.id.menu_hack_login:
-                Intent intent = new Intent(this, BlackMagicActivity.class);
-                startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
-                break;
-        }
-        return true;
-    }
+	private class AccountListItemClickListener implements
+			AdapterView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> adapterView, View view, int i,
+				long l) {
 
-    public void addAccount() {
+			Intent intent = new Intent(AccountActivity.this,
+					MainTimeLineActivity.class);
+			intent.putExtra("account", accountList.get(i));
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			finish();
+		}
+	}
 
-        Intent intent = new Intent(this, OAuthActivity.class);
-        startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
-    }
+	private class AccountMultiChoiceModeListener implements
+			AbsListView.MultiChoiceModeListener {
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_ACCOUNT_REQUEST_CODE && resultCode == RESULT_OK) {
-            refresh();
-        }
-    }
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			mode.getMenuInflater().inflate(
+					R.menu.contextual_menu_accountactivity, menu);
+			mode.setTitle(getString(R.string.account_management));
+			return true;
+		}
 
-    private void refresh() {
-        if (getTask == null || getTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            getTask = new GetAccountListDBTask();
-            getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false;
+		}
 
-    private class AccountListItemClickListener implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			switch (item.getItemId()) {
+			case R.id.menu_remove_account:
+				if (removeTask == null
+						|| removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+					removeTask = new RemoveAccountDBTask();
+					removeTask
+							.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+				}
+				mode.finish();
+				return true;
+			}
+			return false;
+		}
 
-            Intent intent = new Intent(AccountActivity.this, MainTimeLineActivity.class);
-            intent.putExtra("account", accountList.get(i));
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-        }
-    }
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
 
-    private class AccountMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+		}
 
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.contextual_menu_accountactivity, menu);
-            mode.setTitle(getString(R.string.account_management));
-            return true;
-        }
+		@Override
+		public void onItemCheckedStateChanged(ActionMode mode, int position,
+				long id, boolean checked) {
+			listAdapter.notifyDataSetChanged();
+		}
+	}
 
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
+	private class AccountAdapter extends BaseAdapter {
 
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.menu_remove_account:
-                    if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                        removeTask = new RemoveAccountDBTask();
-                        removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                    }
-                    mode.finish();
-                    return true;
-            }
-            return false;
-        }
+		int checkedBG;
+		int defaultBG;
 
+		public AccountAdapter() {
+			defaultBG = getResources().getColor(R.color.transparent);
 
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
+			int[] attrs = new int[] { R.attr.listview_checked_color };
+			TypedArray ta = obtainStyledAttributes(attrs);
+			checkedBG = ta.getColor(0, 430);
+		}
 
-        }
+		@Override
+		public int getCount() {
+			return accountList.size();
+		}
 
-        @Override
-        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-            listAdapter.notifyDataSetChanged();
-        }
-    }
+		@Override
+		public Object getItem(int i) {
+			return accountList.get(i);
+		}
 
+		@Override
+		public long getItemId(int i) {
+			return Long.valueOf(accountList.get(i).getUid());
+		}
 
-    private class AccountAdapter extends BaseAdapter {
+		@Override
+		public boolean hasStableIds() {
+			return true;
+		}
 
-        int checkedBG;
-        int defaultBG;
+		@Override
+		public View getView(final int i, View view, ViewGroup viewGroup) {
 
-        public AccountAdapter() {
-            defaultBG = getResources().getColor(R.color.transparent);
+			LayoutInflater layoutInflater = getLayoutInflater();
 
-            int[] attrs = new int[]{R.attr.listview_checked_color};
-            TypedArray ta = obtainStyledAttributes(attrs);
-            checkedBG = ta.getColor(0, 430);
-        }
+			View mView = layoutInflater.inflate(
+					R.layout.accountactivity_listview_item_layout, viewGroup,
+					false);
+			mView.findViewById(R.id.listview_root)
+					.setBackgroundColor(defaultBG);
 
-        @Override
-        public int getCount() {
-            return accountList.size();
-        }
+			if (listView.getCheckedItemPositions().get(i)) {
+				mView.findViewById(R.id.listview_root).setBackgroundColor(
+						checkedBG);
+			}
 
-        @Override
-        public Object getItem(int i) {
-            return accountList.get(i);
-        }
+			TextView textView = (TextView) mView
+					.findViewById(R.id.account_name);
+			if (accountList.get(i).getInfo() != null)
+				textView.setText(accountList.get(i).getInfo().getScreen_name());
+			else
+				textView.setText(accountList.get(i).getUsernick());
+			ImageView imageView = (ImageView) mView
+					.findViewById(R.id.imageView_avatar);
 
-        @Override
-        public long getItemId(int i) {
-            return Long.valueOf(accountList.get(i).getUid());
-        }
+			if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
+				commander.downloadAvatar(imageView, accountList.get(i)
+						.getInfo(), false);
+			}
 
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
+			return mView;
+		}
+	}
 
-        @Override
-        public View getView(final int i, View view, ViewGroup viewGroup) {
+	private class GetAccountListDBTask extends
+			MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
 
-            LayoutInflater layoutInflater = getLayoutInflater();
+		@Override
+		protected List<AccountBean> doInBackground(Void... params) {
+			return DatabaseManager.getInstance().getAccountList();
+		}
 
-            View mView = layoutInflater.inflate(R.layout.accountactivity_listview_item_layout, viewGroup, false);
-            mView.findViewById(R.id.listview_root).setBackgroundColor(defaultBG);
+		@Override
+		protected void onPostExecute(List<AccountBean> accounts) {
+			accountList = accounts;
+			listAdapter.notifyDataSetChanged();
 
-            if (listView.getCheckedItemPositions().get(i)) {
-                mView.findViewById(R.id.listview_root).setBackgroundColor(checkedBG);
-            }
+		}
+	}
 
-            TextView textView = (TextView) mView.findViewById(R.id.account_name);
-            if (accountList.get(i).getInfo() != null)
-                textView.setText(accountList.get(i).getInfo().getScreen_name());
-            else
-                textView.setText(accountList.get(i).getUsernick());
-            ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
+	private class RemoveAccountDBTask extends
+			MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
 
-            if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
-                commander.downloadAvatar(imageView, accountList.get(i).getInfo(), false);
-            }
+		Set<String> set = new HashSet<String>();
 
-            return mView;
-        }
-    }
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			long[] ids = listView.getCheckedItemIds();
+			for (long id : ids) {
+				set.add(String.valueOf(id));
+			}
+		}
 
-    private class GetAccountListDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
+		@Override
+		protected List<AccountBean> doInBackground(Void... params) {
+			return DatabaseManager.getInstance()
+					.removeAndGetNewAccountList(set);
+		}
 
-        @Override
-        protected List<AccountBean> doInBackground(Void... params) {
-            return DatabaseManager.getInstance().getAccountList();
-        }
-
-        @Override
-        protected void onPostExecute(List<AccountBean> accounts) {
-            accountList = accounts;
-            listAdapter.notifyDataSetChanged();
-
-        }
-    }
-
-    private class RemoveAccountDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
-
-        Set<String> set = new HashSet<String>();
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            long[] ids = listView.getCheckedItemIds();
-            for (long id : ids) {
-                set.add(String.valueOf(id));
-            }
-        }
-
-        @Override
-        protected List<AccountBean> doInBackground(Void... params) {
-            return DatabaseManager.getInstance().removeAndGetNewAccountList(set);
-        }
-
-        @Override
-        protected void onPostExecute(List<AccountBean> accounts) {
-            accountList = accounts;
-            listAdapter.notifyDataSetChanged();
-        }
-    }
+		@Override
+		protected void onPostExecute(List<AccountBean> accounts) {
+			accountList = accounts;
+			listAdapter.notifyDataSetChanged();
+		}
+	}
 }

@@ -6,6 +6,8 @@
     android:background="@color/white"
     android:clickable="true" >
 
+    <include layout="@layout/net_status_bar" />
+
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
@@ -17,11 +19,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
         </android.support.v4.view.ViewPager>
-         <com.engc.smartedu.widget.PathView
+
+        <com.engc.smartedu.widget.PathView
             android:id="@+id/mPathView_uitilsmodem"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-        </com.engc.smartedu.widget.PathView> 
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical" >
+        </com.engc.smartedu.widget.PathView>
     </FrameLayout>
 
 </LinearLayout>

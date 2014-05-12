@@ -37,8 +37,8 @@ public class SetupFragment extends BaseSlidingFragment {
 		// initView();
 		//getActivity().getActionBar().hide();
 		myViewLB = (MenuItemView) view.findViewById(R.id.myViewLB);
-		//myViewLB.setPosition(MenuItemView.);
-		//myViewLB.setRadius(70);
+		myViewLB.setPosition(MenuItemView.POSITION_LEFT_BOTTOM);
+		myViewLB.setRadius(80);
 		return view;
 	}
 
