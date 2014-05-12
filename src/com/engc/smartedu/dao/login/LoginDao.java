@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import android.content.Context;
+
 import com.alibaba.fastjson.JSON;
 import com.engc.smartedu.bean.User;
 import com.engc.smartedu.dao.URLS;
@@ -11,6 +13,8 @@ import com.engc.smartedu.support.exception.AppException;
 import com.engc.smartedu.support.http.HttpMethod;
 import com.engc.smartedu.support.http.HttpUtility;
 import com.engc.smartedu.support.utils.GlobalContext;
+import com.engc.smartedu.support.utils.PreferenceUtils;
+import com.engc.smartedu.support.utils.SharePreferenceUtil;
 import com.google.gson.Gson;
 
 /**
@@ -24,6 +28,7 @@ import com.google.gson.Gson;
  * @date: 2014-5-9 下午2:55:30
  */
 public class LoginDao {
+
 	public static User Login(final String userName, final String passWord)
 			throws AppException {
 		Map<String, String> params = new HashMap<String, String>();
@@ -49,44 +54,39 @@ public class LoginDao {
 	 * 
 	 * @param user
 	 */
-	public static void saveLoginInfo(final User user) {
-		GlobalContext.getInstance().setProperties(new Properties() {
-			{
-				String accountName = user.getUsername();
-				setProperty("user.usercode",
-						String.valueOf(user.getUsercode() != null ? user
-								.getUsercode() : ""));
-				setProperty("user.name",
-						user.getUsername() != null ? user.getUsername() : "");
-				setProperty("user.cardstatusName", String.valueOf(user
-						.getEntityname() != null ? user.getEntityname() : "0"));
-				setProperty("user.cardstatusCode", String.valueOf(user
-						.getCardstatus() != 0 ? user.getCardstatus() : 0));
-				setProperty("user.accountBalance", String.valueOf(user
-						.getCurrdbmoney() != null ? user.getCurrdbmoney() : 0));
-				setProperty("user.orgid",
-						user.getOrgid() != null ? user.getOrgid() : "");
-				setProperty("user.face",
-						String.valueOf(user.getHeadpic() != null ? user
-								.getHeadpic() : ""));
-				setProperty("user.parentphone",
-						user.getParentphone() != null ? user.getParentphone()
-								: "");
-				setProperty("user.sonname",
-						user.getSonname() != null ? user.getSonname() : "");
-				setProperty("user.soncode",
-						user.getSoncode() != null ? user.getSoncode() : "");
-				setProperty("user.usertype",
-						String.valueOf(user.getUsertype() != 0 ? user
-								.getUsertype() : 0));
-			}
-		});
+	public static void saveLoginInfo(Context context, final User user) {
+
+		PreferenceUtils.setPrefString(context, "user.usercode", String
+				.valueOf(user.getUsercode() != null ? user.getUsercode() : ""));
+		PreferenceUtils.setPrefString(context, "user.name",
+				user.getUsername() != null ? user.getUsername() : "");
+		PreferenceUtils.setPrefString(context, "user.cardstatusName", String
+				.valueOf(user.getEntityname() != null ? user.getEntityname()
+						: "0"));
+		PreferenceUtils.setPrefString(context, "user.cardstatusCode", String
+				.valueOf(user.getCardstatus() != 0 ? user.getCardstatus() : 0));
+		PreferenceUtils.setPrefString(context, "user.accountBalance", String
+				.valueOf(user.getCurrdbmoney() != null ? user.getCurrdbmoney()
+						: 0));
+		PreferenceUtils.setPrefString(context, "user.orgid",
+				user.getOrgid() != null ? user.getOrgid() : "");
+		PreferenceUtils.setPrefString(context, "user.face", String.valueOf(user
+				.getHeadpic() != null ? user.getHeadpic() : ""));
+		PreferenceUtils.setPrefString(context, "user.parentphone",
+				user.getParentphone() != null ? user.getParentphone() : "");
+		PreferenceUtils.setPrefString(context, "user.sonname",
+				user.getSonname() != null ? user.getSonname() : "");
+		PreferenceUtils.setPrefString(context, "user.soncode",
+				user.getSoncode() != null ? user.getSoncode() : "");
+		PreferenceUtils.setPrefString(context, "user.usertype", String
+				.valueOf(user.getUsertype() != 0 ? user.getUsertype() : 0));
+
 	}
 
 	/**
 	 * 清除登录信息
 	 */
-	public static  void cleanLoginInfo() {
+	public static void cleanLoginInfo() {
 		GlobalContext.getInstance().removeProperty("user.usercode",
 				"user.name", "user.cardstatusName", "user.cardstatusCode",
 				"user.accountBalance", "user.face", "user.orgid",
@@ -99,20 +99,24 @@ public class LoginDao {
 	 * 
 	 * @return
 	 */
-	public static  User getLoginInfo() {
+	public static User getLoginInfo(Context context) {
 		User lu = new User();
 
-		lu.setUsercode(GlobalContext.getInstance().getProperty("user.usercode"));
-		lu.setUsername(GlobalContext.getInstance().getProperty("user.name"));
-		lu.setEntityname(GlobalContext.getInstance().getProperty("user.cardstatusName"));
-		lu.setCardstatus(Integer.parseInt(GlobalContext.getInstance().getProperty("user.cardstatusCode")));
-		lu.setCurrdbmoney(GlobalContext.getInstance().getProperty("user.accountBalance"));
-		lu.setHeadpic(GlobalContext.getInstance().getProperty("user.face"));
-		lu.setOrgid(GlobalContext.getInstance().getProperty("user.orgid"));
-		lu.setParentphone(GlobalContext.getInstance().getProperty("user.parentphone"));
-		lu.setSoncode(GlobalContext.getInstance().getProperty("user.soncode"));
-		lu.setSonname(GlobalContext.getInstance().getProperty("user.sonname"));
-		lu.setUsertype(Integer.parseInt(GlobalContext.getInstance().getProperty("user.usertype")));
+		lu.setUsercode(PreferenceUtils.getPrefString(context, "user.usercode",
+				""));
+		lu.setUsername(PreferenceUtils.getPrefString(context, "user.name", ""));
+		lu.setEntityname(PreferenceUtils.getPrefString(context,
+				"user.cardstatusName", ""));
+		lu.setCardstatus(Integer.parseInt(PreferenceUtils.getPrefString(context,"user.cardstatusCode","")));
+		lu.setCurrdbmoney(PreferenceUtils.getPrefString(context,
+				"user.accountBalance",""));
+		lu.setHeadpic(PreferenceUtils.getPrefString(context,"user.face",""));
+		lu.setOrgid(PreferenceUtils.getPrefString(context,"user.orgid",""));
+		lu.setParentphone(PreferenceUtils.getPrefString(context,
+				"user.parentphone",""));
+		lu.setSoncode(PreferenceUtils.getPrefString(context,"user.soncode",""));
+		lu.setSonname(PreferenceUtils.getPrefString(context,"user.sonname",""));
+		lu.setUsertype(Integer.parseInt(PreferenceUtils.getPrefString(context,"user.usertype","")));
 		return lu;
 	}
 
@@ -126,16 +130,16 @@ public class LoginDao {
 	 * @return
 	 * @throws AppException
 	 */
-	public static User ChangeCardStatus(
-			final String userCode, final int basicStatus,
-			final int cardstatusone) throws AppException {
+	public static User ChangeCardStatus(final String userCode,
+			final int basicStatus, final int cardstatusone) throws AppException {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("usercode", userCode);
 		params.put("status", String.valueOf(basicStatus));
 		params.put("cardstatusone", String.valueOf(cardstatusone));
 		User user = null;
 		try {
-			String result = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post,URLS.CHANGE_CARD_STATUS, params);
+			String result = HttpUtility.getInstance().executeNormalTask(
+					HttpMethod.Post, URLS.CHANGE_CARD_STATUS, params);
 			user = JSON.parseObject(result, User.class);
 			return user;
 		} catch (Exception e) {

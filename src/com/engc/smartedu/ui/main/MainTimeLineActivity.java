@@ -13,14 +13,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -48,10 +46,7 @@ import com.engc.smartedu.support.lib.MyAsyncTask;
 import com.engc.smartedu.support.settinghelper.SettingUtility;
 import com.engc.smartedu.support.utils.AppLogger;
 import com.engc.smartedu.support.utils.GlobalContext;
-import com.engc.smartedu.support.utils.PreferenceConstants;
-import com.engc.smartedu.support.utils.PreferenceUtils;
 import com.engc.smartedu.support.utils.Utility;
-import com.engc.smartedu.support.utils.XMPPHelper;
 import com.engc.smartedu.ui.basefragment.AbstractTimeLineFragment;
 import com.engc.smartedu.ui.dm.DMUserListFragment;
 import com.engc.smartedu.ui.fragment.LeftMenuFragment;
@@ -69,20 +64,23 @@ import com.engc.smartedu.ui.maintimeline.MyStatussTimeLineFragment;
 import com.engc.smartedu.ui.preference.SettingActivity;
 import com.engc.smartedu.ui.search.SearchMainActivity;
 import com.engc.smartedu.ui.userinfo.MyInfoActivity;
+import com.engc.smartedu.widget.PathView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 /**
  * 
  * Copyright © 2014ENGC. All rights reserved.
+ * 
  * @Title: MainTimeLineActivity.java
  * @Package: com.engc.smartedu.ui.main
  * @Description: 首页时间轴
- * @author: wutao  
+ * @author: wutao
  * @date: 2014-5-4 下午4:11:04
  */
 @SuppressLint("NewApi")
 public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
-		IUserInfo, IAccountInfo, OnClickListener,IConnectionStatusCallback,EventHandler {
+		IUserInfo, IAccountInfo, OnClickListener, IConnectionStatusCallback,
+		EventHandler {
 
 	private ViewPager mViewPager;
 
@@ -101,42 +99,11 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 	public static TextView titleText; // 标题
 	public static int actionBarHeight;
 	private int mScreenWidth; // 当前设备屏幕宽度
-	
+
 	private Handler mainHandler = new Handler();
 	private AppService appService;
-	
-	
-	
-	ServiceConnection mServiceConnection = new ServiceConnection() {
 
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			appService = ((AppService.AppBinder) service).getService();
-			appService.registerConnectionStatusCallback(MainTimeLineActivity.this);
-			// 开始连接xmpp服务器
-			if (!appService.isAuthenticated()) {
-				String usr = PreferenceUtils.getPrefString(MainTimeLineActivity.this,
-						PreferenceConstants.ACCOUNT, "");
-				String password = PreferenceUtils.getPrefString(
-						MainTimeLineActivity.this, PreferenceConstants.PASSWORD, "");
-				appService.Login(usr, password);
-				
-				AppLogger.i("当前的链接状态为"+"未连接");
-			} else {
-				AppLogger.i("当前的链接状态为"+XMPPHelper
-						.splitJidAndServer(PreferenceUtils.getPrefString(
-								MainTimeLineActivity.this, PreferenceConstants.ACCOUNT,
-								"")));
-			}
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			appService.unRegisterConnectionStatusCallback();
-			appService = null;
-		}
-
-	};
+	
 
 	public String getToken() {
 		return accountBean.getAccess_token();
@@ -147,11 +114,13 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		super.onSaveInstanceState(outState);
 		outState.putSerializable("account", accountBean);
 	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		startService(new Intent(MainTimeLineActivity.this, AppService.class)); //开启服务
+		startService(new Intent(MainTimeLineActivity.this, AppService.class)); // 开启服务
 		initSlidingMenu();
+		
 		setContentView(R.layout.viewpager_layout);
 
 		if (savedInstanceState != null) {
@@ -164,13 +133,14 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 
 		if (accountBean == null)
 			accountBean = GlobalContext.getInstance().getAccountBean();
-		
+
 		GlobalContext.getInstance().setAccountBean(accountBean);
 		SettingUtility.setDefaultAccountId(accountBean.getUid());
-		
+
 		initRightSlidingMenuView();
 
 		buildPhoneInterface();
+		initConvenientView();
 
 		Executors.newSingleThreadScheduledExecutor().schedule(
 				new ClearCacheTask(), 8000, TimeUnit.SECONDS);
@@ -182,7 +152,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		// getMenuInflater().inflate(null, menu);
 		ActionBar actionBar = getActionBar();
-		actionBarHeight=actionBar.getHeight();
+		actionBarHeight = actionBar.getHeight();
 		ActionBar.LayoutParams params = new ActionBar.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT,
 				Gravity.CENTER);
@@ -194,11 +164,24 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 
 		ivTitleBtnRight = (ImageButton) this.findViewById(R.id.ivTitleBtnRight);
 		ivTitleBtnLeft = (ImageButton) this.findViewById(R.id.ivTitleBtnLeft);
-		titleText=(TextView) this.findViewById(R.id.ivTitleName);
+		titleText = (TextView) this.findViewById(R.id.ivTitleName);
 		ivTitleBtnLeft.setOnClickListener(this);
 		ivTitleBtnRight.setOnClickListener(this);
 
 		return true;
+	}
+
+	/**
+	 * 初始化快捷菜单
+	 */
+	private void initConvenientView() {
+		PathView mPathView = (PathView) this
+				.findViewById(R.id.mPathView_uitilsmodem);
+		ImageButton startMenu = new ImageButton(MainTimeLineActivity.this);
+		startMenu.setBackgroundResource(R.drawable.start_menu_btn);
+		mPathView.setStartMenu(startMenu);
+		// mPathView.setOnItemClickListener(this);
+
 	}
 
 	/**
@@ -247,7 +230,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 
 		mSlidingMenu.setFadeDegree(0.35f);// 设置淡入淡出的比例
 		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);// 设置手势模式
-		//mSlidingMenu.setShadowDrawable(R.drawable.shadow);// 设置左菜单阴影图片
+		// mSlidingMenu.setShadowDrawable(R.drawable.shadow);// 设置左菜单阴影图片
 		mSlidingMenu.setFadeEnabled(true);// 设置滑动时菜单的是否淡入淡出
 		mSlidingMenu.setBehindScrollScale(0.333f);// 设置滑动时拖拽效果
 
@@ -255,8 +238,8 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 
 	private void buildPhoneInterface() {
 		buildViewPager();
-		 buildActionBarAndViewPagerTitles();
-//		/ buildTabTitle(getIntent());
+		buildActionBarAndViewPagerTitles();
+		// / buildTabTitle(getIntent());
 	}
 
 	/**
@@ -379,27 +362,27 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 				actionBar.setDisplayShowHomeEnabled(false);
 			}
 
-		 MainTabListener tabListener = new MainTabListener();
+		MainTabListener tabListener = new MainTabListener();
 
-		 actionBar.addTab(actionBar.newTab()
-		 .setText(getString(R.string.home))
-		 .setTabListener(tabListener));
+		actionBar.addTab(actionBar.newTab().setText(getString(R.string.home))
+				.setTabListener(tabListener));
 
-		
-		  actionBar.addTab(actionBar.newTab()
-		  .setText(getString(R.string.mentions)) .setTabListener(tabListener));
-		  
-		  actionBar.addTab(actionBar.newTab()
-		  .setText(getString(R.string.comments)) .setTabListener(tabListener));
-		 
+		actionBar.addTab(actionBar.newTab()
+				.setText(getString(R.string.mentions))
+				.setTabListener(tabListener));
 
-		
-		 if (getResources().getBoolean(R.bool.blackmagic)) {
-		  actionBar.addTab(actionBar.newTab() .setText(getString(R.string.dm))
-		  .setTabListener(tabListener)); } else {
-		  actionBar.addTab(actionBar.newTab() .setText(getString(R.string.me))
-		  .setTabListener(tabListener)); }
-		 
+		actionBar.addTab(actionBar.newTab()
+				.setText(getString(R.string.comments))
+				.setTabListener(tabListener));
+
+		if (getResources().getBoolean(R.bool.blackmagic)) {
+			actionBar.addTab(actionBar.newTab().setText(getString(R.string.dm))
+					.setTabListener(tabListener));
+		} else {
+			actionBar.addTab(actionBar.newTab().setText(getString(R.string.me))
+					.setTabListener(tabListener));
+		}
+
 	}
 
 	ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
@@ -545,42 +528,23 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 				getUnreadCount();
 			}
 		}, 10, 50, TimeUnit.SECONDS);
-		
-		bindXMPPService();
-		/*getContentResolver().registerContentObserver(
-			RosterProvider.CONTENT_URI, true, mRosterObserver);
-		setStatusImage(isConnected());
-		if (!isConnected())
-			mTitleNameView.setText(R.string.login_prompt_no);
-		mRosterAdapter.requery();
-		XXBroadcastReceiver.mListeners.add(this);
-		if (NetUtil.getNetworkState(this) == NetUtil.NETWORN_NONE)
-			mNetErrorView.setVisibility(View.VISIBLE);
-		else
-			mNetErrorView.setVisibility(View.GONE);
-		ChangeLog cl = new ChangeLog(this);
-		if (cl != null && cl.firstRun()) {
-			cl.getFullLogDialog().show();
-		}*/
+
+		/*
+		 * getContentResolver().registerContentObserver(
+		 * RosterProvider.CONTENT_URI, true, mRosterObserver);
+		 * setStatusImage(isConnected()); if (!isConnected())
+		 * mTitleNameView.setText(R.string.login_prompt_no);
+		 * mRosterAdapter.requery(); XXBroadcastReceiver.mListeners.add(this);
+		 * if (NetUtil.getNetworkState(this) == NetUtil.NETWORN_NONE)
+		 * mNetErrorView.setVisibility(View.VISIBLE); else
+		 * mNetErrorView.setVisibility(View.GONE); ChangeLog cl = new
+		 * ChangeLog(this); if (cl != null && cl.firstRun()) {
+		 * cl.getFullLogDialog().show(); }
+		 */
 
 	}
+
 	
-	private void unbindXMPPService() {
-		try {
-			unbindService(mServiceConnection);
-			AppLogger.i(LoginActivity.class, "[SERVICE] Unbind*****************服务绑定");
-		} catch (IllegalArgumentException e) {
-			AppLogger.e(LoginActivity.class, "Service wasn't bound**************服务未能绑定!");
-		}
-	}
-
-	private void bindXMPPService() {
-		AppLogger.i(LoginActivity.class, "[SERVICE] Unbind");
-		bindService(new Intent(MainTimeLineActivity.this, AppService.class),
-				mServiceConnection, Context.BIND_AUTO_CREATE
-						+ Context.BIND_DEBUG_UNBIND);
-	}
-
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -727,13 +691,13 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 	@Override
 	public void onNetChange() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void connectionStatusChanged(int connectedState, String reason) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/userinfo_detail_scrollview"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/preference_bg_color"
+    android:fadingEdge="none"
+    android:scrollbars="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/user_info_favorites_message"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:paddingLeft="10.0dp"
+            android:paddingRight="10.0dp" >
+
+            <LinearLayout
+                android:id="@+id/user_info_favorites_ll"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20.0dip"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:duplicateParentState="true"
+                    android:text="设置"
+                    android:textSize="@dimen/text_size_20" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout_album_box"
+                    android:layout_width="fill_parent"
+                    android:layout_height="4px"
+                    android:layout_marginTop="10.0dip"
+                    android:background="@color/detail_node_title"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/user_my_team"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20.0dip"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:duplicateParentState="true"
+                    android:text="消息提醒"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_size_16" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dip"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/exit_horizontal_cut_line" />
+
+            <LinearLayout
+                android:id="@+id/user_my_action"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20.0dip"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:duplicateParentState="true"
+                    android:text="加载图片 "
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_size_16"
+                     />
+
+                <TextView
+                    android:id="@+id/user_info_fans"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_weight="1"
+                    android:duplicateParentState="true"
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dip"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/exit_horizontal_cut_line" />
+
+            <LinearLayout
+                android:id="@+id/mine_score"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20.0dip"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:id="@+id/txt_mine_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:duplicateParentState="true"
+                    android:text="清除缓存"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_size_16"
+                    />
+
+                <TextView
+                    android:id="@+id/user_info_fans"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10.0dip"
+                    android:layout_weight="1"
+                    android:duplicateParentState="true"
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dip"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/exit_horizontal_cut_line" />
+
+            <LinearLayout
+                android:id="@+id/user_info_favorit_other"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20.0dip"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:duplicateParentState="true"
+                    android:text="其他"
+                    android:textSize="@dimen/text_size_20"
+                     />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout_album_box"
+                    android:layout_width="fill_parent"
+                    android:layout_height="4px"
+                    android:layout_marginTop="10.0dip"
+                    android:background="@color/detail_node_title"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/set_push_mode"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20.0dip"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:duplicateParentState="true"
+                    android:text="意见反馈"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_size_16"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dip"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/exit_horizontal_cut_line" />
+
+            <LinearLayout
+                android:id="@+id/check_update"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20.0dip"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:duplicateParentState="true"
+                    android:text="检查更新"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_size_16"
+                     />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dip"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/exit_horizontal_cut_line" />
+
+            <LinearLayout
+                android:id="@+id/about_us"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20.0dip"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.0dip"
+                    android:duplicateParentState="true"
+                    android:text="关于我们"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_size_16"
+                     />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- </ScrollView> -->
+
+    </LinearLayout>
+
+</ScrollView>

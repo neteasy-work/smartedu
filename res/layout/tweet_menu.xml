@@ -1,0 +1,107 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <!-- Left Top -->
+
+<!--     <com.allenwu.pure.widget.MenuItemView
+        android:id="@+id/myViewLT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+         />
+
+    <RelativeLayout
+        android:id="@+id/relLayLT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/composer_button"
+        >
+
+        <ImageView
+            android:id="@+id/imgPlusLT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/composer_icn_plus" />
+    </RelativeLayout> -->
+    <!-- Right Top -->
+
+   <!--  <com.allenwu.pure.widget.MenuItemView
+        android:id="@+id/myViewRT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        />
+
+    <RelativeLayout
+        android:id="@+id/relLayRT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/composer_button"
+        >
+
+        <ImageView
+            android:id="@+id/imgPlusRT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/composer_icn_plus" />
+    </RelativeLayout> -->
+
+    <!-- Left Bottom -->
+
+    <com.engc.smartedu.widget.MenuItemView
+        android:id="@+id/myViewLB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+  />
+
+    <RelativeLayout
+        android:id="@+id/relLayLB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/composer_button" >
+
+        <ImageView
+            android:id="@+id/imgPlusLB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/composer_icn_plus" />
+    </RelativeLayout>
+
+    <!-- Right Bottom -->
+
+   <!--  <com.allenwu.pure.widget.MenuItemView
+        android:id="@+id/myViewRB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+         />
+
+    <RelativeLayout
+        android:id="@+id/relLayRB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/composer_button"
+         >
+
+        <ImageView
+            android:id="@+id/imgPlusRB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/composer_icn_plus" />
+    </RelativeLayout> -->
+
+</RelativeLayout>

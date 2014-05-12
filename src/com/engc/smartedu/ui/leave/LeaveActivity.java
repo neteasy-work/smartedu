@@ -83,8 +83,8 @@ public class LeaveActivity extends AbstractAppActivity{
 		txtLeaveEndTime = (TextView) findViewById(R.id.txtleaveenddate);
 		txtLeaveMan = (TextView) findViewById(R.id.txt_ask_for_leaveman);
 		txtDisplayLeaveMan = (TextView) findViewById(R.id.txtdisplayleavename);
-		txtLeaveMan.setText(!LoginDao.getLoginInfo().getSonname().equals("") ? LoginDao
-				.getLoginInfo().getSonname() : LoginDao.getLoginInfo().getUsername());
+		txtLeaveMan.setText(!LoginDao.getLoginInfo(LeaveActivity.this).getSonname().equals("") ? LoginDao
+				.getLoginInfo(LeaveActivity.this).getSonname() : LoginDao.getLoginInfo(LeaveActivity.this).getUsername());
 		txtDisplayLeaveMan.setText("请假人:" + txtLeaveMan.getText());
 		actLeaveRemark = (AutoCompleteTextView) findViewById(R.id.actleaveremark);
 
@@ -223,6 +223,48 @@ public class LeaveActivity extends AbstractAppActivity{
 			}
 		});
 	}
+	
+	
+	/**
+	 * 回调函数
+	 */
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		String name = "";
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (resultCode) {
+		case 0:
+			if (data != null) {
+				leaveBeginTime = data.getExtras().getString("startTime");
+				txtLeaveStartTime.setText(data.getExtras().getString(
+						"DisplaystartTime"));
+
+			}
+			break;
+		default:
+			if (data != null) {
+				leaveEndTime = data.getExtras().getString("endTime");
+				String isHalf=data.getExtras().getString("isHalf");
+				txtLeaveEndTime.setText(data.getExtras().getString(
+						"DisplayendTime"));
+				if (txtLeaveStartTime.getText() == null)
+					Utility.ToastMessage(LeaveActivity.this, "请选择开始时间");
+
+				//else if(isHalf.equals("AM")||isHalf.equals("PM"))
+					/*actLeaveDays.setText(StringUtils
+							.ConvertDateToStringForTimeResult(txtLeaveStartTime
+									.getText().toString(), data.getExtras()
+									.getString("endTime"))
+							+ "天");
+*/
+			}
+			break;
+
+		}
+
+	}
+
 	/**
 	 * 选择请假类型
 	 */
@@ -287,9 +329,9 @@ public class LeaveActivity extends AbstractAppActivity{
 			public void run() {
 				Message msg = new Message();
 				try {
-					User user = LeaveDao.ApplyHolidays(LoginDao.getLoginInfo()
-							.getUsercode(), LoginDao.getLoginInfo().getOrgid(),telNo, startDate, endDate, days,
-							remark, holidaysTypeCode,LoginDao.getLoginInfo().getUsertype());
+					User user = LeaveDao.ApplyHolidays(LoginDao.getLoginInfo(LeaveActivity.this)
+							.getUsercode(), LoginDao.getLoginInfo(LeaveActivity.this).getOrgid(),telNo, startDate, endDate, days,
+							remark, holidaysTypeCode,LoginDao.getLoginInfo(LeaveActivity.this).getUsertype());
 					if (user.getIsError().equals("true")) {
 						msg.what = 1;// 成功
 						msg.obj = user.getMessage();

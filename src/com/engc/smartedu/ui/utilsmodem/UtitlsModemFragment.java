@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +28,8 @@ import com.engc.smartedu.support.exception.AppException;
 import com.engc.smartedu.support.utils.CardConstants;
 import com.engc.smartedu.support.utils.Utility;
 import com.engc.smartedu.ui.interfaces.BaseSlidingFragment;
+import com.engc.smartedu.ui.leave.LeaveActivity;
+import com.engc.smartedu.ui.leave.LeaveRecordActivity;
 
 public class UtitlsModemFragment extends BaseSlidingFragment {
 
@@ -65,7 +68,7 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.actionbar_menu_commentnewactivity, menu);
 		super.onCreateOptionsMenu(menu, inflater);
-		ActionBar ab=getActivity().getActionBar();
+		ActionBar ab = getActivity().getActionBar();
 		ab.hide();
 
 	}
@@ -78,67 +81,23 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				switch (position) {
-				case 0:  //请假 
-					
-					break;
-					
-				case 1://挂失
-					final Handler handler = new Handler() {
-						public void handleMessage(Message msg) {
-							if (msg.what == 1) {
-								Utility.ToastMessage(getActivity().getApplicationContext(), (String) msg.obj);
-								User user = LoginDao.getLoginInfo();
-								user.setCardstatus(CardConstants.REPORT_LOSS_ED_CARD);
-								LoginDao.saveLoginInfo(user);
-								initGridData(CardConstants.REPORT_LOSS_ED_CARD);
-							} else {
-								Utility.ToastMessage(getActivity().getApplicationContext(), (String) msg.obj);
-
-							}
-
-						}
-					};
-					new Thread() {
-						public void run() {
-							Message msg = new Message();
-							try {
-								User user = LoginDao.ChangeCardStatus(
-										LoginDao.getLoginInfo().getUsercode(),
-										LoginDao.getLoginInfo().getCardstatus(),
-										1);
-								if (user.getIsError().equals("false")) {
-									msg.what = 1;
-									msg.obj = user.getMessage();
-
-								} else {
-									msg.what = 0;
-									msg.obj = user.getMessage();
-								}
-
-							} catch (AppException e) {
-								e.printStackTrace();
-								msg.what = -1;
-								msg.obj = e;
-							}
-							handler.sendMessage(msg);
-						}
-					}.start();
-					
-					break;
-				case 2: //请假记录
-					break;
-
-				default: //解挂
+				case 0: // 解挂
 					final Handler handler1 = new Handler() {
 						public void handleMessage(Message msg) {
 							if (msg.what == 1) {
-								Utility.ToastMessage(getActivity().getApplicationContext(), (String) msg.obj);
-								User user = LoginDao.getLoginInfo();
+								Utility.ToastMessage(getActivity()
+										.getApplicationContext(),
+										(String) msg.obj);
+								User user = LoginDao.getLoginInfo(getActivity()
+										.getApplicationContext());
 								user.setCardstatus(CardConstants.NORMAL_CARD);
-								LoginDao.saveLoginInfo(user);
-								//initGridData(CardStatus.NORMAL_CARD);
+								LoginDao.saveLoginInfo(getActivity()
+										.getApplicationContext(), user);
+								// initGridData(CardStatus.NORMAL_CARD);
 							} else {
-								Utility.ToastMessage(getActivity().getApplicationContext(), (String) msg.obj);
+								Utility.ToastMessage(getActivity()
+										.getApplicationContext(),
+										(String) msg.obj);
 
 							}
 						}
@@ -147,10 +106,16 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 						public void run() {
 							Message msg = new Message();
 							try {
-								User user = LoginDao.ChangeCardStatus(
-										LoginDao.getLoginInfo().getUsercode(),
-										LoginDao.getLoginInfo().getCardstatus(),
-										5);
+								User user = LoginDao
+										.ChangeCardStatus(
+												LoginDao.getLoginInfo(
+														getActivity()
+																.getApplicationContext())
+														.getUsercode(),
+												LoginDao.getLoginInfo(
+														getActivity()
+																.getApplicationContext())
+														.getCardstatus(), 5);
 								if (user.getIsError().equals("false")) {
 									msg.what = 1;
 									msg.obj = user.getMessage();
@@ -168,10 +133,80 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 							handler1.sendMessage(msg);
 						}
 					}.start();
+
+					break;
+
+				case 1:// 挂失
+					final Handler handler = new Handler() {
+						public void handleMessage(Message msg) {
+							if (msg.what == 1) {
+								Utility.ToastMessage(getActivity()
+										.getApplicationContext(),
+										(String) msg.obj);
+								User user = LoginDao.getLoginInfo(getActivity()
+										.getApplicationContext());
+								user.setCardstatus(CardConstants.REPORT_LOSS_ED_CARD);
+								LoginDao.saveLoginInfo(getActivity()
+										.getApplicationContext(), user);
+								initGridData(CardConstants.REPORT_LOSS_ED_CARD);
+							} else {
+								Utility.ToastMessage(getActivity()
+										.getApplicationContext(),
+										(String) msg.obj);
+
+							}
+
+						}
+					};
+					new Thread() {
+						public void run() {
+							Message msg = new Message();
+							try {
+								User user = LoginDao
+										.ChangeCardStatus(
+												LoginDao.getLoginInfo(
+														getActivity()
+																.getApplicationContext())
+														.getUsercode(),
+												LoginDao.getLoginInfo(
+														getActivity()
+																.getApplicationContext())
+														.getCardstatus(), 1);
+								if (user.getIsError().equals("false")) {
+									msg.what = 1;
+									msg.obj = user.getMessage();
+
+								} else {
+									msg.what = 0;
+									msg.obj = user.getMessage();
+								}
+
+							} catch (AppException e) {
+								e.printStackTrace();
+								msg.what = -1;
+								msg.obj = e;
+							}
+							handler.sendMessage(msg);
+						}
+					}.start();
+
+					break;
+				case 2: // 请假
+					Intent intent = new Intent(getActivity()
+							.getApplicationContext(), LeaveActivity.class);
+					startActivity(intent);
+					break;
+
+				case 3: // 请假记录
+					Intent inte = new Intent(getActivity()
+							.getApplicationContext(), LeaveRecordActivity.class);
+					startActivity(inte);
+					break;
+				default: //更多
+					Utility.ToastMessage(getActivity().getApplicationContext(), "暂未开放，敬请期待");
 					break;
 				}
-				
-				
+
 			}
 		});
 
@@ -188,13 +223,16 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 
 		imgtitleList.clear();
 		imgList.clear();
-		imgtitleList.add("充值");
+		imgtitleList.add("解挂");
 		imgtitleList.add("挂失");
 		imgtitleList.add("请假");
+		imgtitleList.add("请假记录");
+
 		imgtitleList.add("更多");
 		imgList.add(R.drawable.icon_prepaid);
 		imgList.add(R.drawable.icon_lost);
 		imgList.add(R.drawable.icon_holdday);
+		imgList.add(R.drawable.icon_leave_record);
 		imgList.add(R.drawable.icon_more);
 		gvUtilsModem
 				.setAdapter(new GridViewModemAdapter(imgtitleList, imgList));

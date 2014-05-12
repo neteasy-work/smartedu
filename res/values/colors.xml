@@ -297,6 +297,7 @@
     <!--海军色 -->
     <color name="black">#000000</color>
     <!--黑色 -->
+    
     <color name="dark_gray">#1E2129</color>
     <color name="light_orange">#FF7A0F</color>
     <color name="divide_line">#FFC5CCD1</color>
@@ -326,4 +327,5 @@
     <color name="calendar_text_selected">#ffffffff</color>
     <color name="calendar_text_unselectable">#7f778088</color>
 
+    <color name="preference_bg_color">#f0f0f0</color>
 </resources>  

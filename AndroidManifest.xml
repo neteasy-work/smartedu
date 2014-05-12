@@ -53,18 +53,32 @@
         <activity
             android:name="com.engc.smartedu.ui.login.LoginActivity"
             android:uiOptions="splitActionBarWhenNarrow" />
+        <!-- 日历  activity -->
+        <activity
+            android:name="com.engc.smartedu.ui.calendar.CalendarPick"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
 
         <!-- chat activity -->
         <activity
             android:name="com.engc.smartedu.ui.chat.ChatActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" >
         </activity>
+        <!-- 请假  and 请假记录 activtiy -->
+        <activity
+            android:name="com.engc.smartedu.ui.leave.LeaveActivity"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.engc.smartedu.ui.leave.LeaveRecordActivity"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
 
         <!-- main activity -->
         <activity
             android:name="com.engc.smartedu.ui.main.MainTimeLineActivity"
             android:launchMode="singleTop"
-            android:uiOptions="splitActionBarWhenNarrow" />
+            />
 
         <!-- send activity -->
         <activity
@@ -182,11 +196,13 @@
         <service android:name="com.engc.smartedu.othercomponent.SaveToDBService" />
         <!--
         <service android:name="com.engc.smartedu.othercomponent.chat.AppService" >
-        </service>
+        </service>
         -->
         <!-- 消息预处理的intenService -->
-       <!--  <service android:name="com.engc.smartedu.baidupush." >
-        </service> -->
+        <!--
+        <service android:name="com.engc.smartedu.baidupush." >
+        </service>        <
+        -->
         <!-- -百度推送 服务 -->
         <service
             android:name="com.baidu.android.pushservice.PushService"
@@ -258,7 +274,7 @@
             <action android:name="android.intent.action.ACTION_SHUTDOWN" />
             网络连接变化的广播
             <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-        </receiver>
+        </receiver>
         -->
 
 

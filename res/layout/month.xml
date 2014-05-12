@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.engc.times.calendar.MonthView
+<com.engc.smartedu.widget.times.calendar.MonthView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -15,12 +15,12 @@
       android:gravity="center_horizontal"
       style="@style/CalendarTitle"
       />
-  <com.engc.times.calendar.CalendarGridView
+  <com.engc.smartedu.widget.times.calendar.CalendarGridView
       android:id="@+id/calendar_grid"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       >
-    <com.engc.times.calendar.CalendarRowView
+    <com.engc.smartedu.widget.times.calendar.CalendarRowView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/calendar_day_headers_paddingbottom"
@@ -60,12 +60,12 @@
           android:layout_height="wrap_content"
           style="@style/CalendarCell.DayHeader"
           />
-    </com.engc.times.calendar.CalendarRowView>
+    </com.engc.smartedu.widget.times.calendar.CalendarRowView>
     <include layout="@layout/week"/>
     <include layout="@layout/week"/>
     <include layout="@layout/week"/>
     <include layout="@layout/week"/>
     <include layout="@layout/week"/>
     <include layout="@layout/week"/>
-  </com.engc.times.calendar.CalendarGridView>
-</com.engc.times.calendar.MonthView>
+  </com.engc.smartedu.widget.times.calendar.CalendarGridView>
+</com.engc.smartedu.widget.times.calendar.MonthView>

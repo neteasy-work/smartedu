@@ -127,9 +127,12 @@ public class LoginActivity extends AbstractAppActivity implements
 				if (msg.what == 1) {
 
 					User user = (User) msg.obj;
-					LoginDao.saveLoginInfo(user);
-					// save2Preferences();
-				   loginDialog.cancel();
+					//LoginDao.saveLoginInfo(LoginActivity.this,user);
+					 //save2Preferences();
+					mSpUtil.setUserName(user.getUsername());
+					mSpUtil.setTag("man");
+					//mSpUtil.setHeadIcon()
+				    loginDialog.cancel();
 					Intent intent = new Intent(LoginActivity.this,
 							MainTimeLineActivity.class);
 					startActivity(intent);
@@ -155,7 +158,7 @@ public class LoginActivity extends AbstractAppActivity implements
 					User user = LoginDao.Login(accountName, accountPwd);
 					if (user != null) {
 						if (user.getUsercode() != null) {
-							//LoginDao.saveLoginInfo(user);
+							LoginDao.saveLoginInfo(LoginActivity.this,user);
 							msg.what = 1;// 成功
 							msg.obj = user;
 
@@ -230,6 +233,7 @@ public class LoginActivity extends AbstractAppActivity implements
 
 		PreferenceUtils.setPrefString(this, PreferenceConstants.PASSWORD,
 				userCode);
+		
 
 	}
 

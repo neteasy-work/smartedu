@@ -230,7 +230,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
+        /*inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
         name = menu.findItem(R.id.group_name);
         if (currentGroupId.equals(ALL_GROUP_ID)) {
             name.setTitle(userBean.getScreen_name());
@@ -244,7 +244,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     return;
                 }
             }
-        }
+        }*/
 
     }
 
