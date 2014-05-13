@@ -106,7 +106,6 @@ public class ChatActivity extends AbstractAppActivity implements
 	private EditText msgEt;
 	private LinearLayout faceLinearLayout;
 	private WindowManager.LayoutParams params;
-	private InputMethodManager imm;
 	private List<String> keys;
 	private MessageAdapter adapter;
 	private MsgListView mMsgListView;
@@ -173,11 +172,6 @@ public class ChatActivity extends AbstractAppActivity implements
 		PushMessageReceiver.ehList.add(this);// 监听推送的消息
 	}
 
-	  @Override
-	    public boolean onCreateOptionsMenu(Menu menu) {
-	        getMenuInflater().inflate(R.menu.actionbar_menu_browserbigpicactivity, menu);
-	        return true;
-	    }
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -197,7 +191,7 @@ public class ChatActivity extends AbstractAppActivity implements
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		imm.hideSoftInputFromWindow(msgEt.getWindowToken(), 0);
+		mInputMethodManager.hideSoftInputFromWindow(msgEt.getWindowToken(), 0);
 		faceLinearLayout.setVisibility(View.GONE);
 		isFaceShow = false;
 		super.onPause();

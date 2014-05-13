@@ -9,7 +9,6 @@ public class MenuItemView extends ViewGroup{
 	public static final int POSITION_RIGHT_TOP = 2;
 	public static final int POSITION_LEFT_BOTTOM = 3;
 	public static final int POSITION_RIGHT_BOTTOM = 4;
-	public static final int POSITION_CENTER_BOTTOM=5;
 	public  final static int STATUS_CLOSE = 5;
 	public  final static int STATUS_OPEN = 6;
 	

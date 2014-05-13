@@ -75,7 +75,9 @@ import com.engc.smartedu.ui.maintimeline.MentionsTimeLineFragment;
 import com.engc.smartedu.ui.maintimeline.MyStatussTimeLineFragment;
 import com.engc.smartedu.ui.preference.SettingActivity;
 import com.engc.smartedu.ui.search.SearchMainActivity;
+import com.engc.smartedu.ui.send.WriteWeiboActivity;
 import com.engc.smartedu.ui.userinfo.MyInfoActivity;
+import com.engc.smartedu.widget.MenuItemView;
 import com.engc.smartedu.widget.PathView;
 import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -93,7 +95,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 @SuppressLint("NewApi")
 public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		IUserInfo, IAccountInfo, OnClickListener, IConnectionStatusCallback,
-		PushMessageReceiver.EventHandler,OnHomePressedListener {
+		PushMessageReceiver.EventHandler,OnHomePressedListener ,PathView.OnItemClickListener{
 
 	private ViewPager mViewPager;
 
@@ -131,6 +133,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 	private RightMenuFragment mRightFragment;
 	private HomeWatcher mHomeWatcher;
 	private ListView mListView;
+	private MenuItemView myViewLB;
 
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -220,7 +223,8 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		initData();  //初始化本地sqlite 数据 
         initView(); //初始化  网络异常视图
 		buildPhoneInterface();
-		initConvenientView();
+		
+		
 
 		Executors.newSingleThreadScheduledExecutor().schedule(
 				new ClearCacheTask(), 8000, TimeUnit.SECONDS);
@@ -254,15 +258,28 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 	/**
 	 * 初始化快捷菜单
 	 */
-	private void initConvenientView() {
+/*	private void initConvenientView() {
 		PathView mPathView = (PathView) this
 				.findViewById(R.id.mPathView_uitilsmodem);
 		ImageButton startMenu = new ImageButton(MainTimeLineActivity.this);
 		startMenu.setBackgroundResource(R.drawable.start_menu_btn);
 		mPathView.setStartMenu(startMenu);
-		// mPathView.setOnItemClickListener(this);
-
-	}
+		
+		mPathView.setItems(new View[0]);
+		mPathView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainTimeLineActivity.this, WriteWeiboActivity.class);
+                intent.putExtra("token", getToken());
+                intent.putExtra("account", getAccount());
+                startActivity(intent);
+				
+			}
+		});
+		
+	}*/
 
 	/**
 	 * 初始化slidingview
@@ -671,7 +688,21 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 	 */
 	private void initView(){
 		mNetErrorView = findViewById(R.id.net_status_bar_top);
+		/*myViewLB = (MenuItemView)findViewById(R.id.myViewRB);
+		myViewLB.setPosition(MenuItemView.POSITION_LEFT_TOP);
+		myViewLB.setRadius(80);*/
 		mNetErrorView.setOnClickListener(this);
+		/*myViewLB.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainTimeLineActivity.this, WriteWeiboActivity.class);
+                intent.putExtra("token", getToken());
+                intent.putExtra("account", getAccount());
+                startActivity(intent);
+				
+			}
+		});*/
 	}
 	
 	@Override
@@ -876,6 +907,12 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 
 	@Override
 	public void onHomeLongPressed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onItemClick(View view, int position) {
 		// TODO Auto-generated method stub
 		
 	}

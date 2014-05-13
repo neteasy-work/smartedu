@@ -70,7 +70,8 @@
         <!-- 请假  and 请假记录 activtiy -->
         <activity
             android:name="com.engc.smartedu.ui.leave.LeaveActivity"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:configChanges="locale|keyboardHidden|orientation"
+            android:windowSoftInputMode="stateHidden|adjustResize">
         </activity>
         <activity
             android:name="com.engc.smartedu.ui.leave.LeaveRecordActivity"

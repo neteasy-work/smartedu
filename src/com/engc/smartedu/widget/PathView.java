@@ -68,10 +68,10 @@ public class PathView extends RelativeLayout {
 		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		params.addRule(RelativeLayout.ALIGN_END);
-		//params.rightMargin = MARGIN_RIGHT;
-		//params.bottomMargin = MARGIN_BOTTOM;
-		//params.topMargin = MARGIN_TOP;
+		params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		params.rightMargin = MARGIN_RIGHT;
+		params.bottomMargin = MARGIN_BOTTOM;
+		params.topMargin = MARGIN_TOP;
 		addView(view, params);
 		this.startMenu = view;
 		startMenu.setId(66666);
@@ -213,9 +213,9 @@ public class PathView extends RelativeLayout {
 			} else {
 				params.addRule(RelativeLayout.ABOVE, items[i - 1].getId());
 			}
-		//	params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			//params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 			params.addRule(RelativeLayout.ALIGN_RIGHT, startMenu.getId());
-		//	params.rightMargin = MARGIN_RIGHT;
+			//params.rightMargin = MARGIN_RIGHT;
 			addView(view, params);
 			view.setVisibility(View.INVISIBLE);
 		}

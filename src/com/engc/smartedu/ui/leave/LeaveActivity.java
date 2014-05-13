@@ -3,6 +3,8 @@ package com.engc.smartedu.ui.leave;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -36,7 +39,9 @@ import com.engc.smartedu.support.utils.Utility;
 import com.engc.smartedu.ui.adapter.LeaveTypeAdapter;
 import com.engc.smartedu.ui.calendar.CalendarPick;
 import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
+import com.engc.smartedu.ui.main.MainTimeLineActivity;
 
+@SuppressLint("NewApi")
 public class LeaveActivity extends AbstractAppActivity{
 	private TableRow tbrLeaveStartDate, tbrLeaveEndDate, tbrLeaveType;
 	private AutoCompleteTextView actLeaveRemark, actLeaveDays;
@@ -56,6 +61,9 @@ public class LeaveActivity extends AbstractAppActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ask_for_leave);
+		ActionBar actionBar=getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle("请假");
 		listLeaveTypeResource.clear();
 		listLeaveTypeResource.add("病假");
 		listLeaveTypeResource.add("事假");
@@ -63,6 +71,18 @@ public class LeaveActivity extends AbstractAppActivity{
 
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+            break;
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+
+	}
 	/**
 	 * 初始化视图
 	 */
