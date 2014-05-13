@@ -21,16 +21,15 @@
         android:paddingLeft="8.0dip"
         android:paddingRight="8.0dip"
         android:text="11:11"
-        android:textColor="@color/black"
         android:textSize="10.0sp"
-        />
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="40.0dip"
         android:layout_height="40.0dip"
         android:layout_below="@id/datetime"
-        android:background="@drawable/login_default_avatar"
+        android:background="@drawable/chat_tool_camera"
         android:clickable="true"
         android:scaleType="fitXY"
         android:focusable="true"
@@ -53,7 +52,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/black"
             android:textSize="16.0sp" />
 
         <ProgressBar
@@ -68,7 +66,6 @@
             android:layout_marginLeft="4.0dip"
             android:layout_marginRight="4.0dip"
             android:max="100"
-            android:visibility="gone"
             android:progressDrawable="@drawable/progress_receivepic" />
     </RelativeLayout>
 

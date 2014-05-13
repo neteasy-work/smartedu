@@ -1,13 +1,11 @@
 package com.engc.smartedu.ui.fragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -15,9 +13,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -51,44 +51,24 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 	private AppService appService;
 	private RelativeLayout fragementHeaderLayout;
 
-    private GlobalContext global;
+	private GlobalContext global;
 	private UserDB mUserDB;
 	private RecentDB mRecentDB;
 	private MessageDB mMsgDB;
 	private SharePreferenceUtil mSpUtil;
-	private ListView firendsList;
-
-	/*
-	 * ServiceConnection mServiceConnection = new ServiceConnection() {
-	 * 
-	 * @Override public void onServiceConnected(ComponentName name, IBinder
-	 * service) { appService = ((AppService.AppBinder) service).getService();
-	 * appService.registerConnectionStatusCallback(RightMenuFragment.this); //
-	 * 开始连接xmpp服务器 if (!appService.isAuthenticated()) { String usr =
-	 * PreferenceUtils.getPrefString(getActivity() .getApplicationContext(),
-	 * PreferenceConstants.ACCOUNT, ""); String password =
-	 * PreferenceUtils.getPrefString(getActivity() .getApplicationContext(),
-	 * PreferenceConstants.PASSWORD, ""); appService.Login(usr, password); //
-	 * mTitleNameView.setText(R.string.login_prompt_msg); //
-	 * setStatusImage(false); // mTitleProgressBar.setVisibility(View.VISIBLE);
-	 * } else { mTitleNameView.setText(XMPPHelper
-	 * .splitJidAndServer(PreferenceUtils.getPrefString(
-	 * getActivity().getApplicationContext(), PreferenceConstants.ACCOUNT,
-	 * ""))); setStatusImage(true); } }
-	 * 
-	 * @Override public void onServiceDisconnected(ComponentName name) {
-	 * appService.unRegisterConnectionStatusCallback(); appService = null; }
-	 * 
-	 * };
-	 */
+	public ListView firendsList;
+	private FriendsAdapter adapter;
+	private EditText edtSearch;
+	private List<User> dbUsers;
 
 	public void updateAdapter() {
 		if (firendsList != null) {
 			AppLogger.i("update friend...");
 			initUserData();
 		}
-		
+
 	}
+
 	@Override
 	public void onClick(View v) {
 
@@ -109,8 +89,20 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 		 * .getActionBar().getHeight());
 		 * fragementHeaderLayout.setLayoutParams(params);
 		 */
-
+	    
+        
 		firendsList = (ListView) view.findViewById(R.id.friends_display);
+		edtSearch = (EditText) view.findViewById(R.id.friends_search);
+		edtSearch.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				// TODO Auto-generated method stub
+				new GetDataTask().execute();
+
+			}
+		});
+		
 
 		firendsList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -118,8 +110,11 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
+				User u = dbUsers.get(position);
+				mMsgDB.clearNewCount(u.getUsercode());// 新消息置空
 				Intent intent = new Intent(getActivity()
 						.getApplicationContext(), ChatActivity.class);
+				intent.putExtra("user", u);
 				startActivity(intent);
 
 			}
@@ -143,7 +138,7 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		global=GlobalContext.getInstance();
+		global = GlobalContext.getInstance();
 		mUserDB = global.getUserDB();
 		mMsgDB = global.getMessageDB();
 		mRecentDB = global.getRecentDB();
@@ -162,9 +157,9 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 	 */
 	private void initUserData() {
 		// TODO Auto-generated method stub
-		List<User> dbUsers = mUserDB.getUser();// 查询本地数据库所有好友
-		FriendsAdapter adapter = new FriendsAdapter(getActivity()
-				.getApplicationContext(), dbUsers, 0);
+		dbUsers = mUserDB.getUser();// 查询本地数据库所有好友
+		adapter = new FriendsAdapter(getActivity().getApplicationContext(),
+				dbUsers, 0);
 		firendsList.setAdapter(adapter);
 
 		/*
@@ -200,28 +195,29 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 
 	}
 
-	private List<Map<String, Object>> getData() {
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", "小甜甜");
-		map.put("info", "I love sweety");
-		map.put("img", R.drawable.honey_face);
-		list.add(map);
+		@Override
+		protected String[] doInBackground(Void... params) {
+			// Simulates a background job.
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+			}
+			return null;
+		}
 
-		map = new HashMap<String, Object>();
-		map.put("title", "QQ君");
-		map.put("info", "I love QQ");
-		map.put("img", R.drawable.login_default_avatar);
-		list.add(map);
+		@Override
+		protected void onPostExecute(String[] result) {
+			// Do some stuff here
 
-		map = new HashMap<String, Object>();
-		map.put("title", "coffee君");
-		map.put("info", "I love coffee");
-		map.put("img", R.drawable.login_default_avatar);
-		list.add(map);
+			// Call onRefreshComplete when the list has been refreshed.
+			initUserData();
+			firendsList.setAdapter(adapter);
+			// mPullRefreshScrollView.onRefreshComplete();
 
-		return list;
+			super.onPostExecute(result);
+		}
 	}
 
 	private void setStatusImage(boolean isConnected) {

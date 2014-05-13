@@ -62,7 +62,10 @@
         <!-- chat activity -->
         <activity
             android:name="com.engc.smartedu.ui.chat.ChatActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize" >
+            android:alwaysRetainTaskState="true"
+            android:configChanges="locale|keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
         <!-- 请假  and 请假记录 activtiy -->
         <activity
@@ -77,8 +80,8 @@
         <!-- main activity -->
         <activity
             android:name="com.engc.smartedu.ui.main.MainTimeLineActivity"
-            android:launchMode="singleTop"
-            />
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleTop" />
 
         <!-- send activity -->
         <activity
@@ -196,12 +199,12 @@
         <service android:name="com.engc.smartedu.othercomponent.SaveToDBService" />
         <!--
         <service android:name="com.engc.smartedu.othercomponent.chat.AppService" >
-        </service>
+        </service>
         -->
         <!-- 消息预处理的intenService -->
         <!--
         <service android:name="com.engc.smartedu.baidupush." >
-        </service>        <
+        </service>        <
         -->
         <!-- -百度推送 服务 -->
         <service
@@ -274,7 +277,7 @@
             <action android:name="android.intent.action.ACTION_SHUTDOWN" />
             网络连接变化的广播
             <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-        </receiver>
+        </receiver>
         -->
 
 

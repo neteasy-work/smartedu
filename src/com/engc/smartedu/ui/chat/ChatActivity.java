@@ -4,41 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.engc.smartedu.R;
-import com.engc.smartedu.othercomponent.chat.AppService;
-import com.engc.smartedu.othercomponent.chat.ChatApp;
-import com.engc.smartedu.othercomponent.chat.IConnectionStatusCallback;
-import com.engc.smartedu.support.database.ChatProvider;
-import com.engc.smartedu.support.database.ChatProvider.ChatConstants;
-import com.engc.smartedu.support.database.RosterProvider;
-import com.engc.smartedu.support.utils.AppLogger;
-import com.engc.smartedu.support.utils.PreferenceConstants;
-import com.engc.smartedu.support.utils.PreferenceUtils;
-import com.engc.smartedu.support.utils.Utility;
-import com.engc.smartedu.ui.adapter.ChatAdapter;
-import com.engc.smartedu.ui.adapter.FaceAdapter;
-import com.engc.smartedu.ui.adapter.FacePageAdapter;
-import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
-import com.engc.smartedu.ui.msglistview.MsgListView;
-import com.engc.smartedu.ui.msglistview.MsgListView.IXListViewListener;
-import com.engc.smartedu.widget.CirclePageIndicator;
-
-import android.app.Activity;
-import android.content.AsyncQueryHandler;
-import android.content.ComponentName;
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.database.ContentObserver;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.v4.view.ViewPager;
+import android.os.Handler;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
 import android.text.Spannable;
@@ -47,112 +22,250 @@ import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
+import com.engc.smartedu.R;
+import com.engc.smartedu.baidupush.client.PushMessageReceiver;
+import com.engc.smartedu.bean.Message;
+import com.engc.smartedu.bean.MessageItem;
+import com.engc.smartedu.bean.RecentItem;
+import com.engc.smartedu.bean.User;
+import com.engc.smartedu.othercomponent.chat.SendMsgAsyncTask;
+import com.engc.smartedu.support.database.MessageDB;
+import com.engc.smartedu.support.database.RecentDB;
+import com.engc.smartedu.support.utils.AppLogger;
+import com.engc.smartedu.support.utils.GlobalContext;
+import com.engc.smartedu.support.utils.HomeWatcher;
+import com.engc.smartedu.support.utils.HomeWatcher.OnHomePressedListener;
+import com.engc.smartedu.support.utils.SharePreferenceUtil;
+import com.engc.smartedu.support.utils.Utility;
+import com.engc.smartedu.ui.adapter.FaceAdapter;
+import com.engc.smartedu.ui.adapter.FacePageAdapter;
+import com.engc.smartedu.ui.adapter.MessageAdapter;
+import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
+import com.engc.smartedu.ui.leave.LeaveActivity;
+import com.engc.smartedu.ui.main.MainTimeLineActivity;
+import com.engc.smartedu.ui.msglistview.MsgListView;
+import com.engc.smartedu.ui.msglistview.MsgListView.IXListViewListener;
+import com.engc.smartedu.widget.CirclePageIndicator;
+import com.engc.smartedu.widget.JazzyViewPager;
+import com.engc.smartedu.widget.JazzyViewPager.TransitionEffect;
+import com.google.gson.Gson;
+
+@SuppressLint("NewApi")
 public class ChatActivity extends AbstractAppActivity implements
-		OnTouchListener, OnClickListener, IXListViewListener,
-		IConnectionStatusCallback {
+		OnTouchListener, OnClickListener, PushMessageReceiver.EventHandler,
+		OnHomePressedListener, IXListViewListener {
+
+	public static final int NEW_MESSAGE = 0x001;// 收到消息
+	private TransitionEffect mEffects[] = { TransitionEffect.Standard,
+			TransitionEffect.Tablet, TransitionEffect.CubeIn,
+			TransitionEffect.CubeOut, TransitionEffect.FlipVertical,
+			TransitionEffect.FlipHorizontal, TransitionEffect.Stack,
+			TransitionEffect.ZoomIn, TransitionEffect.ZoomOut,
+			TransitionEffect.RotateUp, TransitionEffect.RotateDown,
+			TransitionEffect.Accordion, };// 表情翻页效果
+
+	private GlobalContext global;
 
 	public static final String INTENT_EXTRA_USERNAME = ChatActivity.class
 			.getName() + ".username";// 昵称对应的key
-	private MsgListView mMsgListView;// 对话ListView
-	private ViewPager mFaceViewPager;// 表情选择ViewPager
+	private JazzyViewPager mFaceViewPager;// 表情选择ViewPager
 	private int mCurrentPage = 0;// 当前表情页
 	private boolean mIsFaceShow = false;// 是否显示表情
 	private Button mSendMsgBtn;// 发送消息button
 	private ImageButton mFaceSwitchBtn;// 切换键盘和表情的button
 	private TextView mTitleNameView;// 标题栏
 	// private ImageView mTitleStatusView;
-	private EditText mChatEditText;// 消息输入框
-	private LinearLayout mFaceRoot;// 表情父容器
 	private WindowManager.LayoutParams mWindowNanagerParams;
 	private InputMethodManager mInputMethodManager;
-	private List<String> mFaceMapKeys;// 表情对应的字符串数组
-	private String mWithJabberID = null;// 当前聊天用户的ID
+	private static int MsgPagerNum;
+	private MessageDB mMsgDB;
+	private RecentDB mRecentDB;
+	private int currentPage = 0;
+	private boolean isFaceShow = false;
+	private ImageButton faceBtn;
+	private EditText msgEt;
+	private LinearLayout faceLinearLayout;
+	private WindowManager.LayoutParams params;
+	private InputMethodManager imm;
+	private List<String> keys;
+	private MessageAdapter adapter;
+	private MsgListView mMsgListView;
+	private SharePreferenceUtil mSpUtil;
+	private User mFromUser;
+	private TextView mTitle, mTitleLeftBtn, mTitleRightBtn;
+	private HomeWatcher mHomeWatcher;
+	private Gson mGson;
+	private Message notificationMessage; // 通知栏 中 信息
+	private ActionBar actionBar;
 
-	private static final String[] PROJECTION_FROM = new String[] {
-			ChatProvider.ChatConstants._ID, ChatProvider.ChatConstants.DATE,
-			ChatProvider.ChatConstants.DIRECTION,
-			ChatProvider.ChatConstants.JID, ChatProvider.ChatConstants.MESSAGE,
-			ChatProvider.ChatConstants.DELIVERY_STATUS };// 查询字段
+	private Handler handler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			if (msg.what == NEW_MESSAGE) {
+				// String message = (String) msg.obj;
+				com.engc.smartedu.bean.Message msgItem = (com.engc.smartedu.bean.Message) msg.obj;
+				String userId = msgItem.getUsercode();
+				if (!userId.equals(mFromUser.getUsercode()))// 如果不是当前正在聊天对象的消息，不处理
+					return;
 
-	// private ContentObserver mContactObserver = new ContactObserver();//
-	// 联系人数据监听，主要是监听对方在线状态
-	private AppService appService;// Main服务
-
-	ServiceConnection mServiceConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			appService = ((AppService.AppBinder) service).getService();
-			appService.registerConnectionStatusCallback(ChatActivity.this);
-			// 如果没有连接上，则重新连接xmpp服务器
-			if (!appService.isAuthenticated()) {
-				String usr = PreferenceUtils.getPrefString(ChatActivity.this,
-						PreferenceConstants.ACCOUNT, "");
-				String password = PreferenceUtils.getPrefString(
-						ChatActivity.this, PreferenceConstants.PASSWORD, "");
-				appService.Login(usr, password);
+				// int headId = msgItem.getHead_id();
+				/*
+				 * try { headId = Integer
+				 * .parseInt(JsonUtil.getFromUserHead(message)); } catch
+				 * (Exception e) { L.e("head is not integer  " + e); }
+				 */
+				// TODO Auto-generated method stub
+				MessageItem item = new MessageItem(
+						MessageItem.MESSAGE_TYPE_TEXT, msgItem.getUsername(),
+						System.currentTimeMillis(), msgItem.getMessage(), "",
+						true, 0);
+				adapter.upDateMsg(item);
+				mMsgDB.saveMsg(msgItem.getUsercode(), item);
+				RecentItem recentItem = new RecentItem(userId, "",
+						msgItem.getUsername(), msgItem.getMessage(), 0,
+						System.currentTimeMillis());
+				mRecentDB.saveRecent(recentItem);
 			}
 		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			appService.unRegisterConnectionStatusCallback();
-			appService = null;
-		}
-
 	};
-
-	/**
-	 * 解绑服务
-	 */
-	private void unbindXMPPService() {
-		try {
-			unbindService(mServiceConnection);
-		} catch (IllegalArgumentException e) {
-			AppLogger.e("Service wasn't bound!");
-		}
-	}
-
-	/**
-	 * 绑定服务
-	 */
-	private void bindXMPPService() {
-		Intent mServiceIntent = new Intent(this, AppService.class);
-		Uri chatURI = Uri.parse(mWithJabberID);
-		mServiceIntent.setData(chatURI);
-		bindService(mServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.chat);
-		 initData();// 初始化数据
+		actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 
+		initData(); // 初始化 本地数据
 		initView();// 初始化view
-		// initFacePage();// 初始化表情
-		// setChatWindowAdapter();// 初始化对话数据
-		// getContentResolver().registerContentObserver(
-		// RosterProvider.CONTENT_URI, true, mContactObserver);// 开始监听联系人数据库
+		initFacePage(); // 初始化表情 page
+		if (notificationMessage != null)
+			showNotificationMessageToDB();
+
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		mHomeWatcher = new HomeWatcher(this);
+		mHomeWatcher.setOnHomePressedListener(this);
+		mHomeWatcher.startWatch();
+		PushMessageReceiver.ehList.add(this);// 监听推送的消息
+	}
+
+	  @Override
+	    public boolean onCreateOptionsMenu(Menu menu) {
+	        getMenuInflater().inflate(R.menu.actionbar_menu_browserbigpicactivity, menu);
+	        return true;
+	    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			Intent intent = new Intent(this, MainTimeLineActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+            break;
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		imm.hideSoftInputFromWindow(msgEt.getWindowToken(), 0);
+		faceLinearLayout.setVisibility(View.GONE);
+		isFaceShow = false;
+		super.onPause();
+		mHomeWatcher.setOnHomePressedListener(null);
+		mHomeWatcher.stopWatch();
+		PushMessageReceiver.ehList.remove(this);// 移除监听
+	}
+
+	/**
+	 * 点击通知栏 将信息保存到Recent DB 中 并刷新 chat 窗体
+	 */
+	private void showNotificationMessageToDB() {
+		actionBar.setTitle(notificationMessage.getUsername());
+		MessageItem item = new MessageItem(MessageItem.MESSAGE_TYPE_TEXT,
+				notificationMessage.getUsername(), System.currentTimeMillis(),
+				notificationMessage.getMessage(), "", true, 0);
+		adapter.upDateMsg(item);
+		mMsgDB.saveMsg(notificationMessage.getUsercode(), item);
+		RecentItem recentItem = new RecentItem(
+				notificationMessage.getUsercode(), "",
+				notificationMessage.getUsername(),
+				notificationMessage.getMessage(), 0, System.currentTimeMillis());
+		mRecentDB.saveRecent(recentItem);
+	}
+
+	/**
+	 * 初始化SQLite 中基本数据
+	 */
+	private void initData() {
+		mFromUser = (User) getIntent().getSerializableExtra("user");
+		if (mFromUser == null) {// 如果为空，直接关闭
+			finish();
+		}
+		notificationMessage = (Message) getIntent().getSerializableExtra(
+				"message");
+		actionBar.setTitle(mFromUser.getUsername());
+		global = GlobalContext.getInstance();
+		mSpUtil = global.getSpUtil();
+		mGson = global.getGson();
+		mMsgDB = global.getMessageDB();
+		mRecentDB = global.getRecentDB();
+		Set<String> keySet = global.getFaceMap().keySet();
+		keys = new ArrayList<String>();
+		keys.addAll(keySet);
+		MsgPagerNum = 0;
+		adapter = new MessageAdapter(this, initMsgData());
+	}
+
+	/**
+	 * 加载消息历史，从数据库中读出
+	 */
+	private List<MessageItem> initMsgData() {
+		List<MessageItem> list = mMsgDB.getMsg(mFromUser.getUsercode(),
+				MsgPagerNum);
+		List<MessageItem> msgList = new ArrayList<MessageItem>();// 消息对象数组
+		if (list.size() > 0) {
+			for (MessageItem entity : list) {
+				if (entity.getName().equals("")) {
+					entity.setName(mFromUser.getUsername());
+				}
+				// if (entity.getHeadImg() < 0) {
+				// entity.setHeadImg(mFromUser.getHeadIcon());
+				// }
+				msgList.add(entity);
+			}
+		}
+		return msgList;
+
 	}
 
 	private void initView() {
@@ -161,27 +274,32 @@ public class ChatActivity extends AbstractAppActivity implements
 
 		mMsgListView = (MsgListView) findViewById(R.id.msg_listView);
 		// 触摸ListView隐藏表情和输入法
+		// 触摸ListView隐藏表情和输入法
 		mMsgListView.setOnTouchListener(this);
 		mMsgListView.setPullLoadEnable(false);
 		mMsgListView.setXListViewListener(this);
+		mMsgListView.setAdapter(adapter);
+		mMsgListView.setSelection(adapter.getCount() - 1);
 		mSendMsgBtn = (Button) findViewById(R.id.send);
 		mFaceSwitchBtn = (ImageButton) findViewById(R.id.face_switch_btn);
-		mChatEditText = (EditText) findViewById(R.id.input);
-		mFaceRoot = (LinearLayout) findViewById(R.id.face_ll);
-		mFaceViewPager = (ViewPager) findViewById(R.id.face_pager);
-		mChatEditText.setOnTouchListener(this);
-		mTitleNameView = (TextView) findViewById(R.id.ivTitleName);
-		// mTitleStatusView = (ImageView) findViewById(R.id.ivTitleStatus);
-		mChatEditText.setOnKeyListener(new OnKeyListener() {
+		msgEt = (EditText) findViewById(R.id.input);
+		msgEt.setOnTouchListener(this);
+		faceLinearLayout = (LinearLayout) findViewById(R.id.face_ll);
+		mFaceViewPager = (JazzyViewPager) findViewById(R.id.face_pager);
+		msgEt.setOnTouchListener(this);
+
+		// mTitleNameView = (TextView) findViewById(R.id.ivTitleName);
+		// mTitleNameView.setText(mFromUser.getUsername());
+		msgEt.setOnKeyListener(new OnKeyListener() {
 
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				// TODO Auto-generated method stub
 				if (keyCode == KeyEvent.KEYCODE_BACK) {
-					if (mWindowNanagerParams.softInputMode == WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-							|| mIsFaceShow) {
-						mFaceRoot.setVisibility(View.GONE);
-						mIsFaceShow = false;
+					if (params.softInputMode == WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+							|| isFaceShow) {
+						faceLinearLayout.setVisibility(View.GONE);
+						isFaceShow = false;
 						// imm.showSoftInput(msgEt, 0);
 						return true;
 					}
@@ -189,7 +307,7 @@ public class ChatActivity extends AbstractAppActivity implements
 				return false;
 			}
 		});
-		mChatEditText.addTextChangedListener(new TextWatcher() {
+		msgEt.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
@@ -219,36 +337,26 @@ public class ChatActivity extends AbstractAppActivity implements
 	}
 
 	/**
-	 * 初始化聊天对象 数据
-	 */
-	private void initData() {
-		mWithJabberID = getIntent().getDataString().toLowerCase();// 获取聊天对象的id
-		// 将表情map的key保存在数组中
-		Set<String> keySet = ChatApp.getInstance().getFaceMap().keySet();
-		mFaceMapKeys = new ArrayList<String>();
-		mFaceMapKeys.addAll(keySet);
-	}
-
-	/**
-	 * 初始化表情
+	 * 初始化表情page
 	 */
 	private void initFacePage() {
 		// TODO Auto-generated method stub
 		List<View> lv = new ArrayList<View>();
-		for (int i = 0; i < ChatApp.NUM_PAGE; ++i)
+		for (int i = 0; i < global.NUM_PAGE; ++i)
 			lv.add(getGridView(i));
-		FacePageAdapter adapter = new FacePageAdapter(lv);
+		FacePageAdapter adapter = new FacePageAdapter(lv, mFaceViewPager);
 		mFaceViewPager.setAdapter(adapter);
-		mFaceViewPager.setCurrentItem(mCurrentPage);
+		mFaceViewPager.setCurrentItem(currentPage);
+		mFaceViewPager.setTransitionEffect(mEffects[mSpUtil.getFaceEffect()]);
 		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.indicator);
 		indicator.setViewPager(mFaceViewPager);
 		adapter.notifyDataSetChanged();
-		mFaceRoot.setVisibility(View.GONE);
+		faceLinearLayout.setVisibility(View.GONE);
 		indicator.setOnPageChangeListener(new OnPageChangeListener() {
 
 			@Override
 			public void onPageSelected(int arg0) {
-				mCurrentPage = arg0;
+				currentPage = arg0;
 			}
 
 			@Override
@@ -265,36 +373,11 @@ public class ChatActivity extends AbstractAppActivity implements
 	}
 
 	/**
-	 * 设置聊天的Adapter
+	 * 获得表情 gridview
+	 * 
+	 * @param i
+	 * @return
 	 */
-	private void setChatWindowAdapter() {
-		String selection = ChatConstants.JID + "='" + mWithJabberID + "'";
-		// 异步查询数据库
-		new AsyncQueryHandler(getContentResolver()) {
-
-			@Override
-			protected void onQueryComplete(int token, Object cookie,
-					Cursor cursor) {
-				// ListAdapter adapter = new ChatWindowAdapter(cursor,
-				// PROJECTION_FROM, PROJECTION_TO, mWithJabberID);
-				ListAdapter adapter = new ChatAdapter(ChatActivity.this,
-						cursor, PROJECTION_FROM);
-				mMsgListView.setAdapter(adapter);
-				mMsgListView.setSelection(adapter.getCount() - 1);
-			}
-
-		}.startQuery(0, null, ChatProvider.CONTENT_URI, PROJECTION_FROM,
-				selection, null, null);
-		// 同步查询数据库，建议停止使用,如果数据庞大时，导致界面失去响应
-		// Cursor cursor = managedQuery(ChatProvider.CONTENT_URI,
-		// PROJECTION_FROM,
-		// selection, null, null);
-		// ListAdapter adapter = new ChatWindowAdapter(cursor, PROJECTION_FROM,
-		// PROJECTION_TO, mWithJabberID);
-		// mMsgListView.setAdapter(adapter);
-		// mMsgListView.setSelection(adapter.getCount() - 1);
-	}
-
 	private GridView getGridView(int i) {
 		// TODO Auto-generated method stub
 		GridView gv = new GridView(this);
@@ -315,22 +398,21 @@ public class ChatActivity extends AbstractAppActivity implements
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				if (arg2 == ChatApp.NUM) {// 删除键的位置
-					int selection = mChatEditText.getSelectionStart();
-					String text = mChatEditText.getText().toString();
+				if (arg2 == global.NUM) {// 删除键的位置
+					int selection = msgEt.getSelectionStart();
+					String text = msgEt.getText().toString();
 					if (selection > 0) {
 						String text2 = text.substring(selection - 1);
 						if ("]".equals(text2)) {
 							int start = text.lastIndexOf("[");
 							int end = selection;
-							mChatEditText.getText().delete(start, end);
+							msgEt.getText().delete(start, end);
 							return;
 						}
-						mChatEditText.getText()
-								.delete(selection - 1, selection);
+						msgEt.getText().delete(selection - 1, selection);
 					}
 				} else {
-					int count = mCurrentPage * ChatApp.NUM + arg2;
+					int count = currentPage * global.NUM + arg2;
 					// 注释的部分，在EditText中显示字符串
 					// String ori = msgEt.getText().toString();
 					// int index = msgEt.getSelectionStart();
@@ -341,8 +423,8 @@ public class ChatActivity extends AbstractAppActivity implements
 
 					// 下面这部分，在EditText中显示表情
 					Bitmap bitmap = BitmapFactory.decodeResource(
-							getResources(), (Integer) ChatApp.getInstance()
-									.getFaceMap().values().toArray()[count]);
+							getResources(), (Integer) global.getFaceMap()
+									.values().toArray()[count]);
 					if (bitmap != null) {
 						int rawHeigh = bitmap.getHeight();
 						int rawWidth = bitmap.getHeight();
@@ -364,45 +446,26 @@ public class ChatActivity extends AbstractAppActivity implements
 								rawWidth, rawHeigh, matrix, true);
 						ImageSpan imageSpan = new ImageSpan(ChatActivity.this,
 								newBitmap);
-						String emojiStr = mFaceMapKeys.get(count);
+						String emojiStr = keys.get(count);
 						SpannableString spannableString = new SpannableString(
 								emojiStr);
 						spannableString.setSpan(imageSpan,
 								emojiStr.indexOf('['),
 								emojiStr.indexOf(']') + 1,
 								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-						mChatEditText.append(spannableString);
+						msgEt.append(spannableString);
 					} else {
-						String ori = mChatEditText.getText().toString();
-						int index = mChatEditText.getSelectionStart();
+						String ori = msgEt.getText().toString();
+						int index = msgEt.getSelectionStart();
 						StringBuilder stringBuilder = new StringBuilder(ori);
-						stringBuilder.insert(index, mFaceMapKeys.get(count));
-						mChatEditText.setText(stringBuilder.toString());
-						mChatEditText.setSelection(index
-								+ mFaceMapKeys.get(count).length());
+						stringBuilder.insert(index, keys.get(count));
+						msgEt.setText(stringBuilder.toString());
+						msgEt.setSelection(index + keys.get(count).length());
 					}
 				}
 			}
 		});
 		return gv;
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (hasWindowFocus())
-			unbindXMPPService();// 解绑服务
-		// getContentResolver().unregisterContentObserver(mContactObserver);
-	}
-
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-		super.onWindowFocusChanged(hasFocus);
-		// 窗口获取到焦点时绑定服务，失去焦点将解绑
-		if (hasFocus)
-			bindXMPPService();
-		else
-			unbindXMPPService();
 	}
 
 	// 防止乱pageview乱滚动
@@ -418,9 +481,95 @@ public class ChatActivity extends AbstractAppActivity implements
 	}
 
 	@Override
-	public void onRefresh() {
-		mMsgListView.stopRefresh();
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.face_switch_btn:
+			if (!mIsFaceShow) {
+				mInputMethodManager.hideSoftInputFromWindow(
+						msgEt.getWindowToken(), 0);
+				try {
+					Thread.sleep(80);// 解决此时会黑一下屏幕的问题
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				faceLinearLayout.setVisibility(View.VISIBLE);
+				mFaceSwitchBtn.setImageResource(R.drawable.aio_keyboard);
+				mIsFaceShow = true;
+			} else {
+				faceLinearLayout.setVisibility(View.GONE);
+				mInputMethodManager.showSoftInput(msgEt, 0);
+				mFaceSwitchBtn
+						.setImageResource(R.drawable.qzone_edit_face_drawable);
+				mIsFaceShow = false;
+			}
 
+			
+			break;
+		case R.id.send:// 发送消息
+
+			String msg = msgEt.getText().toString();
+			MessageItem item = new MessageItem(MessageItem.MESSAGE_TYPE_TEXT,
+					mSpUtil.getUserName(), System.currentTimeMillis(), msg,
+					mSpUtil.getHeadIcon(), false, 0);
+			adapter.upDateMsg(item);
+			// if (adapter.getCount() - 10 > 10) {
+			// L.i("begin to remove...");
+			// adapter.removeHeadMsg();
+			// MsgPagerNum--;
+			// }
+			mMsgListView.setSelection(adapter.getCount() - 1);
+			mMsgDB.saveMsg(mFromUser.getUsercode(), item);
+			msgEt.setText("");
+			com.engc.smartedu.bean.Message msgItem = new com.engc.smartedu.bean.Message(
+					System.currentTimeMillis(), msg, "");
+			new SendMsgAsyncTask(mGson.toJson(msgItem), mFromUser.getUsercode())
+					.send();
+			RecentItem recentItem = new RecentItem(mFromUser.getUsercode(), "",
+					mFromUser.getUsername(), msg, 0, System.currentTimeMillis());
+			mRecentDB.saveRecent(recentItem);
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		switch (v.getId()) {
+		case R.id.msg_listView:
+			mInputMethodManager.hideSoftInputFromWindow(msgEt.getWindowToken(),
+					0);
+			mFaceSwitchBtn
+					.setImageResource(R.drawable.qzone_edit_face_drawable);
+			faceLinearLayout.setVisibility(View.GONE);
+			mIsFaceShow = false;
+			break;
+		case R.id.input:
+			mInputMethodManager.showSoftInput(msgEt, 0);
+			mFaceSwitchBtn
+					.setImageResource(R.drawable.qzone_edit_face_drawable);
+			faceLinearLayout.setVisibility(View.GONE);
+			mIsFaceShow = false;
+			break;
+
+		default:
+			break;
+		}
+		return false;
+	}
+
+	@Override
+	public void onRefresh() {
+
+		MsgPagerNum++;
+		List<MessageItem> msgList = initMsgData();
+		int position = adapter.getCount();
+		adapter.setMessageList(msgList);
+		mMsgListView.stopRefresh();
+		mMsgListView.setSelection(adapter.getCount() - position - 1);
+		AppLogger.i("MsgPagerNum = " + MsgPagerNum + ", adapter.getCount() = "
+				+ adapter.getCount());
 	}
 
 	@Override
@@ -430,79 +579,48 @@ public class ChatActivity extends AbstractAppActivity implements
 	}
 
 	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.face_switch_btn:
-			if (!mIsFaceShow) {
-				mInputMethodManager.hideSoftInputFromWindow(
-						mChatEditText.getWindowToken(), 0);
-				try {
-					Thread.sleep(80);// 解决此时会黑一下屏幕的问题
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				mFaceRoot.setVisibility(View.VISIBLE);
-				mFaceSwitchBtn.setImageResource(R.drawable.aio_keyboard);
-				mIsFaceShow = true;
-			} else {
-				mFaceRoot.setVisibility(View.GONE);
-				mInputMethodManager.showSoftInput(mChatEditText, 0);
-				mFaceSwitchBtn
-						.setImageResource(R.drawable.qzone_edit_face_drawable);
-				mIsFaceShow = false;
-			}
-			break;
-		case R.id.send:// 发送消息
-			sendMessageIfNotNull();
-			break;
-		default:
-			break;
-		}
+	public void onHomePressed() {
+		global.showNotification();
 
-	}
-
-	private void sendMessageIfNotNull() {
-		if (mChatEditText.getText().length() >= 1) {
-			if (appService != null) {
-				appService.sendMessage(mWithJabberID, mChatEditText.getText()
-						.toString());
-				if (!appService.isAuthenticated())
-					Utility.ToastMessage(this, "消息已经保存随后发送");
-			}
-			mChatEditText.setText(null);
-			mSendMsgBtn.setEnabled(false);
-		}
 	}
 
 	@Override
-	public void connectionStatusChanged(int connectedState, String reason) {
+	public void onHomeLongPressed() {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		switch (v.getId()) {
-		case R.id.msg_listView:
-			mInputMethodManager.hideSoftInputFromWindow(
-					mChatEditText.getWindowToken(), 0);
-			mFaceSwitchBtn
-					.setImageResource(R.drawable.qzone_edit_face_drawable);
-			mFaceRoot.setVisibility(View.GONE);
-			mIsFaceShow = false;
-			break;
-		case R.id.input:
-			mInputMethodManager.showSoftInput(mChatEditText, 0);
-			mFaceSwitchBtn
-					.setImageResource(R.drawable.qzone_edit_face_drawable);
-			mFaceRoot.setVisibility(View.GONE);
-			mIsFaceShow = false;
-			break;
+	public void onMessage(Message message) {
+		android.os.Message handlerMsg = handler.obtainMessage(NEW_MESSAGE);
+		handlerMsg.obj = message;
+		handler.sendMessage(handlerMsg);
 
-		default:
-			break;
-		}
-		return false;
+	}
+
+	@Override
+	public void onBind(String method, int errorCode, String content) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onNotify(String title, String content) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onNetChange(boolean isNetConnected) {
+		if (!isNetConnected)
+			Utility.ToastMessage(this, "网络连接已断开");
+
+	}
+
+	@Override
+	public void onNewFriend(User u) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

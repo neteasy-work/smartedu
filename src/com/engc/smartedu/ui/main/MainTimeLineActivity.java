@@ -137,6 +137,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 			switch (msg.what) {
 			case NEW_FRIEND:
 				User u = (User) msg.obj;
+				AppLogger.d("new friend handler","step to new friend *********************");
 				// mUserDB.addUser(u);
 				if (mRightFragment == null)
 					mRightFragment = (RightMenuFragment) getSupportFragmentManager()
@@ -146,6 +147,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 				break;
 			case NEW_MESSAGE:
 				// String message = (String) msg.obj;
+				AppLogger.d("new message handler","step to new message *********************");
 				com.engc.smartedu.bean.Message msgItem = (com.engc.smartedu.bean.Message) msg.obj;
 				String userId = msgItem.getUsercode();
 				String nick = msgItem.getUsername();
@@ -430,7 +432,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		ActionBar actionBar = getActionBar();
 
 		actionBar.setNavigationMode(ActionBar.DISPLAY_SHOW_CUSTOM);
-		// actionBar.setCustomView(resId)
+		// actionBar.setCustomView(resId)rr
 		// actionBar.setTitle("智慧教育");
 		if (SettingUtility.getAppTheme() == R.style.AppTheme_Four
 				&& getResources().getBoolean(R.bool.is_phone))
@@ -618,7 +620,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 			mNetErrorView.setVisibility(View.GONE);
 		}
 		PushMessageReceiver.ehList.add(this);
-		//initRecentData();
+		initRecentData();
 		global.getNotificationManager().cancel(
 				PushMessageReceiver.NOTIFY_ID);
 		PushMessageReceiver.mNewNum = 0;
@@ -655,7 +657,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		// TODO Auto-generated method stub
 		mRecentDatas = mRecentDB.getRecentList();
 		mAdapter = new RecentAdapter(this, mRecentDatas, mListView);
-		mListView.setAdapter(mAdapter);
+		//mListView.setAdapter(mAdapter);
 
 	}
 	

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.engc.smartedu.R;
 import com.engc.smartedu.othercomponent.chat.ChatApp;
+import com.engc.smartedu.support.utils.GlobalContext;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -27,7 +28,7 @@ public class FaceAdapter extends BaseAdapter {
 		// TODO Auto-generated constructor stub
 		this.inflater = LayoutInflater.from(context);
 		this.currentPage = currentPage;
-		mFaceMap = ChatApp.getInstance().getFaceMap();
+		mFaceMap = GlobalContext.getInstance().getFaceMap();
 		initData();
 	}
 

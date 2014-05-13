@@ -198,9 +198,9 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 					break;
 
 				case 3: // 请假记录
-					Intent inte = new Intent(getActivity()
-							.getApplicationContext(), LeaveRecordActivity.class);
-					startActivity(inte);
+					//Intent inte = new Intent(getActivity()
+						//	.getApplicationContext(), LeaveRecordActivity.class);
+					//startActivity(inte);
 					break;
 				default: //更多
 					Utility.ToastMessage(getActivity().getApplicationContext(), "暂未开放，敬请期待");

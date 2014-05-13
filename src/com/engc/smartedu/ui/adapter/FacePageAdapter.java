@@ -8,14 +8,18 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.engc.smartedu.widget.JazzyViewPager;
+
 public class FacePageAdapter extends PagerAdapter {
 
 	// 界面列表
 	private List<View> views;
+	private JazzyViewPager viewPager;
 
-	public FacePageAdapter(List<View> lv) {
+	public FacePageAdapter(List<View> lv, JazzyViewPager viewPager) {
 		super();
 		this.views = lv;
+		this.viewPager = viewPager;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -73,6 +77,7 @@ public class FacePageAdapter extends PagerAdapter {
 	@Override
 	public Object instantiateItem(View container, int position) {
 		((ViewPager) container).addView(views.get(position), 0);
+		viewPager.setObjectForPosition(views.get(position), position);// 这句很重要,没有这句就没有效果
 		return views.get(position);
 	}
 

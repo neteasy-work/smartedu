@@ -27,6 +27,7 @@ import com.engc.smartedu.support.utils.GlobalContext;
 import com.engc.smartedu.support.utils.NetUtility;
 import com.engc.smartedu.support.utils.SharePreferenceUtil;
 import com.engc.smartedu.support.utils.Utility;
+import com.engc.smartedu.ui.chat.ChatActivity;
 import com.engc.smartedu.ui.fragment.RightMenuFragment;
 import com.google.gson.Gson;
 
@@ -182,8 +183,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
 		GlobalContext application = GlobalContext.getInstance();
 
 		int icon = R.drawable.notify_newmessage;
-		CharSequence tickerText = message.getUsername() + ":"
-				+ message.getMessage();
+		CharSequence tickerText =message.getMessage();
 		long when = System.currentTimeMillis();
 		Notification notification = new Notification(icon, tickerText, when);
 
@@ -194,11 +194,17 @@ public class PushMessageReceiver extends BroadcastReceiver {
 		notification.defaults |= Notification.DEFAULT_VIBRATE;
 		notification.contentView = null;
 
-		Intent intent = new Intent(application, RightMenuFragment.class); //当有新消息来临时，点击通知栏，进入右侧滑动mianban
+		Intent intent = new Intent(application, ChatActivity.class); //当有新消息来临时，点击通知栏，进入右侧滑动mianban
+		User user=new User();
+		user.setUsercode(application.getSpUtil().getUserCode());
+		user.setUsername(application.getSpUtil().getUserName());
+		user.setHeadpic(application.getSpUtil().getHeadIcon());
+		intent.putExtra("user", user);
+		intent.putExtra("message", message);
 		PendingIntent contentIntent = PendingIntent.getActivity(application, 0,
-				intent, 0);
-		notification.setLatestEventInfo(GlobalContext.getInstance(),
-				application.getSpUtil().getUserName() + " (" + mNewNum + "条新消息)",
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		
+		notification.setLatestEventInfo(application,message.getUsername() + "发来"+ mNewNum +"条消息",
 				tickerText, contentIntent);
 		// 下面是4.0通知栏api
 		// Bitmap headBm = BitmapFactory.decodeResource(

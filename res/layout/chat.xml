@@ -129,7 +129,7 @@
         android:paddingTop="5dip"
         android:visibility="gone" >
 
-        <android.support.v4.view.ViewPager
+        <com.engc.smartedu.widget.JazzyViewPager
             android:id="@+id/face_pager"
             android:layout_width="fill_parent"
             android:layout_height="120.0dip"

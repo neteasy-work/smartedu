@@ -33,12 +33,12 @@ public class SetupFragment extends BaseSlidingFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.tweet_menu, container, false);
+		view = inflater.inflate(R.layout.preference, container, false);
 		// initView();
 		//getActivity().getActionBar().hide();
-		myViewLB = (MenuItemView) view.findViewById(R.id.myViewLB);
+		/*myViewLB = (MenuItemView) view.findViewById(R.id.myViewLB);
 		myViewLB.setPosition(MenuItemView.POSITION_LEFT_BOTTOM);
-		myViewLB.setRadius(80);
+		myViewLB.setRadius(80);*/
 		return view;
 	}
 

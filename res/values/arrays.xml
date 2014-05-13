@@ -1,4 +1,5 @@
 <resources>
+
     <string-array name="frequency">
         <item>三分钟</item>
         <item>十五分钟</item>
@@ -57,15 +58,15 @@
     </string-array>
     <string-array name="theme">
         <item>四次元</item>
-        <!--<item>黑白</item>-->
+        <!-- <item>黑白</item> -->
         <item>夜间纯黑</item>
-        <!--<item>白色</item>-->
+        <!-- <item>白色</item> -->
     </string-array>
     <string-array name="theme_value">
         <item>1</item>
         <item>2</item>
-        <!--<item>3</item>-->
-        <!--<item>4</item>-->
+        <!-- <item>3</item> -->
+        <!-- <item>4</item> -->
     </string-array>
     <string-array name="font">
         <item>小</item>
@@ -109,4 +110,30 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+    <string-array name="jazzy_effects_ch">
+        <item>经典模式</item>
+        <item>淡入淡出</item>
+        <item>立方进入</item>
+        <item>立方退出</item>
+        <item>垂直翻页</item>
+        <item>水平翻页</item>
+        <item>缩放进入</item>
+        <item>向上旋转</item>
+        <item>向下旋转</item>
+        <item>折叠进入</item>
+    </string-array>
+    
+      <string-array name="jazzy_effects">
+        <item>Standard</item>
+        <item>Tablet</item>
+        <item>CubeIn</item>
+        <item>CubeOut</item>
+        <item>FlipVertical</item>
+        <item>FlipHorizontal</item>
+        <item>ZoomIn</item>
+        <item>RotateUp</item>
+        <item>RotateDown</item>
+        <item>Accordion</item>
+    </string-array>
+
 </resources>
