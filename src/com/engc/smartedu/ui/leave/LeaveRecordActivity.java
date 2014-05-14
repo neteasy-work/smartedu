@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
@@ -21,13 +22,19 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.engc.smartedu.R;
 import com.engc.smartedu.bean.LeaveBean;
 import com.engc.smartedu.bean.LeaveRecordList;
+import com.engc.smartedu.dao.leave.LeaveDao;
+import com.engc.smartedu.support.exception.AppException;
+import com.engc.smartedu.support.lib.pulltorefresh.PullToRefreshBase;
+import com.engc.smartedu.support.lib.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.engc.smartedu.support.lib.pulltorefresh.PullToRefreshListView;
+import com.engc.smartedu.support.utils.GlobalContext;
 import com.engc.smartedu.ui.adapter.ListViewHoildayRecordAdapter;
 import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
 
@@ -72,6 +79,9 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 	private View view1, view2;
 	private int listviewStatusCode = 0;
 	private Resources rs = null;
+	private PullToRefreshListView ptlListview;
+	
+	private LeaveRecordList list;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -122,14 +132,52 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 	 * 初始化所有ListView
 	 */
 	private void initFrameListView(View view, final int newsType) {
-		// 初始化listview控件
+		
 	
 	}
 
+	private void intitPullToRefreshListView(View view,int record){
+		ptlListview=(PullToRefreshListView) view.findViewById(R.id.audit_holiday_list);
+		ptlListview.setOnRefreshListener(new OnRefreshListener<ListView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		
+	    
+	}
 	
 
 	
-	
+	private class GetDataTask extends AsyncTask<Void, Void, LeaveRecordList> {
+
+		@Override
+		protected LeaveRecordList doInBackground(Void... params) {
+			// Simulates a background job.
+			try {
+			 list=LeaveDao.getHolidayRecordList(0, 1, GlobalContext.getInstance().getSpUtil().getUserCode(), "0");
+				
+			} catch (AppException e) {
+			}
+			return list;
+		}
+
+		@Override
+		protected void onPostExecute(LeaveRecordList result) {
+			
+			//mListItems.addFirst("Added after refresh...");
+			//mAdapter.notifyDataSetChanged();
+
+			// Call onRefreshComplete when the list has been refreshed.
+			ptlListview.onRefreshComplete();
+
+			super.onPostExecute(result);
+		}
+	}
 	
 
 	/**

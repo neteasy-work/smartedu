@@ -6,9 +6,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -425,6 +427,23 @@ public class Utility {
 		return onlyDitital.matcher(text).matches();
 		
 	}
+	
+	public static void CopyStream(InputStream is, OutputStream os)
+    {
+        final int buffer_size=1024;
+        try
+        {
+            byte[] bytes=new byte[buffer_size];
+            for(;;)
+            {
+              int count=is.read(bytes, 0, buffer_size);
+              if(count==-1)
+                  break;
+              os.write(bytes, 0, count);
+            }
+        }
+        catch(Exception ex){}
+    }
 	
 	
 

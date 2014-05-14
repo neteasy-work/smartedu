@@ -7,9 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.engc.smartedu.R;
+import com.engc.smartedu.support.utils.GlobalContext;
+import com.engc.smartedu.support.utils.SharePreferenceUtil;
 import com.engc.smartedu.ui.appcenter.AppsFragment;
 import com.engc.smartedu.ui.friends.FriendsFragment;
 import com.engc.smartedu.ui.home.HomeFragment;
@@ -31,6 +34,8 @@ public class LeftMenuFragment extends BaseSlidingFragment implements
 	private View setupBtnLayout;
 	private View utilsModemLayout; //
 	private TextView titleText; //头部标题
+	private TextView txtUserName;
+	private SharePreferenceUtil spUtil;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,10 +48,14 @@ public class LeftMenuFragment extends BaseSlidingFragment implements
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.main_left_fragment, container,
 				false);
+		spUtil = GlobalContext.getInstance().getSpUtil();
 		homeBtnLayout = view.findViewById(R.id.homeBtnLayout);
 		homeBtnLayout.setOnClickListener(this);
 		friendsBtnLayout = view.findViewById(R.id.friendBtnLayout);
 		friendsBtnLayout.setOnClickListener(this);
+		txtUserName=(TextView) view.findViewById(R.id.nickNameTextView);
+		txtUserName.setText(spUtil.getUserName());
+		
 		//appCenterBtnLayout = view.findViewById(R.id.appcenterBtnLayout);
 		//appCenterBtnLayout.setOnClickListener(this);
 		setupBtnLayout=view.findViewById(R.id.setupBtnLayout);
