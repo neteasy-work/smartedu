@@ -129,10 +129,12 @@ public class LoginActivity extends AbstractAppActivity implements
 					User user = (User) msg.obj;
 					//LoginDao.saveLoginInfo(LoginActivity.this,user);
 					 //save2Preferences();
+					PushManager.startWork(getApplicationContext(),
+							PushConstants.LOGIN_TYPE_API_KEY, user.getUsercode());// 无baidu帐号登录,以apiKey随机获取一个id
 					mSpUtil.setUserCode(user.getUsercode());
 					mSpUtil.setUserName(user.getUsername());
 					mSpUtil.setTag("man");
-					mSpUtil.setHeadIcon(user.getHeadpic());
+					mSpUtil.setHeadIcon(user.getHeadpic()); 
 				    loginDialog.cancel();
 					Intent intent = new Intent(LoginActivity.this,
 							MainTimeLineActivity.class);
@@ -210,8 +212,7 @@ public class LoginActivity extends AbstractAppActivity implements
 			Utility.initAnim(v.getContext(), (ImageView) loginDialog
 					.findViewById(R.id.auth_loading_icon), R.anim.rotate);
 			login(userCode, passWord);
-			PushManager.startWork(getApplicationContext(),
-					PushConstants.LOGIN_TYPE_API_KEY, GlobalContext.API_KEY);// 无baidu帐号登录,以apiKey随机获取一个id
+			
 
 			break;
 		case R.id.net_status_bar_info_top:
@@ -261,7 +262,8 @@ public class LoginActivity extends AbstractAppActivity implements
 				public void sendScuess() {
 					startActivity(new Intent(LoginActivity.this,
 							MainTimeLineActivity.class));
-					AppLogger.d("Set Tag", "连接服务器成功");
+					//AppLogger.d("Set Tag", "连接服务器成功");
+					Utility.ToastMessage(LoginActivity.this, "链接服务器成功");
 					finish();
 				}
 			});

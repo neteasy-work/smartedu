@@ -62,7 +62,7 @@ public class LoginDao {
 				user.getUsername() != null ? user.getUsername() : "");
 		PreferenceUtils.setPrefString(context, "user.cardstatusName", String
 				.valueOf(user.getEntityname() != null ? user.getEntityname()
-						: "0"));
+						: "0"));	
 		PreferenceUtils.setPrefString(context, "user.cardstatusCode", String
 				.valueOf(user.getCardstatus() != 0 ? user.getCardstatus() : 0));
 		PreferenceUtils.setPrefString(context, "user.accountBalance", String

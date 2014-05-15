@@ -5,7 +5,7 @@
     android:background="@color/white"
     android:orientation="vertical" >
 
-    <LinearLayout
+  <!--   <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="40.0dip"
@@ -39,14 +39,40 @@
         android:layout_height="2px"
         android:background="@color/detail_node_title"
         android:orientation="horizontal" >
+    </LinearLayout> -->
+    
+        <LinearLayout
+        android:id="@+id/ll_index_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_menu_bg"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        
+        android:padding="0dp" >
+
+        <TextView
+            android:id="@+id/txtunauditholiday"
+            style="@style/menuTitle"
+            android:text="未审核"
+               android:layout_marginTop="10.0dp"
+            android:textColor="@color/detail_node_title" />
+
+        <TextView
+            android:id="@+id/txtauditedholiday"
+               android:layout_marginTop="10.0dp"
+            style="@style/menuTitle"
+            android:text="已审核"
+            android:textColor="@color/audit_leave_menu_title_unselected" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/cursor"
-        android:layout_width="fill_parent"
-        android:layout_height="3px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:scaleType="matrix"
-        android:src="@drawable/album_box_4" />
+        android:paddingLeft="10.0dp"
+        android:src="@drawable/album_box_5" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vPager"

@@ -12,6 +12,7 @@ import android.widget.*;
 import com.engc.smartedu.R;
 
 import com.engc.smartedu.bean.AccountBean;
+import com.engc.smartedu.dao.login.LoginDao;
 import com.engc.smartedu.support.database.DatabaseManager;
 import com.engc.smartedu.support.lib.MyAsyncTask;
 import com.engc.smartedu.support.lib.changelogdialog.ChangeLogDialog;
@@ -37,7 +38,7 @@ public class AccountActivity extends AbstractAppActivity {
 	private List<AccountBean> accountList = new ArrayList<AccountBean>();
 
 	private GetAccountListDBTask getTask = null;
-	private RemoveAccountDBTask removeTask = null;
+	private RemoveAccountDBTask removeTask = null;  
 
 	private final int ADD_ACCOUNT_REQUEST_CODE = 0;
 	public static int actionBarHeight;
@@ -103,8 +104,9 @@ public class AccountActivity extends AbstractAppActivity {
 				if (!TextUtils.isEmpty(id)) {
 					AccountBean bean = DatabaseManager.getInstance()
 							.getAccount(id);
+					String userCode=spUtil.getUserCode();
 					if (bean != null) {
-						if (!TextUtils.isEmpty(spUtil.getUserCode())) {
+						if (!TextUtils.isEmpty(userCode)) {
 							Intent start = new Intent(AccountActivity.this,
 									MainTimeLineActivity.class);
 							start.putExtra("account", bean);

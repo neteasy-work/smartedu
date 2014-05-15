@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -15,6 +16,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -30,6 +33,7 @@ import com.engc.smartedu.R;
 import com.engc.smartedu.bean.LeaveBean;
 import com.engc.smartedu.bean.LeaveRecordList;
 import com.engc.smartedu.dao.leave.LeaveDao;
+import com.engc.smartedu.dao.login.LoginDao;
 import com.engc.smartedu.support.exception.AppException;
 import com.engc.smartedu.support.lib.pulltorefresh.PullToRefreshBase;
 import com.engc.smartedu.support.lib.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -38,14 +42,15 @@ import com.engc.smartedu.support.utils.GlobalContext;
 import com.engc.smartedu.ui.adapter.ListViewHoildayRecordAdapter;
 import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
 
-
 /**
- * 请假记录  activity
+ * 请假记录 activity
+ * 
  * @author Admin
- *
+ * 
  */
+@SuppressLint("NewApi")
 public class LeaveRecordActivity extends AbstractAppActivity {
-	
+
 	private ListViewHoildayRecordAdapter lvHolidayRecordAdapter; // 适配器
 
 	private List<LeaveBean> lvHolidayRecordData = new ArrayList<LeaveBean>();
@@ -65,7 +70,6 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 
 	private int curHolidayRecodCatalog = LeaveRecordList.CATALOG_ALL;
 
-
 	private ProgressBar lvHolidayRecord_foot_progress; // 新闻 progressbar
 	private Button imBack; // 返回按钮
 
@@ -80,17 +84,44 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 	private int listviewStatusCode = 0;
 	private Resources rs = null;
 	private PullToRefreshListView ptlListview;
-	
+
 	private LeaveRecordList list;
+	 ListViewHoildayRecordAdapter adapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.holiday_record);
+		initActionBar();
 		rs = this.getResources();
 		InitImageView();
 		InitTextView();
 		InitViewPager();
 		initFrameListView(view1, UN_AUDIT_HOLIDAY);
+	}
+
+	/**
+	 * 初始化Actionbar
+	 */
+	private void initActionBar() {
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle("请假记录");
+	}
+
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	/**
@@ -111,7 +142,6 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 		viewPager.setAdapter(new MyViewPagerAdapter(views));
 		viewPager.setCurrentItem(0);
 		viewPager.setOnPageChangeListener(new MyOnPageChangeListener());
-	
 
 	}
 
@@ -132,35 +162,34 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 	 * 初始化所有ListView
 	 */
 	private void initFrameListView(View view, final int newsType) {
+		intitPullToRefreshListView(view, newsType);
 		
-	
+
 	}
 
-	private void intitPullToRefreshListView(View view,int record){
-		ptlListview=(PullToRefreshListView) view.findViewById(R.id.audit_holiday_list);
+	private void intitPullToRefreshListView(View view, int record) {
+		ptlListview = (PullToRefreshListView) view
+				.findViewById(R.id.audit_holiday_list);
 		ptlListview.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				// TODO Auto-generated method stub
-				
+
+				new GetDataTask().execute();
 			}
 		});
-		
-		
-	    
-	}
-	
 
-	
+	}
+
 	private class GetDataTask extends AsyncTask<Void, Void, LeaveRecordList> {
 
 		@Override
 		protected LeaveRecordList doInBackground(Void... params) {
 			// Simulates a background job.
 			try {
-			 list=LeaveDao.getHolidayRecordList(0, 1, GlobalContext.getInstance().getSpUtil().getUserCode(), "0");
-				
+
+				list = LeaveDao.getHolidayRecordList(0, 1, LoginDao.getLoginInfo(LeaveRecordActivity.this).getUsercode(), String.valueOf(AUDIT_ED_HOLIDAY));
+
 			} catch (AppException e) {
 			}
 			return list;
@@ -168,17 +197,21 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 
 		@Override
 		protected void onPostExecute(LeaveRecordList result) {
-			
-			//mListItems.addFirst("Added after refresh...");
-			//mAdapter.notifyDataSetChanged();
+
+			// mListItems.addFirst("Added after refresh...");
+			// mAdapter.notifyDataSetChanged();
 
 			// Call onRefreshComplete when the list has been refreshed.
-			ptlListview.onRefreshComplete();
+		    adapter=new ListViewHoildayRecordAdapter(getApplicationContext(),list.getHolidayslist(),R.layout.list_holiday_record_item);
+			ptlListview.setAdapter(adapter);
+		    adapter.notifyDataSetChanged();
+		    ptlListview.onRefreshComplete();
 
 			super.onPostExecute(result);
 		}
-	}
+
 	
+	}
 
 	/**
 	 * 2 * 初始化动画，这个就是页卡滑动时，下面的横线也滑动的效果，在这里需要计算一些数据 3
@@ -187,7 +220,7 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 	private void InitImageView() {
 		imageView = (ImageView) findViewById(R.id.cursor);
 		bmpW = BitmapFactory.decodeResource(getResources(),
-				R.drawable.album_box_4).getWidth();// 获取图片宽度
+				R.drawable.album_box_5).getWidth();// 获取图片宽度
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenW = dm.widthPixels;// 获取分辨率宽度
@@ -236,6 +269,7 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 		public int getCount() {
 			return mListViews.size();
 		}
+		
 
 		@Override
 		public boolean isViewFromObject(View arg0, Object arg1) {
@@ -267,20 +301,18 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 
 				txtReadedMsg.setTextColor(rs
 						.getColor(R.color.detail_node_title));
-				txtUnReadMsg.setTextColor(rs
-						.getColor(R.color.black));
+				txtUnReadMsg.setTextColor(rs.getColor(R.color.audit_leave_menu_title_unselected));
 				txtReadedMsg.setTextSize(16);
-				txtUnReadMsg.setTextSize(14);
+				txtUnReadMsg.setTextSize(16);
 				initFrameListView(view1, UN_AUDIT_HOLIDAY);
 
 				break;
 			case 1:
 				txtUnReadMsg.setTextColor(rs
 						.getColor(R.color.detail_node_title));
-				txtReadedMsg.setTextColor(rs
-						.getColor(R.color.black));
+				txtReadedMsg.setTextColor(rs.getColor(R.color.audit_leave_menu_title_unselected));
 				txtUnReadMsg.setTextSize(16);
-				txtReadedMsg.setTextSize(14);
+				txtReadedMsg.setTextSize(16);
 				initFrameListView(view2, AUDIT_ED_HOLIDAY);
 				break;
 

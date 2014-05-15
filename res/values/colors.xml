@@ -325,5 +325,9 @@
     <color name="calendar_text_unselectable">#7f778088</color>
     <color name="preference_bg_color">#f0f0f0</color>
     <color name="holo_blue">#FF33E5B5</color>
+    
+    <!-- viewpager  color  -->
+    <color name="audit_leave_menu_title_selected">#ff1869af</color>
+    <color name="audit_leave_menu_title_unselected">#ff5b5a5a</color>
 
 </resources>

@@ -31,6 +31,7 @@ import com.engc.smartedu.ui.interfaces.BaseSlidingFragment;
 import com.engc.smartedu.ui.leave.LeaveActivity;
 import com.engc.smartedu.ui.leave.LeaveRecordActivity;
 
+@SuppressLint("NewApi")
 public class UtitlsModemFragment extends BaseSlidingFragment {
 
 	private TextView txtTitle;
@@ -52,7 +53,6 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_uitlsmodem, container, false);
 		initView();
-
 		return view;
 	}
 
@@ -72,6 +72,7 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 		ab.hide();
 
 	}
+	
 
 	private void initView() {
 		gvUtilsModem = (GridView) view.findViewById(R.id.gvutilsmodem);
@@ -198,12 +199,13 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 					break;
 
 				case 3: // 请假记录
-					//Intent inte = new Intent(getActivity()
-						//	.getApplicationContext(), LeaveRecordActivity.class);
-					//startActivity(inte);
+					Intent inte = new Intent(getActivity()
+							.getApplicationContext(), LeaveRecordActivity.class);
+					startActivity(inte);
 					break;
-				default: //更多
-					Utility.ToastMessage(getActivity().getApplicationContext(), "暂未开放，敬请期待");
+				default: // 更多
+					Utility.ToastMessage(getActivity().getApplicationContext(),
+							"暂未开放，敬请期待");
 					break;
 				}
 
