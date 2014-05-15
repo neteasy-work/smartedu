@@ -112,7 +112,7 @@
                 android:background="@drawable/exit_horizontal_cut_line" />
 
             <LinearLayout
-                android:id="@+id/mine_score"
+                android:id="@+id/clearcachelayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20.0dip"
@@ -178,7 +178,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/set_push_mode"
+                android:id="@+id/feedbacklayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20.0dip"
@@ -204,7 +204,7 @@
                 android:background="@drawable/exit_horizontal_cut_line" />
 
             <LinearLayout
-                android:id="@+id/check_update"
+                android:id="@+id/check_update_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20.0dip"
@@ -217,6 +217,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5.0dip"
                     android:duplicateParentState="true"
+                    android:id="@+id/txt_display_versioncode"
                     android:text="检查更新"
                     android:textColor="@color/grey"
                     android:textSize="@dimen/text_size_16"
@@ -230,7 +231,7 @@
                 android:background="@drawable/exit_horizontal_cut_line" />
 
             <LinearLayout
-                android:id="@+id/about_us"
+                android:id="@+id/about_us_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20.0dip"

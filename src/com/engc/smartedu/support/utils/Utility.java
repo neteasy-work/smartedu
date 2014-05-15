@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
@@ -52,16 +53,23 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 
+import com.engc.smartedu.R;
 import com.engc.smartedu.bean.GeoBean;
 import com.engc.smartedu.support.lib.MyAsyncTask;
 import com.engc.smartedu.support.settinghelper.SettingUtility;
+import com.engc.smartedu.ui.login.LoginActivity;
+
 
 
 @SuppressLint("NewApi")
@@ -445,7 +453,42 @@ public class Utility {
         catch(Exception ex){}
     }
 	
-	
+	/**
+	 * 退出登录 注销 
+	 * @param cont
+	 */
+	public static void Logout(final Context cont) {
+		final AlertDialog alg = new AlertDialog.Builder(cont).create();
+		alg.show();
+		Window window = alg.getWindow();
+		window.setContentView(R.layout.dialog);
+		Button btnEntry = (Button) window
+				.findViewById(R.id.dialog_button_entry);
+		Button btnCancle = (Button) window
+				.findViewById(R.id.dialog_button_cancle);
+		btnEntry.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				alg.cancel();
+				// 注销
+				Intent intent = new Intent(cont, LoginActivity.class);
+				cont.startActivity(intent);
+				
+			}
+		});
+		btnCancle.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				alg.dismiss();
+			}
+		});
+
+	}
+
 
 }
 

@@ -32,6 +32,7 @@ import com.engc.smartedu.support.database.UserDB;
 import com.engc.smartedu.support.utils.AppLogger;
 import com.engc.smartedu.support.utils.GlobalContext;
 import com.engc.smartedu.support.utils.SharePreferenceUtil;
+import com.engc.smartedu.support.utils.Utility;
 import com.engc.smartedu.ui.adapter.FriendsAdapter;
 import com.engc.smartedu.ui.chat.ChatActivity;
 import com.engc.smartedu.ui.interfaces.FixedOnActivityResultBugFragment;
@@ -116,6 +117,7 @@ public class RightMenuFragment extends FixedOnActivityResultBugFragment
 						.getApplicationContext(), ChatActivity.class);
 				intent.putExtra("user", u);
 				startActivity(intent);
+
 
 			}
 		});

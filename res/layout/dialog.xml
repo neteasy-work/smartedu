@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/exit_bg_2"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5.0dip"
+        android:paddingTop="10dip" >
+
+        <!-- <ImageView
+            android:id="@+id/dialog_title_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/app_icon" /> -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           
+            android:layout_marginLeft="10.0dip"
+            android:paddingBottom="5.0dip"
+            android:text="亲，确定退出智慧教育吗?"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_16"  />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginTop="5dip"
+        android:paddingLeft="10.0dip"
+        android:paddingRight="10.0dip"
+        android:background="@drawable/exit_horizontal_cut_line" />
+
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom|center_horizontal"
+      
+        >
+
+        <Button
+            android:id="@+id/dialog_button_entry"
+          
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="30.0dip"
+              android:layout_marginTop="5.0dip"
+            android:background="@drawable/exit_app_button"
+             android:textSize="@dimen/text_size_12" 
+            android:text="确定" />
+        
+        <ImageView
+            android:id="@+id/dialog_cutline"
+            android:layout_width="wrap_content"
+            android:layout_height="50.0dip"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/exit_vertical_cut_line" />
+        
+
+        <Button
+            android:id="@+id/dialog_button_cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+             android:layout_marginTop="5.0dip"
+            android:layout_marginRight="30.0dip"
+            android:background="@drawable/exit_app_button"
+            android:text="取消"
+            android:textSize="@dimen/text_size_13" />
+    </RelativeLayout>
+
+</LinearLayout>

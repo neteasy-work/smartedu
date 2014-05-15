@@ -192,6 +192,10 @@
             android:uiOptions="splitActionBarWhenNarrow" />
         <activity android:name="com.engc.smartedu.ui.preference.PerformanceActivity" />
         <activity android:name="com.engc.smartedu.ui.preference.AboutActivity" />
+        
+        <!-- About us and FeedBack -->
+        <activity android:name="com.engc.smartedu.ui.setup.AboutActivity"></activity>
+        <activity android:name="com.engc.smartedu.ui.setup.FeedBack"></activity>
 
         <!-- service -->
         <service android:name="com.engc.smartedu.othercomponent.FetchNewMsgService" />

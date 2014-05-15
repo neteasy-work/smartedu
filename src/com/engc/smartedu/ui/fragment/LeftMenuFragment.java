@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.engc.smartedu.R;
 import com.engc.smartedu.support.utils.GlobalContext;
 import com.engc.smartedu.support.utils.SharePreferenceUtil;
+import com.engc.smartedu.support.utils.Utility;
 import com.engc.smartedu.ui.appcenter.AppsFragment;
 import com.engc.smartedu.ui.friends.FriendsFragment;
 import com.engc.smartedu.ui.home.HomeFragment;
@@ -36,6 +38,7 @@ public class LeftMenuFragment extends BaseSlidingFragment implements
 	private TextView titleText; //头部标题
 	private TextView txtUserName;
 	private SharePreferenceUtil spUtil;
+	private View exitLayout;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,8 @@ public class LeftMenuFragment extends BaseSlidingFragment implements
 		utilsModemLayout=view.findViewById(R.id.uitlsmodemBtnLayout);
 		utilsModemLayout.setOnClickListener(this);
 		titleText=MainTimeLineActivity.titleText;
+		exitLayout=view.findViewById(R.id.exitBtnLayout);
+		exitLayout.setOnClickListener(this);
 		
 		homeBtnLayout.setSelected(true);
 		friendsBtnLayout.setSelected(false);
@@ -85,7 +90,7 @@ public class LeftMenuFragment extends BaseSlidingFragment implements
 			friendsBtnLayout.setSelected(false);
 			//appCenterBtnLayout.setSelected(false);
 			setupBtnLayout.setSelected(false);
-			//utilsModemLayout.setSelected(false);
+			utilsModemLayout.setSelected(false);
 
 			break;
 		case R.id.friendBtnLayout:
@@ -126,7 +131,13 @@ public class LeftMenuFragment extends BaseSlidingFragment implements
 			//titleText.setText(getString(R.string.leftslidingmenu_setup));
 			break;
 
+		case R.id.exitBtnLayout:
+			
+			Utility.Logout(getActivity());
+			//getActivity().finish();
+			break;
 		default:
+			
 			
 			break;
 		}

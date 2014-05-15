@@ -65,6 +65,8 @@ public class URLS {
 	public final static String GET_TODAY_HOMEWORK = BASEHOST
 			+ "homeworkCtrl/homeWorkTodayListForMobile";
 
+	//意见反馈
+	public final static String FEED_BACK=BASEHOST+"";
 	/**
 	 * 解析url获得objId
 	 * 

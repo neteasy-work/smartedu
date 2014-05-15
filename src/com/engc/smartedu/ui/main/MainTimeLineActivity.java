@@ -17,6 +17,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -57,6 +59,7 @@ import com.engc.smartedu.support.utils.AppLogger;
 import com.engc.smartedu.support.utils.GlobalContext;
 import com.engc.smartedu.support.utils.HomeWatcher;
 import com.engc.smartedu.support.utils.HomeWatcher.OnHomePressedListener;
+import com.engc.smartedu.support.utils.PreferenceUtils;
 import com.engc.smartedu.support.utils.SharePreferenceUtil;
 import com.engc.smartedu.support.utils.Utility;
 import com.engc.smartedu.ui.adapter.RecentAdapter;
@@ -223,11 +226,27 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		initData();  //初始化本地sqlite 数据 
         initView(); //初始化  网络异常视图
 		buildPhoneInterface();
+		getPackageInfo();
 		
 		
 
 		Executors.newSingleThreadScheduledExecutor().schedule(
 				new ClearCacheTask(), 8000, TimeUnit.SECONDS);
+	}
+	
+	/**
+	 * 获得当前客户端 版本号  并将其存储
+	 */
+	private void getPackageInfo(){
+		//获取客户端版本信息
+        try { 
+        	
+        	PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+        	PreferenceUtils.setPrefString(MainTimeLineActivity.this, "APP_Version_Code", info.versionName);
+        } catch (NameNotFoundException e) {    
+			e.printStackTrace(System.err);
+		} 
+		
 	}
 
 	@Override
@@ -255,6 +274,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		return true;
 	}
 
+	
 	/**
 	 * 初始化快捷菜单
 	 */

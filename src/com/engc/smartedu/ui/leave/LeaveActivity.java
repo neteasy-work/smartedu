@@ -76,6 +76,7 @@ public class LeaveActivity extends AbstractAppActivity{
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+
             break;
 		default:
 			break;
