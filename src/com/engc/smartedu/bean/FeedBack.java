@@ -6,6 +6,45 @@ package com.engc.smartedu.bean;
  */
 public class FeedBack extends Entity{
 	
+	private int id;
+	private String author;
+	private String authorCode;
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	private String content;
+	private String operatTime;
+
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	public String getAuthorCode() {
+		return authorCode;
+	}
+	public void setAuthorCode(String authorCode) {
+		this.authorCode = authorCode;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getOperatTime() {
+		return operatTime;
+	}
+	public void setOperatTime(String operatTime) {
+		this.operatTime = operatTime;
+	}
+	
+	
 	
 
 }

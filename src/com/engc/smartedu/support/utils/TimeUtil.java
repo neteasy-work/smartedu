@@ -2,6 +2,7 @@ package com.engc.smartedu.support.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
@@ -21,6 +22,18 @@ public class TimeUtil {
 			return new SimpleDateFormat("yyyy-MM-dd");
 		}
 	};
+	
+	/**
+	 * 获取的时间格式为 yyyy-MM-dd HH:mm
+	 * 
+	 * @return
+	 */
+	public static String getCurrentTime() {
+		SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm");
+		Calendar cal = Calendar.getInstance();
+		return format.format(cal.getTime());
+
+	}
 	public static String getTime(long time) {
 		SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm");
 		return format.format(new Date(time));

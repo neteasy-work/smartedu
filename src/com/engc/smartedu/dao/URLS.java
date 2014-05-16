@@ -67,6 +67,11 @@ public class URLS {
 
 	//意见反馈
 	public final static String FEED_BACK=BASEHOST+"";
+	
+	//根据orgid 查询 朋友
+	public final static String GET_FRIENDS_BY_ORGID=BASEHOST+"";
+	
+	
 	/**
 	 * 解析url获得objId
 	 * 

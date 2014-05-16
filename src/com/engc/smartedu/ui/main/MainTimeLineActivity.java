@@ -30,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -227,6 +228,10 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
         initView(); //初始化  网络异常视图
 		buildPhoneInterface();
 		getPackageInfo();
+		
+		WindowManager wm=(WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+		int width=wm.getDefaultDisplay().getWidth();
+		int height=wm.getDefaultDisplay().getHeight();
 		
 		
 
