@@ -17,7 +17,7 @@ public class FeedBack extends Entity{
 		this.id = id;
 	}
 	private String content;
-	private String operatTime;
+	private String operationTime;
 
 	public String getAuthor() {
 		return author;
@@ -37,12 +37,13 @@ public class FeedBack extends Entity{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getOperatTime() {
-		return operatTime;
+	public String getOperationTime() {
+		return operationTime;
 	}
-	public void setOperatTime(String operatTime) {
-		this.operatTime = operatTime;
+	public void setOperationTime(String operationTime) {
+		this.operationTime = operationTime;
 	}
+	
 	
 	
 	

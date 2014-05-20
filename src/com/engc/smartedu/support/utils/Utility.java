@@ -66,6 +66,7 @@ import android.widget.Toast;
 
 import com.engc.smartedu.R;
 import com.engc.smartedu.bean.GeoBean;
+import com.engc.smartedu.support.http.HttpUtility;
 import com.engc.smartedu.support.lib.MyAsyncTask;
 import com.engc.smartedu.support.settinghelper.SettingUtility;
 import com.engc.smartedu.ui.login.LoginActivity;
@@ -489,6 +490,22 @@ public class Utility {
 
 	}
 
+	/**
+	 * 获取assets 目录下  属性文件
+	 * @return
+	 */
+	public static Properties getContextProperties(){
+		Properties pro=new Properties();
+		InputStream in =Utility.class.getResourceAsStream("/assets/context.properties");
+		try {
+			pro.load(in);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pro;
+		
+	}
 
 }
 

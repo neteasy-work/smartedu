@@ -153,6 +153,7 @@ public class ChatActivity extends AbstractAppActivity implements
 		setContentView(R.layout.chat);
 		actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		
 
 		initData(); // 初始化 本地数据
 		initView();// 初始化view

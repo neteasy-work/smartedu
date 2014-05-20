@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.engc.eop.ClientRequest;
 import com.engc.smartedu.bean.LeaveBean;
 import com.engc.smartedu.bean.LeaveRecordList;
 import com.engc.smartedu.bean.User;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
  *
  */
 public class LeaveDao {
+	
 	
 	/**
 	 * 请假  
@@ -133,6 +135,7 @@ public class LeaveDao {
 			final int pageIndex, final int pageSize, final String userCode,
 			final String status) throws AppException {
 		Map<String, String> map = new HashMap<String, String>();
+		
 		map.put("pageIndex", "1");
 		if (userCode != "0")
 			map.put("usercode", userCode);

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!--  上下文 环境  server 地址 以及 EOP key 配置 -->
+    
+    <string name="BASEHOST"></string>
+    <string name="EOPURI"></string>
+    <string name="EOPKEY"></string>
+    <string name="EOPSECRET"></string>
+    
+    
+</resources>

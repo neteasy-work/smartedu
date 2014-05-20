@@ -31,45 +31,31 @@ public class URLS {
 	private final static String URL_UNDERLINE = "_";
 
 	// 调用服务端推送方法
-	public final static String PushTest = BASEHOST + "pushtest/sendpush.do";
+	public final static String PushTest = "pushtest/sendpush.do";
 	// 登录
-	public final static String Login = BASEHOST + "sysLogin/loginFromMobile.do";
+	public final static String Login ="loginFromMobile";
 	// 请假
-	public final static String APPLY_HOLIDAYS = BASEHOST
-			+ "LeaveManage/forPhoneLeave.do";
+	public final static String APPLY_HOLIDAYS ="forPhoneLeave";
 
 	// 审核假期
-	public final static String AUDIT_HOLIDAYS = BASEHOST
-			+ "LeaveManage/ApplyLeaveforPhone.do";
+	public final static String AUDIT_HOLIDAYS ="ApplyLeaveforPhone";
 
 	// 根据记录ID 查询申请请假信息
-	public final static String GET_APPLY_HOLIDAYS_INFO_BY_RECORDID = BASEHOST
-			+ "LeaveManage/getLeaveInfoforPhone.do";
+	public final static String GET_APPLY_HOLIDAYS_INFO_BY_RECORDID ="getLeaveInfoforPhone";
 	// 更改当前卡 状态
-	public final static String CHANGE_CARD_STATUS = BASEHOST
-			+ "cardOperate/CardReportLossforphone.do";
+	public final static String CHANGE_CARD_STATUS ="CardReportLossforphone";
 
 	// 查询当前 学生的请假
-	public final static String GET_HOLIDAYS_RECORF_FOR_STUDENT = BASEHOST
-			+ "LeaveManage/getLeaveRecord.do";
+	public final static String GET_HOLIDAYS_RECORF_FOR_STUDENT ="getLeaveRecord";
 
 	// 获得应用版本号
-	public final static String GET_APP_VERSION = BASEHOST
-			+ "appVersion/getAppVersion";
-
-	// 获得历史家庭作业
-	public final static String GET_BEFORE_HOMEWORK = BASEHOST
-			+ "homeworkCtrl/homeWorkBefoListForMobile";
-
-	// 获得今天家庭作业
-	public final static String GET_TODAY_HOMEWORK = BASEHOST
-			+ "homeworkCtrl/homeWorkTodayListForMobile";
+	public final static String GET_APP_VERSION ="getAppVersion";
 
 	//意见反馈
-	public final static String FEED_BACK=BASEHOST+"";
+	public final static String FEED_BACK="addFeedBack";
 	
 	//根据orgid 查询 朋友
-	public final static String GET_FRIENDS_BY_ORGID=BASEHOST+"";
+	public final static String GET_FRIENDS_BY_ORGID="getFriends";
 	
 	
 	/**

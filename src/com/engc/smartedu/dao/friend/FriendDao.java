@@ -7,10 +7,12 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.engc.smartedu.bean.FriendBean;
 import com.engc.smartedu.bean.FriendListBean;
+import com.engc.smartedu.bean.SortModel;
 import com.engc.smartedu.dao.URLS;
 import com.engc.smartedu.support.exception.AppException;
 import com.engc.smartedu.support.http.HttpMethod;
 import com.engc.smartedu.support.http.HttpUtility;
+import com.engc.smartedu.ui.adapter.SortAdapter;
 
 /**
  * 
@@ -30,17 +32,15 @@ public class FriendDao {
 	 * @return
 	 * @throws AppException
 	 */
-	public static FriendListBean getFriendsByOrgId(String orgId) throws AppException {
+	public static List<SortModel> getFriendsByOrgId(String orgId) throws AppException {
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("orgId", orgId);
-		FriendListBean friendList = new FriendListBean();
 		try {
 			String result = HttpUtility.getInstance().executeNormalTask(
 					HttpMethod.Post, URLS.GET_FRIENDS_BY_ORGID, params);
-			List<FriendBean> list = JSON.parseArray(result, FriendBean.class);
-			friendList.getFriendsList().addAll(list);
-			return friendList;
+			List<SortModel> list = JSON.parseArray(result, SortModel.class);
+			return list;
 		} catch (Exception e) {
 			if (e instanceof AppException)
 				throw (AppException) e;

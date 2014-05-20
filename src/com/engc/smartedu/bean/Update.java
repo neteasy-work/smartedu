@@ -3,24 +3,35 @@ package com.engc.smartedu.bean;
 import java.io.Serializable;
 
 public class Update implements Serializable {
-	public final static String UTF8 = "UTF-8";
-	public final static String NODE_ROOT = "meeting";
+
 
 	private int versioncode;
 	private String versionname;
 	private String downloadurl;
 	private String updatelog;
 	private String appname;
+	private String apkName;
+	private String operationTime;
 
-	public String getOperatTime() {
-		return operatTime;
+
+
+	
+
+	public String getApkName() {
+		return apkName;
 	}
 
-	public void setOperatTime(String operatTime) {
-		this.operatTime = operatTime;
+	public void setApkName(String apkName) {
+		this.apkName = apkName;
 	}
 
-	private String operatTime;
+	public String getOperationTime() {
+		return operationTime;
+	}
+
+	public void setOperationTime(String operationTime) {
+		this.operationTime = operationTime;
+	}
 
 	public String getAppname() {
 		return appname;
@@ -62,12 +73,6 @@ public class Update implements Serializable {
 		this.updatelog = updatelog;
 	}
 
-	public static String getUtf8() {
-		return UTF8;
-	}
 
-	public static String getNodeRoot() {
-		return NODE_ROOT;
-	}
 
 }

@@ -7,11 +7,14 @@ import java.util.Properties;
 import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
+import com.engc.eop.ClientRequest;
+import com.engc.eop.CompositeResponse;
 import com.engc.smartedu.bean.User;
 import com.engc.smartedu.dao.URLS;
 import com.engc.smartedu.support.exception.AppException;
 import com.engc.smartedu.support.http.HttpMethod;
 import com.engc.smartedu.support.http.HttpUtility;
+import com.engc.smartedu.support.utils.EopClientConstants;
 import com.engc.smartedu.support.utils.GlobalContext;
 import com.engc.smartedu.support.utils.PreferenceUtils;
 import com.engc.smartedu.support.utils.SharePreferenceUtil;
@@ -31,15 +34,25 @@ public class LoginDao {
 
 	public static User Login(final String userName, final String passWord)
 			throws AppException {
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("userName", userName);
-		params.put("passWord", passWord);
+		//Map<String, String> params = new HashMap<String, String>();
+		//params.put("userName", userName);
+		//params.put("passWord", passWord);
+		ClientRequest request=HttpUtility.getEopClient().buildClientRequest();
+		request.addParam("userName", userName);
+		request.addParam("passWord", passWord);
+		
+			
+		
 		User user = null;
 		try {
-			String result = HttpUtility.getInstance().executeNormalTask(
-					HttpMethod.Post, URLS.Login, params);
-			Gson gson = new Gson();
-			user = gson.fromJson(result, User.class);
+			/*String result = HttpUtility.getInstance().executeNormalTask(
+					HttpMethod.Post, URLS.Login, params);*/
+			CompositeResponse<?> res=request.post(URLS.Login, EopClientConstants.VERSION);
+			if(res.isSuccessful()){
+				user=JSON.parseObject(res.getResponseContent(),User.class);
+			}
+			//Gson gson = new Gson();
+			//user = gson.fromJson(result, User.class);
 			return user;
 		} catch (Exception e) {
 			if (e instanceof AppException)
@@ -132,15 +145,24 @@ public class LoginDao {
 	 */
 	public static User ChangeCardStatus(final String userCode,
 			final int basicStatus, final int cardstatusone) throws AppException {
-		Map<String, String> params = new HashMap<String, String>();
+		ClientRequest request=HttpUtility.getEopClient().buildClientRequest();
+		request.addParam("usercode", userCode);
+		request.addParam("status", String.valueOf(basicStatus));
+		request.addParam("cardstatusone", String.valueOf(cardstatusone));
+		
+		
+		/*Map<String, String> params = new HashMap<String, String>();
 		params.put("usercode", userCode);
 		params.put("status", String.valueOf(basicStatus));
-		params.put("cardstatusone", String.valueOf(cardstatusone));
+		params.put("cardstatusone", String.valueOf(cardstatusone));*/
 		User user = null;
 		try {
-			String result = HttpUtility.getInstance().executeNormalTask(
-					HttpMethod.Post, URLS.CHANGE_CARD_STATUS, params);
-			user = JSON.parseObject(result, User.class);
+			//String result = HttpUtility.getInstance().executeNormalTask(
+					//HttpMethod.Post, URLS.CHANGE_CARD_STATUS, params);
+			CompositeResponse<?> res=request.post(URLS.CHANGE_CARD_STATUS, EopClientConstants.JSON);
+			if(res.isSuccessful()){
+				user=JSON.parseObject(res.getResponseContent(),User.class);
+			}
 			return user;
 		} catch (Exception e) {
 			if (e instanceof AppException)

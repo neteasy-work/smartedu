@@ -49,7 +49,7 @@ public class FriendsFragment extends BaseSlidingFragment {
 	private CharacterParser characterParser;
 	private List<SortModel> SourceDateList;
 
-	private FriendListBean friendList;
+	//private  friendList;
 
 	/**
 	 * 根据拼音来排列ListView里面的数据类
@@ -109,16 +109,7 @@ public class FriendsFragment extends BaseSlidingFragment {
 						((SortModel) adapter.getItem(position)).getName());
 			}
 		});
-
-		SourceDateList = filledData(
-				getResources().getStringArray(R.array.date), getResources()
-						.getStringArray(R.array.img_src_data));
-
-		// 根据a-z进行排序源数据
-		Collections.sort(SourceDateList, pinyinComparator);
-		//adapter = new SortAdapter(getActivity(), SourceDateList);
-		//sortListView.setAdapter(adapter);
-
+ 
 	}
 
 	/**
@@ -151,40 +142,34 @@ public class FriendsFragment extends BaseSlidingFragment {
 
 	}
 
-	private class GetDataTask extends AsyncTask<Void, Void, FriendListBean> {
+	private class GetDataTask extends AsyncTask<Void, Void, List<SortModel>> {
 
 		@Override
-		protected FriendListBean doInBackground(Void... params) {
+		protected List<SortModel> doInBackground(Void... params) {
 
 			try {
-				friendList = FriendDao.getFriendsByOrgId(LoginDao.getLoginInfo(
+				SourceDateList = FriendDao.getFriendsByOrgId(LoginDao.getLoginInfo(
 						getActivity()).getOrgid());
+				
 			} catch (AppException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return null;
+			
 		}
 		
 		@Override
-		protected void onPostExecute(FriendListBean result) {
-
-			// mListItems.addFirst("Added after refresh...");
-			// mAdapter.notifyDataSetChanged();
-			
-			
-
-			// Call onRefreshComplete when the list has been refreshed.
-		    //adapter=new ListViewHoildayRecordAdapter(getApplicationContext(),list.getHolidayslist(),R.layout.list_holiday_record_item);
-			//ptlListview.setAdapter(adapter);
-		    //adapter.notifyDataSetChanged();
-		   // ptlListview.onRefreshComplete();
-			//adapter = new SortAdapter(getActivity(), friendList);
-			//sortListView.setAdapter(adapter);
-
+		protected void onPostExecute(List<SortModel> result){
 			super.onPostExecute(result);
+			adapter = new SortAdapter(getActivity(), SourceDateList);
+			adapter.notifyDataSetChanged();
+			//sortListView.setAdapter(adapter);
+			
 		}
-
+		
+	
+		
 
 	}
 
