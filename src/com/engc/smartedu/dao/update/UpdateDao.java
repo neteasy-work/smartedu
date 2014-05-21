@@ -1,20 +1,19 @@
 package com.engc.smartedu.dao.update;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.engc.eop.ClientRequest;
+import com.engc.eop.CompositeResponse;
 import com.engc.smartedu.bean.Update;
 import com.engc.smartedu.dao.URLS;
 import com.engc.smartedu.support.exception.AppException;
-import com.engc.smartedu.support.http.HttpMethod;
 import com.engc.smartedu.support.http.HttpUtility;
+import com.engc.smartedu.support.utils.EopClientConstants;
 
 /**
- * 应用升级  dao
+ * 应用升级 dao
  * 
  * @author Admin
- *
+ * 
  */
 public class UpdateDao {
 
@@ -24,13 +23,22 @@ public class UpdateDao {
 	 * @param url
 	 * @return
 	 */
-	public static Update checkVersion()
-			throws AppException {
+	public static Update checkVersion() throws AppException {
+		Update update = null;
 		try {
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("appName", "SP");
-			String result=HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, URLS.GET_APP_VERSION, map);
-			Update update = JSONObject.parseObject(result, Update.class);
+			ClientRequest request = HttpUtility.getInstance().getEopClient()
+					.buildClientRequest();
+			// Map<String, String> map = new HashMap<String, String>();
+			CompositeResponse<?> res = request.post(URLS.GET_APP_VERSION,
+					EopClientConstants.VERSION);
+			if (res.isSuccessful()) {
+				update = JSON.parseObject(res.getResponseContent(),
+						Update.class);
+			}
+			// String
+			// result=HttpUtility.getInstance().executeNormalTask(HttpMethod.Post,
+			// URLS.GET_APP_VERSION, map);
+			// Update update = JSONObject.parseObject(result, Update.class);
 			return update;
 
 		} catch (Exception e) {

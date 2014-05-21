@@ -58,16 +58,19 @@
         <activity android:name="com.engc.smartedu.ui.login.OAuthActivity" />
         <activity
             android:name="com.engc.smartedu.ui.login.LoginActivity"
+            android:logo="@drawable/login_icon"
             android:uiOptions="splitActionBarWhenNarrow" />
         <!-- 日历  activity -->
         <activity
             android:name="com.engc.smartedu.ui.calendar.CalendarPick"
+            android:logo="@drawable/back_icon"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
 
         <!-- chat activity -->
         <activity
             android:name="com.engc.smartedu.ui.chat.ChatActivity"
+            android:logo="@drawable/back_icon"
             android:alwaysRetainTaskState="true"
             android:configChanges="locale|keyboardHidden|orientation"
             android:launchMode="singleTop"
@@ -76,11 +79,13 @@
         <!-- 请假  and 请假记录 activtiy -->
         <activity
             android:name="com.engc.smartedu.ui.leave.LeaveActivity"
+            android:logo="@drawable/back_icon"
             android:configChanges="locale|keyboardHidden|orientation"
             android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
         <activity
             android:name="com.engc.smartedu.ui.leave.LeaveRecordActivity"
+            android:logo="@drawable/back_icon"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
 
@@ -93,6 +98,7 @@
         <!-- send activity -->
         <activity
             android:name="com.engc.smartedu.ui.send.WriteWeiboActivity"
+            android:logo="@drawable/back_icon"
             android:windowSoftInputMode="stateVisible|adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -111,9 +117,11 @@
         </activity>
         <activity
             android:name="com.engc.smartedu.ui.send.WriteRepostActivity"
+            android:logo="@drawable/back_icon"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name="com.engc.smartedu.ui.send.WriteCommentActivity"
+            android:logo="@drawable/back_icon"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name="com.engc.smartedu.ui.send.WriteReplyToCommentActivity"
@@ -122,15 +130,19 @@
         <!-- browser activity -->
         <activity
             android:name="com.engc.smartedu.ui.browser.BrowserWeiboMsgActivity"
+            android:logo="@drawable/back_icon"
             android:label="@string/detail" />
         <activity
             android:name="com.engc.smartedu.ui.browser.BrowserCommentActivity"
+            android:logo="@drawable/back_icon"
             android:label="@string/comment_detail" />
         <activity
             android:name="com.engc.smartedu.ui.browser.BrowserBigPicActivity"
+            android:logo="@drawable/back_icon"
             android:launchMode="singleTop" />
         <activity
             android:name="com.engc.smartedu.ui.browser.BrowserLocalPicActivity"
+            android:logo="@drawable/back_icon"
             android:launchMode="singleTop" />
 
         <!-- topic activity -->
@@ -200,9 +212,11 @@
         <activity android:name="com.engc.smartedu.ui.preference.AboutActivity" />
 
         <!-- About us and FeedBack -->
-        <activity android:name="com.engc.smartedu.ui.setup.AboutActivity" >
+        <activity android:name="com.engc.smartedu.ui.setup.AboutActivity" 
+            >
         </activity>
-        <activity android:name="com.engc.smartedu.ui.setup.FeedBack" >
+        <activity android:name="com.engc.smartedu.ui.setup.FeedBack"
+            android:logo="@drawable/back_icon" >
         </activity>
 
         <!-- service -->

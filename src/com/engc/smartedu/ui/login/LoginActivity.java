@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -100,6 +101,11 @@ public class LoginActivity extends AbstractAppActivity implements
 		if (task != null)
 			task.stop();
 		PushMessageReceiver.ehList.remove(this);// 注销推送的消息
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu){
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	/**

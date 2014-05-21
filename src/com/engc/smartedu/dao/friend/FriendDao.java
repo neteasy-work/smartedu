@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.engc.eop.ClientRequest;
+import com.engc.eop.CompositeResponse;
 import com.engc.smartedu.bean.FriendBean;
 import com.engc.smartedu.bean.FriendListBean;
 import com.engc.smartedu.bean.SortModel;
@@ -12,6 +14,7 @@ import com.engc.smartedu.dao.URLS;
 import com.engc.smartedu.support.exception.AppException;
 import com.engc.smartedu.support.http.HttpMethod;
 import com.engc.smartedu.support.http.HttpUtility;
+import com.engc.smartedu.support.utils.EopClientConstants;
 import com.engc.smartedu.ui.adapter.SortAdapter;
 
 /**
@@ -27,19 +30,30 @@ import com.engc.smartedu.ui.adapter.SortAdapter;
 public class FriendDao {
 
 	/**
-	 * 根据orgid 获取 好友列表 
+	 * 根据orgid 获取 好友列表
+	 * 
 	 * @param orgId
 	 * @return
 	 * @throws AppException
 	 */
-	public static List<SortModel> getFriendsByOrgId(String orgId) throws AppException {
+	public static List<SortModel> getFriendsByOrgId(String orgId)
+			throws AppException {
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("orgId", orgId);
+		ClientRequest request = HttpUtility.getInstance().getEopClient()
+				.buildClientRequest();
+		request.addParam("orgId", orgId);
+		// Map<String, String> params = new HashMap<String, String>();
+		// params.put("orgId", orgId);
+		List<SortModel> list=null;
 		try {
-			String result = HttpUtility.getInstance().executeNormalTask(
-					HttpMethod.Post, URLS.GET_FRIENDS_BY_ORGID, params);
-			List<SortModel> list = JSON.parseArray(result, SortModel.class);
+			CompositeResponse<?> res = request.post(URLS.GET_FRIENDS_BY_ORGID,
+					EopClientConstants.VERSION);
+			// String result = HttpUtility.getInstance().executeNormalTask(
+			// HttpMethod.Post, URLS.GET_FRIENDS_BY_ORGID, params);
+			if (res.isSuccessful()) {
+				list = JSON.parseArray(
+						res.getResponseContent(), SortModel.class);
+			}
 			return list;
 		} catch (Exception e) {
 			if (e instanceof AppException)
@@ -48,5 +62,4 @@ public class FriendDao {
 		}
 
 	}
-
 }

@@ -1,9 +1,14 @@
 package com.engc.smartedu.support.http;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
+import java.util.Properties;
 
 import com.engc.eop.DefaultEngcOpenClient;
 import com.engc.eop.EopClient;
+import com.engc.eop.MessageFormat;
+import com.engc.eop.Utils.SignUtils;
 import com.engc.smartedu.support.error.WeiboException;
 import com.engc.smartedu.support.file.FileDownloaderHttpHelper;
 import com.engc.smartedu.support.file.FileUploaderHttpHelper;
@@ -11,12 +16,29 @@ import com.engc.smartedu.support.utils.Utility;
 
 public class HttpUtility {
 
-	public static EopClient getEopClient() {
-		EopClient client = new DefaultEngcOpenClient(Utility
-				.getContextProperties().getProperty("EOPURI"), Utility
-				.getContextProperties().getProperty("EOPKEY"), Utility
-				.getContextProperties().getProperty("EOPSECRET"));
+	public  EopClient getEopClient() {
+		//EopClient client = new DefaultEngcOpenClient(
+				//getContextProperties().getProperty("EOPURI"), getContextProperties().getProperty("EOPKEY"), getContextProperties().getProperty("EOPSECRET"),MessageFormat.json,SignUtils.sign_method_MD5
+				//);
+		EopClient client = new DefaultEngcOpenClient("http://172.16.17.57:8080/EduOpenPlatform/api", "20140320143734328001", "da22080febf961174d06b7fd5d2c7a6e",MessageFormat.json,SignUtils.sign_method_MD5);
 		return client;
+	}
+	
+	/**
+	 * 获取assets 目录下  属性文件
+	 * @return
+	 */
+	public static Properties getContextProperties(){
+		Properties pro=new Properties();
+		InputStream in =HttpUtility.class.getResourceAsStream("/assets/context.properties");
+		try {
+			pro.load(in);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pro;
+		
 	}
 
 	private static HttpUtility httpUtility = new HttpUtility();

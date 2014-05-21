@@ -37,7 +37,7 @@ public class LoginDao {
 		//Map<String, String> params = new HashMap<String, String>();
 		//params.put("userName", userName);
 		//params.put("passWord", passWord);
-		ClientRequest request=HttpUtility.getEopClient().buildClientRequest();
+		ClientRequest request=HttpUtility.getInstance().getEopClient().buildClientRequest();
 		request.addParam("userName", userName);
 		request.addParam("passWord", passWord);
 		
@@ -145,7 +145,7 @@ public class LoginDao {
 	 */
 	public static User ChangeCardStatus(final String userCode,
 			final int basicStatus, final int cardstatusone) throws AppException {
-		ClientRequest request=HttpUtility.getEopClient().buildClientRequest();
+		ClientRequest request=HttpUtility.getInstance().getEopClient().buildClientRequest();
 		request.addParam("usercode", userCode);
 		request.addParam("status", String.valueOf(basicStatus));
 		request.addParam("cardstatusone", String.valueOf(cardstatusone));

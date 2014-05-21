@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#EFEFEF"
+    android:orientation="vertical" >
+
+    
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="150.0dip"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="10.0dip"
+        android:background="@drawable/feedback_editlayout_bg"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10.0dip"
+            android:orientation="horizontal" >
+
+            <AutoCompleteTextView
+                android:id="@+id/actfeedback"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10.0dip"
+                android:background="@null"
+                android:drawablePadding="10.0dip"
+                android:gravity="center_vertical"
+                android:hint="有问题，请吐槽！您无节操无尺度无下限\n的吐槽，是我们专注成功的保证"
+                android:includeFontPadding="false"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
