@@ -41,7 +41,7 @@ public class ImageLoader {
         executorService=Executors.newFixedThreadPool(5);
     }
     
-    final int stub_id=R.drawable.stub;
+    final int stub_id=R.drawable.honey_face;
     public void DisplayImage(String url, ImageView imageView)
     {
         imageViews.put(imageView, url);

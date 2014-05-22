@@ -4,10 +4,17 @@ public class SortModel {
 
 	private String imgSrc; 
 	private String name;   
-	private String sortLetters;  
+	private String sortLetters;
+	private String userCode;
 	
 	public String getImgSrc() {
 		return imgSrc;
+	}
+	public String getUserCode() {
+		return userCode;
+	}
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
 	}
 	public void setImgSrc(String imgSrc) {
 		this.imgSrc = imgSrc;

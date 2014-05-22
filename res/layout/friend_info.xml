@@ -59,7 +59,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:text="sex"
-                        android:id="@+id/sex"/>
+                        android:id="@+id/name"/>
 
                 </LinearLayout>
 
@@ -92,7 +92,7 @@
 
             <TextView
                 android:layout_marginTop="5.0dip"
-                android:text="认证ID"
+                android:text="个性签名"
                 style="?android:attr/listSeparatorTextViewStyle"/>
 
             <TextView
@@ -139,7 +139,7 @@
 
             <TextView
                 android:layout_marginTop="5.0dip"
-                android:text="@string/address"
+                android:text="个人动态"
                 style="?android:attr/listSeparatorTextViewStyle"/>
 
             <TextView

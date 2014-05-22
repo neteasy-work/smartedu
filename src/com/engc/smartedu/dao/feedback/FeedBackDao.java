@@ -27,14 +27,14 @@ import com.engc.smartedu.support.utils.Utility;
 public class FeedBackDao {
 
 	
-	public static FeedBack addFeedBack(FeedBack feedBack)
+	public static FeedBack addFeedBack(String author,String authorCode,String content)
 			throws AppException {
 		FeedBack fd=null;
 		try {
 			ClientRequest request=HttpUtility.getInstance().getEopClient().buildClientRequest();
-			request.addParam("author", feedBack.getAuthor());
-			request.addParam("authorCode", feedBack.getAuthorCode());
-			request.addParam("content", feedBack.getContent());
+			request.addParam("authorName", author);
+			request.addParam("authorCode", authorCode);
+			request.addParam("content", content);
 			request.addParam("operationTime", TimeUtil.getCurrentTime());
 			
 			/*Map<String, String> map = new HashMap<String, String>();

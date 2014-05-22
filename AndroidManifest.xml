@@ -218,6 +218,10 @@
         <activity android:name="com.engc.smartedu.ui.setup.FeedBack"
             android:logo="@drawable/back_icon" >
         </activity>
+        
+          <activity android:name="com.engc.smartedu.ui.friends.FriendInfo"
+            android:logo="@drawable/back_icon" >
+        </activity>
 
         <!-- service -->
         <service android:name="com.engc.smartedu.othercomponent.FetchNewMsgService" />

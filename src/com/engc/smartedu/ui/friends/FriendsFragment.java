@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,36 +13,32 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.engc.smartedu.R;
-import com.engc.smartedu.bean.FriendBean;
-import com.engc.smartedu.bean.FriendListBean;
-import com.engc.smartedu.bean.LeaveRecordList;
 import com.engc.smartedu.bean.SortModel;
 import com.engc.smartedu.dao.friend.FriendDao;
 import com.engc.smartedu.dao.login.LoginDao;
 import com.engc.smartedu.support.exception.AppException;
 import com.engc.smartedu.support.utils.CharacterParser;
-import com.engc.smartedu.support.utils.GlobalContext;
 import com.engc.smartedu.support.utils.Utility;
-import com.engc.smartedu.ui.adapter.ListViewHoildayRecordAdapter;
 import com.engc.smartedu.ui.adapter.SortAdapter;
 import com.engc.smartedu.ui.interfaces.BaseSlidingFragment;
+import com.engc.smartedu.widget.ImageLoader;
 import com.engc.smartedu.widget.PinyinComparator;
 import com.engc.smartedu.widget.SideBar;
 import com.engc.smartedu.widget.SideBar.OnTouchingLetterChangedListener;
 
 public class FriendsFragment extends BaseSlidingFragment {
 
-	private TextView txtTitle;
 	private View view;
-	private RelativeLayout friendHeaderLayout;
 	private ListView sortListView;
 	private SideBar sideBar;
 	private TextView dialog;
 	private SortAdapter adapter;
+	private ProgressBar pgbLoading;
+
 
 	/**
 	 * 汉字转换成拼音的类
@@ -71,6 +68,8 @@ public class FriendsFragment extends BaseSlidingFragment {
 		 * friendHeaderLayout.setVisibility(RelativeLayout.GONE);
 		 */
 		initViews();
+		GetDataTask task=new GetDataTask();
+		task.execute(SourceDateList);
 		return view;
 	}
 
@@ -83,6 +82,7 @@ public class FriendsFragment extends BaseSlidingFragment {
 		sideBar = (SideBar) view.findViewById(R.id.sidrbar);
 		dialog = (TextView) view.findViewById(R.id.dialog);
 		sideBar.setTextView(dialog);
+		pgbLoading=(ProgressBar) view.findViewById(R.id.prbloading);
 
 		// 设置右侧触摸监听
 		sideBar.setOnTouchingLetterChangedListener(new OnTouchingLetterChangedListener() {
@@ -105,10 +105,16 @@ public class FriendsFragment extends BaseSlidingFragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// 这里要利用adapter.getItem(position)来获取当前position所对应的对象
-				Utility.ToastMessage(getActivity(),
-						((SortModel) adapter.getItem(position)).getName());
+				Intent intent=new Intent(view.getContext(),FriendInfo.class);
+				intent.putExtra("userName", SourceDateList.get(position).getName());
+				intent.putExtra("userCode", SourceDateList.get(position).getUserCode());
+				intent.putExtra("imgFace", SourceDateList.get(position).getImgSrc());
+				startActivity(intent);
 			}
 		});
+		
+		
+		
  
 	}
 
@@ -118,15 +124,16 @@ public class FriendsFragment extends BaseSlidingFragment {
 	 * @param date
 	 * @return
 	 */
-	private List<SortModel> filledData(String[] date, String[] imgData) {
+	private List<SortModel> filledData(List<SortModel> list,String [] imgdata) {
 		List<SortModel> mSortList = new ArrayList<SortModel>();
 
-		for (int i = 0; i < date.length; i++) {
+		for(int i=0;i<list.size();i++){
 			SortModel sortModel = new SortModel();
-			sortModel.setImgSrc(imgData[i]);
-			sortModel.setName(date[i]);
+			sortModel.setImgSrc(i>=imgdata.length?imgdata[i-imgdata.length]:imgdata[i]);
+			sortModel.setName(list.get(i).getName());
+			sortModel.setUserCode(list.get(i).getUserCode());
 			// 汉字转换成拼音
-			String pinyin = characterParser.getSelling(date[i]);
+			String pinyin = characterParser.getSelling(list.get(i).getName());
 			String sortString = pinyin.substring(0, 1).toUpperCase();
 
 			// 正则表达式，判断首字母是否是英文字母
@@ -142,10 +149,10 @@ public class FriendsFragment extends BaseSlidingFragment {
 
 	}
 
-	private class GetDataTask extends AsyncTask<Void, Void, List<SortModel>> {
+	private class GetDataTask extends AsyncTask<List<SortModel>, Void, List<SortModel>> {
 
 		@Override
-		protected List<SortModel> doInBackground(Void... params) {
+		protected List<SortModel> doInBackground(List<SortModel>... params) {
 
 			try {
 				SourceDateList = FriendDao.getFriendsByOrgId(LoginDao.getLoginInfo(
@@ -155,16 +162,19 @@ public class FriendsFragment extends BaseSlidingFragment {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return null;
+			return SourceDateList;
 			
 		}
 		
 		@Override
 		protected void onPostExecute(List<SortModel> result){
 			super.onPostExecute(result);
+			SourceDateList=filledData(SourceDateList,getResources().getStringArray(R.array.img_src_data));
+			Collections.sort(SourceDateList,pinyinComparator);
 			adapter = new SortAdapter(getActivity(), SourceDateList);
 			adapter.notifyDataSetChanged();
-			//sortListView.setAdapter(adapter);
+			sortListView.setAdapter(adapter);
+			pgbLoading.setVisibility(View.GONE);
 			
 		}
 		

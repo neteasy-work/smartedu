@@ -50,9 +50,7 @@ import com.google.gson.Gson;
 public class LoginActivity extends AbstractAppActivity implements
 		OnClickListener, PushMessageReceiver.EventHandler {
 
-	private static final int LOGIN_OUT_TIME = 0;
 	public static final String LOGIN_ACTION = "com.engc.smartedu.action.LOGIN";
-	private Dialog mLoginDialog;
 
 	private AutoCompleteTextView actAccountName, actPassWord;
 	private ImageView imgLogin;
@@ -63,7 +61,6 @@ public class LoginActivity extends AbstractAppActivity implements
 	private View mNetErrorView;
 	private String userCode, passWord;
 	private Dialog loginDialog;
-	private Animation mRotate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
