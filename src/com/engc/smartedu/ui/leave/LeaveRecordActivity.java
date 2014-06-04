@@ -2,6 +2,8 @@ package com.engc.smartedu.ui.leave;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -15,11 +17,13 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnDragListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -34,6 +38,7 @@ import com.engc.smartedu.bean.LeaveBean;
 import com.engc.smartedu.bean.LeaveRecordList;
 import com.engc.smartedu.dao.leave.LeaveDao;
 import com.engc.smartedu.dao.login.LoginDao;
+import com.engc.smartedu.othercomponent.ClearCacheTask;
 import com.engc.smartedu.support.exception.AppException;
 import com.engc.smartedu.support.lib.pulltorefresh.PullToRefreshBase;
 import com.engc.smartedu.support.lib.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -86,7 +91,7 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 	private PullToRefreshListView ptlListview;
 
 	private LeaveRecordList list;
-	 ListViewHoildayRecordAdapter adapter;
+	ListViewHoildayRecordAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,7 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 		InitTextView();
 		InitViewPager();
 		initFrameListView(view1, UN_AUDIT_HOLIDAY);
+
 	}
 
 	/**
@@ -109,7 +115,6 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 		actionBar.setTitle("请假记录");
 	}
 
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -163,19 +168,20 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 	 */
 	private void initFrameListView(View view, final int newsType) {
 		intitPullToRefreshListView(view, newsType);
-		
 
 	}
 
 	private void intitPullToRefreshListView(View view, int record) {
 		ptlListview = (PullToRefreshListView) view
 				.findViewById(R.id.audit_holiday_list);
+	
 		ptlListview.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 
 				new GetDataTask().execute();
+
 			}
 		});
 
@@ -188,7 +194,9 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 			// Simulates a background job.
 			try {
 
-				list = LeaveDao.getHolidayRecordList(0, 1, LoginDao.getLoginInfo(LeaveRecordActivity.this).getUsercode(), String.valueOf(AUDIT_ED_HOLIDAY));
+				list = LeaveDao.getHolidayRecordList(0, 1, LoginDao
+						.getLoginInfo(LeaveRecordActivity.this).getUsercode(),
+						String.valueOf(UN_AUDIT_HOLIDAY));
 
 			} catch (AppException e) {
 			}
@@ -202,15 +210,20 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 			// mAdapter.notifyDataSetChanged();
 
 			// Call onRefreshComplete when the list has been refreshed.
-		    adapter=new ListViewHoildayRecordAdapter(getApplicationContext(),list.getHolidayslist(),R.layout.list_holiday_record_item);
-			ptlListview.setAdapter(adapter);
-		    adapter.notifyDataSetChanged();
-		    ptlListview.onRefreshComplete();
+			if (list.getHolidayslist().size() > 0) {
+				adapter = new ListViewHoildayRecordAdapter(
+						getApplicationContext(), list.getHolidayslist(),
+						R.layout.list_holiday_record_item);
+				ptlListview.setAdapter(adapter);
+				adapter.notifyDataSetChanged();
+				ptlListview.onRefreshComplete();
+			} else {
+				ptlListview.onRefreshComplete();
+			}
 
 			super.onPostExecute(result);
 		}
 
-	
 	}
 
 	/**
@@ -269,7 +282,6 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 		public int getCount() {
 			return mListViews.size();
 		}
-		
 
 		@Override
 		public boolean isViewFromObject(View arg0, Object arg1) {
@@ -301,7 +313,8 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 
 				txtReadedMsg.setTextColor(rs
 						.getColor(R.color.detail_node_title));
-				txtUnReadMsg.setTextColor(rs.getColor(R.color.audit_leave_menu_title_unselected));
+				txtUnReadMsg.setTextColor(rs
+						.getColor(R.color.audit_leave_menu_title_unselected));
 				txtReadedMsg.setTextSize(16);
 				txtUnReadMsg.setTextSize(16);
 				initFrameListView(view1, UN_AUDIT_HOLIDAY);
@@ -310,7 +323,8 @@ public class LeaveRecordActivity extends AbstractAppActivity {
 			case 1:
 				txtUnReadMsg.setTextColor(rs
 						.getColor(R.color.detail_node_title));
-				txtReadedMsg.setTextColor(rs.getColor(R.color.audit_leave_menu_title_unselected));
+				txtReadedMsg.setTextColor(rs
+						.getColor(R.color.audit_leave_menu_title_unselected));
 				txtUnReadMsg.setTextSize(16);
 				txtReadedMsg.setTextSize(16);
 				initFrameListView(view2, AUDIT_ED_HOLIDAY);

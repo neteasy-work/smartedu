@@ -212,7 +212,8 @@
         <activity android:name="com.engc.smartedu.ui.preference.AboutActivity" />
 
         <!-- About us and FeedBack -->
-        <activity android:name="com.engc.smartedu.ui.setup.AboutActivity" 
+        <activity android:name="com.engc.smartedu.ui.setup.AboutActivity"
+            android:logo="@drawable/back_icon" 
             >
         </activity>
         <activity android:name="com.engc.smartedu.ui.setup.FeedBack"

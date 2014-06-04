@@ -159,7 +159,7 @@ public class LoginDao {
 		try {
 			//String result = HttpUtility.getInstance().executeNormalTask(
 					//HttpMethod.Post, URLS.CHANGE_CARD_STATUS, params);
-			CompositeResponse<?> res=request.post(URLS.CHANGE_CARD_STATUS, EopClientConstants.JSON);
+			CompositeResponse<?> res=request.post(URLS.CHANGE_CARD_STATUS, EopClientConstants.VERSION);
 			if(res.isSuccessful()){
 				user=JSON.parseObject(res.getResponseContent(),User.class);
 			}

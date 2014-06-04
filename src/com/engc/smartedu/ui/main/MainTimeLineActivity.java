@@ -19,10 +19,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -57,6 +59,7 @@ import com.engc.smartedu.support.lib.AppFragmentPagerAdapter;
 import com.engc.smartedu.support.lib.MyAsyncTask;
 import com.engc.smartedu.support.settinghelper.SettingUtility;
 import com.engc.smartedu.support.utils.AppLogger;
+import com.engc.smartedu.support.utils.EncryptUtil;
 import com.engc.smartedu.support.utils.GlobalContext;
 import com.engc.smartedu.support.utils.HomeWatcher;
 import com.engc.smartedu.support.utils.HomeWatcher.OnHomePressedListener;
@@ -79,8 +82,8 @@ import com.engc.smartedu.ui.maintimeline.MentionsTimeLineFragment;
 import com.engc.smartedu.ui.maintimeline.MyStatussTimeLineFragment;
 import com.engc.smartedu.ui.preference.SettingActivity;
 import com.engc.smartedu.ui.search.SearchMainActivity;
-import com.engc.smartedu.ui.send.WriteWeiboActivity;
 import com.engc.smartedu.ui.userinfo.MyInfoActivity;
+import com.engc.smartedu.widget.FloatView;
 import com.engc.smartedu.widget.MenuItemView;
 import com.engc.smartedu.widget.PathView;
 import com.google.gson.Gson;
@@ -138,6 +141,10 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 	private HomeWatcher mHomeWatcher;
 	private ListView mListView;
 	private MenuItemView myViewLB;
+	
+	 private WindowManager windowManager = null; 
+	    private WindowManager.LayoutParams windowManagerParams = null; 
+	    private FloatView floatView = null; 
 
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -228,10 +235,9 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
         initView(); //初始化  网络异常视图
 		buildPhoneInterface();
 		getPackageInfo();
+		//initConvenientView();
 		
-		WindowManager wm=(WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-		int width=wm.getDefaultDisplay().getWidth();
-		int height=wm.getDefaultDisplay().getHeight();
+		
 		
 		
 
@@ -283,8 +289,8 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 	/**
 	 * 初始化快捷菜单
 	 */
-/*	private void initConvenientView() {
-		PathView mPathView = (PathView) this
+	private void initConvenientView() {
+	/*	PathView mPathView = (PathView) this
 				.findViewById(R.id.mPathView_uitilsmodem);
 		ImageButton startMenu = new ImageButton(MainTimeLineActivity.this);
 		startMenu.setBackgroundResource(R.drawable.start_menu_btn);
@@ -302,9 +308,25 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
                 startActivity(intent);
 				
 			}
-		});
+		});*/
+	 floatView=new FloatView(getApplicationContext());
+	 floatView.setImageResource(R.drawable.white_weibo_menuitem_button);
+	 windowManager=(WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+	 windowManagerParams=((GlobalContext)getApplication()).getWindowParams();
+	 windowManagerParams.type=android.view.WindowManager.LayoutParams.TYPE_PHONE;
+     windowManagerParams.format = PixelFormat.RGBA_8888; 
+     windowManagerParams.flags = android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL 
+     | android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; 
+     windowManagerParams.gravity = Gravity.CENTER_VERTICAL | Gravity.BOTTOM; 
+     windowManagerParams.x = 0; 
+     windowManagerParams.y = 0; 
+     windowManagerParams.width = LayoutParams.WRAP_CONTENT; 
+     windowManagerParams.height = LayoutParams.WRAP_CONTENT; 
+     windowManager.addView(floatView, windowManagerParams);
+	 
 		
-	}*/
+		
+	}
 
 	/**
 	 * 初始化slidingview
@@ -693,6 +715,7 @@ public class MainTimeLineActivity extends MainTitmeLineAppActivity implements
 		mUserDB = global.getUserDB();
 		mMsgDB = global.getMessageDB();
 		mRecentDB = global.getRecentDB();
+	
 	}
 	
 	private void initRecentData() {

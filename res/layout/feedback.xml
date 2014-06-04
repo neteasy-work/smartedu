@@ -30,7 +30,7 @@
                 android:background="@null"
                 android:drawablePadding="10.0dip"
                 android:gravity="center_vertical"
-                android:hint="有问题，请吐槽！您无节操无尺度无下限\n的吐槽，是我们专注成功的保证"
+                android:hint="写点什么吧..."
                 android:includeFontPadding="false"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"

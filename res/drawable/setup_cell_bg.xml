@@ -1,0 +1,10 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item              
+          android:state_pressed="false"
+          android:drawable="@color/preference_bg_color"
+           /> 
+    <item 
+          android:state_pressed="true"
+          android:drawable="@drawable/ab_solid_custom_blue_inverse_holo" /> 
+
+</selector>

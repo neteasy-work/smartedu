@@ -49,12 +49,12 @@ public class LeaveDao {
 			final int userType) throws AppException {
 		ClientRequest request = HttpUtility.getInstance().getEopClient()
 				.buildClientRequest();
-		request.addParam("usercode", userCode);
+		request.addParam("usercode", userCode);	
 		request.addParam("orgid", orgId);
 		request.addParam("leavetype", String.valueOf(holidayType));
 		request.addParam("telno", telNo);
 		request.addParam("begindate", startDate);
-		request.addParam("enddate", endDate);
+	    request.addParam("enddate", endDate);
 		request.addParam("dayno", String.valueOf(days));
 		request.addParam("leavereason", remark);
 		request.addParam("usertype", String.valueOf(userType));
@@ -67,10 +67,12 @@ public class LeaveDao {
 		 * params.put("dayno", String.valueOf(days)); params.put("leavereason",
 		 * remark); params.put("usertype", String.valueOf(userType));
 		 */
+		CompositeResponse<?> res = request.post(URLS.APPLY_HOLIDAYS,
+				EopClientConstants.VERSION);
 		User user = null;
 		try {
-			CompositeResponse<?> res = request.post(URLS.APPLY_HOLIDAYS,
-					EopClientConstants.VERSION);
+			//CompositeResponse<?> res = request.post(URLS.APPLY_HOLIDAYS,
+					//EopClientConstants.VERSION);
 			if (res.isSuccessful()) {
 				// String result =
 				// HttpUtility.getInstance().executeNormalTask(HttpMethod.Post,
@@ -198,6 +200,7 @@ public class LeaveDao {
 			//String result = HttpUtility.getInstance().executeNormalTask(
 				//	HttpMethod.Post, URLS.GET_HOLIDAYS_RECORF_FOR_STUDENT, map);
 			//List<LeaveBean> list = JSON.parseArray(result, LeaveBean.class);
+			if(list.size()>0)
 			recordList.getHolidayslist().addAll(list);
 			return recordList;
 

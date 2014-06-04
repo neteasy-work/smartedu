@@ -20,12 +20,12 @@
             android:layout_height="match_parent" >
         </android.support.v4.view.ViewPager>
 
-        <com.engc.smartedu.widget.PathView
+   <!--      <com.engc.smartedu.widget.PathView
             android:id="@+id/mPathView_uitilsmodem"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical" >
-        </com.engc.smartedu.widget.PathView>
+        </com.engc.smartedu.widget.PathView> -->
      <!--    <include layout="@layout/tweet_menu" /> -->
     </FrameLayout>
 

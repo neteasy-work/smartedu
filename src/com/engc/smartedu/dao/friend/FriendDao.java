@@ -1,21 +1,15 @@
 package com.engc.smartedu.dao.friend;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.engc.eop.ClientRequest;
 import com.engc.eop.CompositeResponse;
-import com.engc.smartedu.bean.FriendBean;
-import com.engc.smartedu.bean.FriendListBean;
 import com.engc.smartedu.bean.SortModel;
 import com.engc.smartedu.dao.URLS;
 import com.engc.smartedu.support.exception.AppException;
-import com.engc.smartedu.support.http.HttpMethod;
 import com.engc.smartedu.support.http.HttpUtility;
 import com.engc.smartedu.support.utils.EopClientConstants;
-import com.engc.smartedu.ui.adapter.SortAdapter;
 
 /**
  * 

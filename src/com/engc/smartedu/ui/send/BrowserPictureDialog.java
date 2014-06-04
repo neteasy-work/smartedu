@@ -51,7 +51,8 @@ public class BrowserPictureDialog extends DialogFragment {
         builder.setTitle(getString(R.string.browser_part_picture))
                 .setView(customView)
                 .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
-                    @Override
+                    @SuppressLint("NewApi")
+					@Override
                     public void onClick(DialogInterface dialog, int which) {
                         ((WriteWeiboActivity) getActivity()).deletePicture();
                     }

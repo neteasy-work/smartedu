@@ -218,7 +218,7 @@ public class LeaveActivity extends AbstractAppActivity{
 				String PhoneNum = new SIMCardInfo(LeaveActivity.this)
 						.getNativePhoneNumber();
 				if (!PhoneNum.equals(""))
-					PhoneNum = PhoneNum;
+					PhoneNum = PhoneNum.substring(3,PhoneNum.length());
 				/*
 				 * else if (ac.getLoginInfo().getParentphone() != null) PhoneNum
 				 * = ac.getLoginInfo().getParentphone();
@@ -233,7 +233,7 @@ public class LeaveActivity extends AbstractAppActivity{
 				 * days.length() - 1);
 				 */
 				requestDialog = DialogUtil.getRequestDialog(LeaveActivity.this,
-						"正在登陆中");
+						"数据提交中");
 				requestDialog.show();
 				Utility.initAnim(v.getContext(), (ImageView) requestDialog
 						.findViewById(R.id.auth_loading_icon), R.anim.rotate);

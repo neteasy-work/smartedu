@@ -7,251 +7,302 @@
     android:fadingEdge="none"
     android:scrollbars="vertical" >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:id="@+id/user_info_favorites_message"
+   <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
+            android:layout_height="116dp"
+            android:gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingLeft="10.0dp"
-            android:paddingRight="10.0dp" >
+            android:paddingBottom="60.0dip"
+            android:paddingLeft="10.0dip"
+            android:paddingRight="10.0dip"
+            android:paddingTop="10.0dip" >
 
             <LinearLayout
-                android:id="@+id/user_info_favorites_ll"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20.0dip"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="vertical" >
+                android:layout_height="wrap_content" >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5.0dip"
-                    android:duplicateParentState="true"
-                    android:text="设置"
-                    android:textSize="@dimen/text_size_20" />
-
-                <LinearLayout
-                    android:id="@+id/linearLayout_album_box"
-                    android:layout_width="fill_parent"
-                    android:layout_height="4px"
-                    android:layout_marginTop="10.0dip"
-                    android:background="@color/detail_node_title"
-                    android:orientation="horizontal" >
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/user_my_team"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20.0dip"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5.0dip"
-                    android:duplicateParentState="true"
-                    android:text="消息提醒"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_size_16" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dip"
-                android:layout_marginTop="10dip"
-                android:background="@drawable/exit_horizontal_cut_line" />
-
-            <LinearLayout
-                android:id="@+id/user_my_action"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20.0dip"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5.0dip"
-                    android:duplicateParentState="true"
-                    android:text="加载图片 "
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_size_16"
-                     />
-
-                <TextView
-                    android:id="@+id/user_info_fans"
+                <TableLayout
+                    android:id="@+id/ask_for_leaveTableLayout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_weight="1"
-                    android:duplicateParentState="true"
-                    android:textSize="@dimen/text_size_14"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    android:shrinkColumns="0"
+                    android:stretchColumns="0" >
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dip"
-                android:layout_marginTop="10dip"
-                android:background="@drawable/exit_horizontal_cut_line" />
+                    <TableRow
+                        android:id="@+id/ask_for_leaveman_row"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:background="@drawable/more_item_bg"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="8.0dip" >
 
-            <LinearLayout
-                android:id="@+id/clearcachelayout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20.0dip"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical" >
+                        <TextView
+                            android:id="@+id/txt_ask_for_leaveman"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text=" 消息提醒 "
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
 
-                <TextView
-                    android:id="@+id/txt_mine_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5.0dip"
-                    android:duplicateParentState="true"
-                    android:text="清除缓存"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_size_16"
-                    />
+                        <CheckBox
+                            android:id="@+id/chkmessagenotifi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:button="@drawable/checkbox_bg"
+                             />
 
-                <TextView
-                    android:id="@+id/user_info_fans"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10.0dip"
-                    android:layout_weight="1"
-                    android:duplicateParentState="true"
-                    android:textSize="@dimen/text_size_14"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                
+                    </TableRow>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dip"
-                android:layout_marginTop="10dip"
-                android:background="@drawable/exit_horizontal_cut_line" />
+                    <TableRow
+                        android:id="@+id/ask_for_display_leaveman_row"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:layout_marginTop="5.0dip"
+                        android:paddingBottom="8.0dip"
+                        android:paddingTop="16.0dip" >
 
-            <LinearLayout
-                android:id="@+id/user_info_favorit_other"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20.0dip"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="vertical" >
+                        <TextView
+                            android:id="@+id/txtdisplayleavename"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:background="@null"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:hint="请假人:王小二"
+                            android:includeFontPadding="false"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:paddingLeft="17.0dip"
+                            android:selectAllOnFocus="true"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_16" />
+                    </TableRow>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5.0dip"
-                    android:duplicateParentState="true"
-                    android:text="其他"
-                    android:textSize="@dimen/text_size_20"
-                     />
+                    <TableRow
+                        android:id="@+id/ask_for_leavetype_row"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:layout_marginTop="5.0dip"
+                        android:background="@drawable/more_item_bg"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
 
-                <LinearLayout
-                    android:id="@+id/linearLayout_album_box"
-                    android:layout_width="fill_parent"
-                    android:layout_height="4px"
-                    android:layout_marginTop="10.0dip"
-                    android:background="@color/detail_node_title"
-                    android:orientation="horizontal" >
-                </LinearLayout>
-            </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtleavetype"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:background="@null"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:hint="请选择请假类型"
+                            android:includeFontPadding="false"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:paddingLeft="17.0dip"
+                            android:selectAllOnFocus="true"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16" />
 
-            <LinearLayout
-                android:id="@+id/feedbacklayout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20.0dip"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical" >
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:src="@drawable/ic_arrow" />
+                    </TableRow>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5.0dip"
-                    android:duplicateParentState="true"
-                    android:text="意见反馈"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_size_16"
-                    />
-            </LinearLayout>
+                    <TableRow
+                        android:id="@+id/ask_for_leavestartdate_row"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:layout_marginTop="8.0dip"
+                        android:background="@drawable/more_item_bg"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dip"
-                android:layout_marginTop="10dip"
-                android:background="@drawable/exit_horizontal_cut_line" />
+                        <TextView
+                            android:id="@+id/txtleavestartdate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:background="@null"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:hint="请选择请假开始日期"
+                            android:includeFontPadding="false"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:paddingLeft="17.0dip"
+                            android:selectAllOnFocus="true"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16" />
 
-            <LinearLayout
-                android:id="@+id/check_update_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20.0dip"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical" >
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:src="@drawable/ic_arrow" />
+                    </TableRow>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5.0dip"
-                    android:duplicateParentState="true"
-                    android:id="@+id/txt_display_versioncode"
-                    android:text="检查更新"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_size_16"
-                     />
-            </LinearLayout>
+                    <TableRow
+                        android:id="@+id/ask_for_leaveenddate_row"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:layout_marginTop="8.0dip"
+                        android:background="@drawable/more_item_bg"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dip"
-                android:layout_marginTop="10dip"
-                android:background="@drawable/exit_horizontal_cut_line" />
+                        <TextView
+                            android:id="@+id/txtleaveenddate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:background="@null"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:hint="请选择请假结束日期"
+                            android:includeFontPadding="false"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:paddingLeft="17.0dip"
+                            android:selectAllOnFocus="true"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16" />
 
-            <LinearLayout
-                android:id="@+id/about_us_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20.0dip"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical" >
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:src="@drawable/ic_arrow" />
+                    </TableRow>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5.0dip"
-                    android:duplicateParentState="true"
-                    android:text="关于我们"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_size_16"
-                     />
+                    <TableRow
+                        android:id="@+id/ask_for_leavedays_row"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:layout_marginTop="8.0dip"
+                        android:background="@drawable/more_item_bg"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/actleavedays"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:background="@null"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:hint="请输入请假天数"
+                            android:includeFontPadding="false"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingLeft="17.0dip"
+                            android:selectAllOnFocus="true"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16" />
+                    </TableRow>
+                    <!--
+                    <TableRow
+                        android:id="@+id/ask_for_leaveman_telnum_row"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:layout_marginTop="8.0dip"
+                        android:background="@drawable/more_item_bg"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/actleavemantelno"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:background="@null"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:hint="请输入联系电话"
+                            android:includeFontPadding="false"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:paddingLeft="17.0dip"
+                            android:selectAllOnFocus="true"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16" />
+                    </TableRow>
+                    -->
+
+                    <TableRow
+                        android:id="@+id/ask_for_leaveremark_row"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:layout_marginTop="8.0dip"
+                        android:background="@drawable/more_item_bg"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/actleaveremark"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:background="@null"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:hint="请输入请假理由"
+                            android:includeFontPadding="false"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:paddingLeft="17.0dip"
+                            android:selectAllOnFocus="true"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/ask_for_leaveentry"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="28.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
+
+                        <Button
+                            android:id="@+id/btnentryleave"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="center"
+                            android:background="@drawable/button_selector"
+                            android:gravity="center_vertical"
+                            android:text="                   确定"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_16"
+                            android:textStyle="bold" />
+                    </TableRow>
+                </TableLayout>
             </LinearLayout>
         </LinearLayout>
-        <!-- </ScrollView> -->
-
-    </LinearLayout>
 
 </ScrollView>

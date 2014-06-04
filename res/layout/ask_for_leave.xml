@@ -341,7 +341,7 @@
                             android:layout_gravity="center"
                             android:background="@drawable/button_selector"
                             android:gravity="center_vertical"
-                            android:text="                     确定"
+                            android:text="                   确定"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_16"
                             android:textStyle="bold" />

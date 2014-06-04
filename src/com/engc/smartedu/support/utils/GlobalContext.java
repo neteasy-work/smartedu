@@ -35,6 +35,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.Display;
+import android.view.WindowManager;
 
 import com.engc.smartedu.R;
 import com.engc.smartedu.baidupush.server.BaiduPush;
@@ -100,6 +101,11 @@ public final class GlobalContext extends Application {
 	private Gson mGson;
 	private static final int CACHE_TIME = 60 * 60000;// 缓存失效时间
 
+	//获取屏幕窗口参数
+	 private WindowManager.LayoutParams windowParams=new WindowManager.LayoutParams();
+	 public  WindowManager.LayoutParams getWindowParams(){
+		 return windowParams;
+	 }
 
    
     @Override

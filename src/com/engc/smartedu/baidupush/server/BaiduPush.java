@@ -31,7 +31,7 @@ public class BaiduPush {
 
 	/**
 	 * 构造函数
-	 * 
+	 * 	
 	 * @param http_mehtod
 	 *            请求方式
 	 * @param secret_key
