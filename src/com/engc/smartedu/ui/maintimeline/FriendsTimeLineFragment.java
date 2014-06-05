@@ -56,7 +56,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private MessageListBean bean = new MessageListBean();
 
-    private MenuItem name;
+    //private MenuItem name;
 
     @Override
     public MessageListBean getList() {
@@ -230,12 +230,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        /*inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
-        name = menu.findItem(R.id.group_name);
-        if (currentGroupId.equals(ALL_GROUP_ID)) {
-            name.setTitle(userBean.getScreen_name());
-        }
-        if (currentGroupId.equals(BILATERAL_GROUP_ID)) {
+        inflater.inflate(R.menu.actionbar_menu_sendweibo, menu);
+        //name = menu.findItem(R.id.group_name);
+        //if (currentGroupId.equals(ALL_GROUP_ID)) {
+        //    name.setTitle(userBean.getScreen_name());
+       // }
+        /*if (currentGroupId.equals(BILATERAL_GROUP_ID)) {
             name.setTitle(getString(R.string.bilateral));
         } else if (GlobalContext.getInstance().getGroup() != null) {
             for (GroupBean b : GlobalContext.getInstance().getGroup().getLists()) {

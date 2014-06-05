@@ -133,7 +133,7 @@ public class LoginActivity extends AbstractAppActivity implements
 					//LoginDao.saveLoginInfo(LoginActivity.this,user);
 					 //save2Preferences();
 					PushManager.startWork(getApplicationContext(),
-							PushConstants.LOGIN_TYPE_API_KEY, user.getUsercode());// 无baidu帐号登录,以apiKey随机获取一个id
+							PushConstants.LOGIN_TYPE_API_KEY, global.API_KEY);// 无baidu帐号登录,以apiKey随机获取一个id
 					mSpUtil.setUserCode(user.getUsercode());
 					mSpUtil.setUserName(user.getUsername());
 					mSpUtil.setTag("man");
