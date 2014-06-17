@@ -27,6 +27,7 @@ import com.engc.smartedu.dao.login.LoginDao;
 import com.engc.smartedu.support.exception.AppException;
 import com.engc.smartedu.support.utils.CardConstants;
 import com.engc.smartedu.support.utils.Utility;
+import com.engc.smartedu.ui.dynamic.Dynamic;
 import com.engc.smartedu.ui.interfaces.BaseSlidingFragment;
 import com.engc.smartedu.ui.leave.LeaveActivity;
 import com.engc.smartedu.ui.leave.LeaveRecordActivity;
@@ -204,8 +205,11 @@ public class UtitlsModemFragment extends BaseSlidingFragment {
 					startActivity(inte);
 					break;
 				default: // 更多
-					Utility.ToastMessage(getActivity().getApplicationContext(),
-							"暂未开放，敬请期待");
+			/*		Utility.ToastMessage(getActivity().getApplicationContext(),
+							"暂未开放，敬请期待");*/
+					Intent dynamicInt = new Intent(getActivity()
+							.getApplicationContext(), Dynamic.class);
+					startActivity(dynamicInt);
 					break;
 				}
 

@@ -88,6 +88,17 @@
             android:logo="@drawable/back_icon"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
+        <activity
+            android:name="com.engc.smartedu.ui.dynamic.Dynamic"
+            android:configChanges="locale|keyboardHidden|orientation"
+            android:logo="@drawable/back_icon"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+        </activity>
+        
+            <activity
+            android:name="com.engc.smartedu.ui.dynamic.DynamicDetail"
+            android:logo="@drawable/back_icon" >
+        </activity>
 
         <!-- main activity -->
         <activity
@@ -290,7 +301,8 @@
         </receiver>
 
         <!-- -broadcast receiver -->
-<!--         <receiver android:name="com.engc.smartedu.othercomponent.notification.UnreadMsgReceiver" >
+        <!--
+             <receiver android:name="com.engc.smartedu.othercomponent.notification.UnreadMsgReceiver" >
             <intent-filter>
                 <action android:name="com.enc.smartedu.newmsg" />
             </intent-filter>
@@ -301,7 +313,8 @@
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
-        </receiver> -->
+        </receiver>
+        -->
         <!--
         <receiver android:name="com.engc.smartedu.othercomponent.chat.AppBroadcastReceive" >
 
@@ -316,12 +329,15 @@
 
 
         <!-- -System Provider -->
-     <!--    <provider
+        <!--
+        <provider
             android:name="com.engc.smartedu.support.database.ChatProvider"
             android:authorities="com.engc.smartedu.provider.Chats" />
         <provider
             android:name="com.engc.smartedu.support.database.RosterProvider"
-            android:authorities="com.engc.smartedu.support.database.RosterProvider" /> -->
+            android:authorities="com.engc.smartedu.support.database.RosterProvider" />
+        -->
+
 
         <!-- black magic -->
         <activity android:name="com.engc.smartedu.ui.blackmagic.BlackMagicActivity" />

@@ -22,7 +22,7 @@ public class HttpUtility {
 				//"EOPKEY"), getContextProperties().getProperty("EOPSECRET"),
 				//MessageFormat.json, SignUtils.sign_method_MD5);
 		 EopClient client = new
-		 DefaultEngcOpenClient("http://172.16.17.57:8080/EduOpenPlatform/api",
+		 DefaultEngcOpenClient("http://211.103.78.13:7780/EduOpenPlatform/api",
 		 "20140521151916944001",
 		 "aa768f4e27aed5fb797a71de78c92fcd",MessageFormat.json,SignUtils.sign_method_MD5);
 		return client;

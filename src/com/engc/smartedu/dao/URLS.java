@@ -57,6 +57,14 @@ public class URLS {
 	//根据orgid 查询 朋友
 	public final static String GET_FRIENDS_BY_ORGID="getFriends";
 	
+	//获取动态
+	public final static String GET_DYNAMIC="getSameSchoolTopic";
+	
+	//发送动态
+	public final static String ADD_DYNAMIC="";
+	//删除动态
+	public final static String REMOVE_DYNAMIC="";
+	
 	
 	/**
 	 * 解析url获得objId
