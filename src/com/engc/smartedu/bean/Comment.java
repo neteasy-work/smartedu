@@ -1,4 +1,7 @@
 package com.engc.smartedu.bean;
+
+import java.io.Serializable;
+
 /**
  * 
  * Copyright © 2014ENGC. All rights reserved.
@@ -8,7 +11,7 @@ package com.engc.smartedu.bean;
  * @author: Administrator  
  * @date: 2014-6-17 上午9:04:10
  */
-public class Comment extends Entity{
+public class Comment extends Entity implements Serializable{
 	private String cid;
 	private String commentContent;
 	private String commentDate;

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.engc.eop.ClientRequest;
 import com.engc.eop.CompositeResponse;
@@ -41,44 +42,40 @@ public class DynamicDao {
 		request.addParam("pageNum", pageNum);
 		request.addParam("pageSize", "20");
 		DynamicListBean dynamicList = new DynamicListBean();
-		List<DynamicBean> list = new ArrayList<DynamicBean>();
-		List<Map<String, Object>> mapParams = null;
+		List<DynamicBean> list=new ArrayList<DynamicBean>();
+		
 		try {
 
 			CompositeResponse<?> res = request.post(URLS.GET_DYNAMIC,
 					EopClientConstants.VERSION);
 			if (res.isSuccessful()) {
-				/*
-				 * list = JSON.parseArray(res.getResponseContent(),
-				 * HashMap.class);
-				 */
-				// list=JSON.parseArray(res.getResponseContent(),
-				// Map<Object,Object>());
-
-				mapParams = JSON.parseObject(res.getResponseContent(),
-						new TypeReference<List<Map<String, Object>>>() {
-						});
+                 list=JSON.parseArray(res.getResponseContent(),DynamicBean.class);
 
 			}
-			for (int i = 0; i < mapParams.size(); i++) {
-				Map<String, Object> temp = mapParams.get(i);
-				Comment coment = new Comment();
-				if (temp.get("commentList") != null) {
-					List<Comment> cList = JSON.parseArray(
-							temp.get("commentList").toString(), Comment.class);
-					dynamicList.getCommentList().addAll(cList);
-					/*
-					 * if (commitMap != null) { for (int z = 0; z <
-					 * commitMap.size(); z++) {
-					 * coment.setCid(commitMap.get("cid").toString()); } }
-					 */
-				}
+//			for (int i = 0; i < mapParams.size(); i++) {
+//				Map<String, Object> temp = mapParams.get(i);
+//				Comment coment = new Comment();
+//				if (temp.get("commentList") != null) {
+//					List<Comment> cList = JSON.parseArray(
+//							temp.get("commentList").toString(), Comment.class);
+//					dynamicList.getCommentList().addAll(cList);
+//					/*
+//					 * if (commitMap != null) { for (int z = 0; z <
+//					 * commitMap.size(); z++) {
+//					 * coment.setCid(commitMap.get("cid").toString()); } }
+//					 */
+//				}else{
+//					StringBuilder sb=new StringBuilder(temp.toString()).insert(0, "[");
+//					StringBuilder json=new StringBuilder(sb.insert(sb.toString().length(), "]"));
+//					String j=JSONObject.toJSONString(json.toString().replace("=", ":"));
+//					
+//					List<DynamicBean> list = JSON.parseArray(j,DynamicBean.class);
+//					
+//					
+//				}
+//
+//			}
 
-			}
-
-			// String result = HttpUtility.getInstance().executeNormalTask(
-			// HttpMethod.Post, URLS.GET_HOLIDAYS_RECORF_FOR_STUDENT, map);
-			// List<LeaveBean> list = JSON.parseArray(result, LeaveBean.class);
 
 			if (list.size() > 0)
 				dynamicList.getDynamicList().addAll(list);

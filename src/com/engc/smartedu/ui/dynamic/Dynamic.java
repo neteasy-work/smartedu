@@ -1,5 +1,8 @@
 package com.engc.smartedu.ui.dynamic;
 
+import java.io.Serializable;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.engc.smartedu.R;
+import com.engc.smartedu.bean.Comment;
 import com.engc.smartedu.bean.DynamicBean;
 import com.engc.smartedu.bean.DynamicListBean;
 import com.engc.smartedu.dao.dynamic.DynamicDao;
@@ -92,11 +96,17 @@ public class Dynamic extends AbstractAppActivity {
 				intent.putExtra("userName", dynamic.getUserName());
 				intent.putExtra("content", dynamic.getContent());
 				intent.putExtra("date", dynamic.getCreateDate());
+				List<Comment> list=dynamic.getCommentList();
+				if(list!=null)
+				
+					intent.putExtra("commentList", (Serializable) list);
+					
+				
 				startActivity(intent);
 
 			}
 		});
-
+		
 	}
 
 	private class GetDataTask extends AsyncTask<Void, Void, DynamicListBean> {

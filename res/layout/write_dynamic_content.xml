@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true"
+                android:id="@+id/scrollview">
+
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/say_something"
+            android:id="@+id/status_new_content"
+            android:gravity="left|top"/>
+
+
+    </ScrollView>
+
+    <LinearLayout
+        android:background="?backgroundSplit"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="?android:actionBarSize">
+
+        <ImageButton
+            style="?android:actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:src="?topic"
+            android:id="@+id/menu_topic"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            style="?android:actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:src="?at"
+            android:id="@+id/menu_at"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            style="?android:actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:src="?emoticon"
+            android:id="@+id/menu_emoticon"
+            android:layout_height="match_parent"/>
+
+        <Space
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+
+        <Button
+            style="?android:actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:drawableRight="?statusnewactivity_send"
+            android:text="@string/send"
+            android:id="@+id/menu_send"
+            android:textColor="?android:actionMenuTextColor"
+            android:textAppearance="?android:attr/actionMenuTextAppearance"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+     <LinearLayout
+        android:id="@+id/face_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff0f0f0"
+        android:orientation="vertical"
+        android:paddingBottom="5dip"
+        android:paddingTop="5dip"
+        android:visibility="gone" >
+
+        <com.engc.smartedu.widget.JazzyViewPager
+            android:id="@+id/face_pager"
+            android:layout_width="fill_parent"
+            android:layout_height="120.0dip"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
+            android:background="#0000"
+            android:flipInterval="30"
+            android:persistentDrawingCache="animation" />
+
+        <com.engc.smartedu.widget.CirclePageIndicator
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/indicator"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip" />
+    </LinearLayout>
+</LinearLayout>

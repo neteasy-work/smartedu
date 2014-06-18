@@ -1,19 +1,31 @@
 package com.engc.smartedu.ui.dynamic;
 
+import java.util.List;
 import java.util.TooManyListenersException;
 
 import org.jivesoftware.smackx.pubsub.GetItemsRequest;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.engc.smartedu.R;
+import com.engc.smartedu.bean.Comment;
 import com.engc.smartedu.support.lib.TimeLineAvatarImageView;
 import com.engc.smartedu.support.utils.TimeTool;
+import com.engc.smartedu.ui.adapter.CommentAdapter;
 import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
 
 /**
@@ -33,17 +45,65 @@ public class DynamicDetail extends AbstractAppActivity {
 	private TextView date;
 	private TimeLineAvatarImageView imgFace;
 	private TextView commentCount;
+	private ListView cListView;
+	private TextView txtHeadTitle, txtReplyComent;
+	private List<Comment> list;
+
+	private MenuItem enableCommentOri;
+	private MenuItem enableRepost;
+
+	private boolean savedEnableCommentOri;
+	private boolean savedEnableRepost;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.dynamic);
+		setContentView(R.layout.dynamic_detial);
 		initView();
 		initData();
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle("正文");
 
+	}
+
+	/**
+	 * 显示回复评论对话框
+	 * 
+	 * @param headTitle
+	 */
+	private void showReplyCommentDialog(String headTitle) {
+		final AlertDialog alg = new AlertDialog.Builder(DynamicDetail.this)
+				.create();
+		alg.show();
+		Window window = alg.getWindow();
+		window.setContentView(R.layout.comment_dialog);
+		txtHeadTitle = (TextView) window
+				.findViewById(R.id.txt_info_header_title);
+		txtHeadTitle.setText(headTitle);
+		txtReplyComent = (TextView) window.findViewById(R.id.txtreplycomment);
+		txtReplyComent.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(DynamicDetail.this,
+						WriteReplyToComment.class);
+				startActivity(intent);
+
+			}
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.actionbar_menu_commentnewactivity,
+				menu);
+		enableCommentOri = menu.findItem(R.id.menu_enable_ori_comment);
+		enableRepost = menu.findItem(R.id.menu_enable_repost);
+
+		enableCommentOri.setChecked(savedEnableCommentOri);
+		enableRepost.setChecked(savedEnableRepost);
+		return true;
 	}
 
 	@Override
@@ -53,7 +113,7 @@ public class DynamicDetail extends AbstractAppActivity {
 			finish();
 
 			break;
-			
+
 		default:
 			break;
 		}
@@ -69,6 +129,19 @@ public class DynamicDetail extends AbstractAppActivity {
 		content = (TextView) findViewById(R.id.content);
 		date = (TextView) findViewById(R.id.time);
 		imgFace = (TimeLineAvatarImageView) findViewById(R.id.avatar);
+		cListView = (ListView) findViewById(R.id.commentList);
+		cListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (list != null)
+					showReplyCommentDialog(list.get(position).getUserName());
+
+			}
+
+		});
+
 	}
 
 	private void initData() {
@@ -78,6 +151,11 @@ public class DynamicDetail extends AbstractAppActivity {
 		date.setText(TimeTool.getListTime(Long.valueOf(getIntent()
 				.getStringExtra("date"))));
 		imgFace.setBackgroundResource(R.drawable.honey_face);
+		list = (List<Comment>) getIntent().getSerializableExtra("commentList");
+		if (list != null)
+			cListView.setAdapter(new CommentAdapter(DynamicDetail.this, list,
+					R.layout.timeline_listview_item_simple_layout));
+
 	}
 
 }

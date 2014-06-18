@@ -99,6 +99,11 @@
             android:name="com.engc.smartedu.ui.dynamic.DynamicDetail"
             android:logo="@drawable/back_icon" >
         </activity>
+              <activity
+            android:name="com.engc.smartedu.ui.dynamic.WriteReplyToComment"
+            android:logo="@drawable/back_icon" >
+        </activity>
+            
 
         <!-- main activity -->
         <activity

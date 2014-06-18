@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/exit_bg_2"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5.0dip"
+        android:paddingTop="10dip" >
+
+        <TextView
+            android:id="@+id/txt_info_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15.0dip"
+            android:paddingBottom="5.0dip"
+            android:text="平安校园"
+            android:textColor="@color/detail_node_title"
+            android:textSize="@dimen/text_size_20" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginTop="5dip"
+        android:background="@drawable/line"
+        android:paddingLeft="10.0dip"
+        android:paddingRight="10.0dip" />
+
+    <TextView
+        android:id="@+id/txtreplycomment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="23.0dip"
+        android:paddingTop="13.0dip"
+        android:paddingBottom="10.0dip"
+        android:text="回复评论"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_16" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_marginTop="5dip"
+        android:background="@drawable/exit_horizontal_cut_line"
+        android:paddingLeft="10.0dip"
+        />
+
+    <TextView
+        android:id="@+id/txtdisplaycomment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="23.0dip"
+        android:paddingTop="10.0dip"
+        android:paddingBottom="13.0dip"
+        android:textColor="@color/black"
+        android:text="查看品论"
+        android:textSize="@dimen/text_size_16" />
+
+   
+
+</LinearLayout>
