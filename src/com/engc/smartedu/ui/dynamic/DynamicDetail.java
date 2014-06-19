@@ -27,6 +27,8 @@ import com.engc.smartedu.support.lib.TimeLineAvatarImageView;
 import com.engc.smartedu.support.utils.TimeTool;
 import com.engc.smartedu.ui.adapter.CommentAdapter;
 import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
+import com.engc.smartedu.ui.send.WriteCommentActivity;
+import com.engc.smartedu.ui.send.WriteRepostActivity;
 
 /**
  * 
@@ -96,13 +98,15 @@ public class DynamicDetail extends AbstractAppActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.actionbar_menu_commentnewactivity,
-				menu);
-		enableCommentOri = menu.findItem(R.id.menu_enable_ori_comment);
-		enableRepost = menu.findItem(R.id.menu_enable_repost);
-
-		enableCommentOri.setChecked(savedEnableCommentOri);
-		enableRepost.setChecked(savedEnableRepost);
+		getMenuInflater().inflate(
+				R.menu.actionbar_menu_browserweibomsgactivity, menu);
+		/*
+		 * enableCommentOri = menu.findItem(R.id.menu_enable_ori_comment);
+		 * enableRepost = menu.findItem(R.id.menu_enable_repost);
+		 * 
+		 * enableCommentOri.setChecked(savedEnableCommentOri);
+		 * enableRepost.setChecked(savedEnableRepost);
+		 */
 		return true;
 	}
 
@@ -113,6 +117,19 @@ public class DynamicDetail extends AbstractAppActivity {
 			finish();
 
 			break;
+		case R.id.menu_repost:
+			Intent intent = new Intent(this, WriteRepostActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.menu_comment:
+
+			 intent = new Intent(this, WriteReplyToComment.class);
+		     intent.putExtra("content", content.getText().toString());
+		     intent.putExtra("dynamicId", getIntent().getStringExtra("dynamicId"));
+		     intent.putExtra("userName", getIntent().getStringExtra("userName"));
+			startActivity(intent);
+
+		break;
 
 		default:
 			break;

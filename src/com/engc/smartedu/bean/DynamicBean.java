@@ -23,6 +23,16 @@ public class DynamicBean extends Entity {
 	private String tid;
 	private String userCode;
 	private String userName;
+	private String thumbnail;
+
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
 	private List<Comment> commentList;
 
 	public String getCid() {

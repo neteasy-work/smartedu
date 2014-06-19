@@ -93,6 +93,7 @@ public class Dynamic extends AbstractAppActivity {
 				// UIHelper.showActionDetail(view.getContext(), news.getId(),
 				// "");
 				Intent intent = new Intent(Dynamic.this, DynamicDetail.class);
+				intent.putExtra("dynamicId",dynamic.getTid());
 				intent.putExtra("userName", dynamic.getUserName());
 				intent.putExtra("content", dynamic.getContent());
 				intent.putExtra("date", dynamic.getCreateDate());

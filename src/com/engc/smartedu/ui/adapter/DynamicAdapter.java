@@ -7,7 +7,11 @@ import java.util.Map;
 import com.engc.smartedu.R;
 import com.engc.smartedu.bean.DynamicBean;
 import com.engc.smartedu.bean.LeaveBean;
+import com.engc.smartedu.support.asyncdrawable.TimeLineBitmapDownloader;
 import com.engc.smartedu.support.lib.TimeLineAvatarImageView;
+import com.engc.smartedu.support.lib.TimeLineImageView;
+import com.engc.smartedu.support.utils.BitmapManager;
+import com.engc.smartedu.support.utils.ImageUtils;
 import com.engc.smartedu.support.utils.TimeTool;
 import com.engc.smartedu.support.utils.TimeUtil;
 import com.engc.smartedu.support.utils.Utility;
@@ -43,7 +47,7 @@ public class DynamicAdapter extends BaseAdapter {
 		public TextView content;
 		public TextView date;
 		public TimeLineAvatarImageView face;
-		private ImageView status;
+		private TimeLineImageView contentPic;
 	}
 	/**
 	 * 实例化Adapter
@@ -98,6 +102,7 @@ public class DynamicAdapter extends BaseAdapter {
 					.findViewById(R.id.content);
 			listItemView.face =  (TimeLineAvatarImageView) convertView
 					.findViewById(R.id.avatar);
+			listItemView.contentPic=(TimeLineImageView) convertView.findViewById(R.id.content_pic);
 			
 		
 
@@ -118,7 +123,11 @@ public class DynamicAdapter extends BaseAdapter {
 		listItemView.content.setText(dynamic.getContent());
 		// listItemView.author.setText(action.getArea());
 		listItemView.date.setText(TimeTool.getListTime(Long.valueOf(dynamic.getCreateDate())));
-
+		//listItemView.contentPic.setba
+		if(!dynamic.getThumbnail().equals(""))
+        //new BitmapManager().loadBitmap(dynamic.getThumbnail(), listItemView.contentPic);
+			listItemView.contentPic.setBackgroundResource(R.drawable.young);
+         
 		//listItemView.count.setText(holidays.getLeavetype());
 
 		// if(StringUtils.isToday(action.getApplytime()))

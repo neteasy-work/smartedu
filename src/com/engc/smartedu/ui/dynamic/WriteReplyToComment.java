@@ -1,8 +1,13 @@
 package com.engc.smartedu.ui.dynamic;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import org.jivesoftware.smack.util.StringUtils;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -12,15 +17,20 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -41,6 +51,8 @@ import android.widget.TextView;
 import com.engc.smartedu.R;
 import com.engc.smartedu.dao.login.LoginDao;
 import com.engc.smartedu.support.utils.GlobalContext;
+import com.engc.smartedu.support.utils.ImageUtils;
+import com.engc.smartedu.support.utils.Utility;
 import com.engc.smartedu.ui.adapter.FaceAdapter;
 import com.engc.smartedu.ui.adapter.FacePageAdapter;
 import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
@@ -75,7 +87,10 @@ public class WriteReplyToComment extends AbstractAppActivity implements
 
 	private GlobalContext global;
 	private ImageButton imageEmoticon, imgeCamera;
-	private TextView txtHeadTitle,txtChooicePic,txtCamera;
+	private TextView txtHeadTitle, txtChooicePic, txtCamera;
+	private String dynamicId, commentContent, userName;
+
+	private String theLarge;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -116,16 +131,30 @@ public class WriteReplyToComment extends AbstractAppActivity implements
 
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	private void initView() {
 		global = GlobalContext.getInstance();
 		mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 		mWindowNanagerParams = getWindow().getAttributes();
+		dynamicId = getIntent().getStringExtra("dynamicId");
+		commentContent = getIntent().getStringExtra("content");
+		userName = getIntent().getStringExtra("userName");
 		getActionBar().setTitle(getString(R.string.reply_to_comment));
 		getActionBar().setSubtitle(
 				LoginDao.getLoginInfo(WriteReplyToComment.this).getUsername());
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		msgEt = (EditText) findViewById(R.id.status_new_content);
+		msgEt.setHint("@" + userName + ":" + commentContent);
 		imageEmoticon = (ImageButton) findViewById(R.id.menu_emoticon);
 		imgeCamera = (ImageButton) findViewById(R.id.menu_topic);
 		faceLinearLayout = (LinearLayout) findViewById(R.id.face_ll);
@@ -164,11 +193,11 @@ public class WriteReplyToComment extends AbstractAppActivity implements
 			}
 		});
 		imgeCamera.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				showSendPicDialog("选择", "拍照", "相册");
-				
+
 			}
 		});
 		msgEt.setOnKeyListener(new OnKeyListener() {
@@ -215,6 +244,7 @@ public class WriteReplyToComment extends AbstractAppActivity implements
 	}
 
 	private void initData() {
+
 		Set<String> keySet = global.getFaceMap().keySet();
 		keys = new ArrayList<String>();
 		keys.addAll(keySet);
@@ -255,15 +285,16 @@ public class WriteReplyToComment extends AbstractAppActivity implements
 		});
 
 	}
-	
+
 	/**
 	 * 显示发送对话框
 	 * 
 	 * @param headTitle
 	 */
-	private void showSendPicDialog(String headTitle,String subTitle,String otherSubTitle) {
-		final AlertDialog alg = new AlertDialog.Builder(WriteReplyToComment.this)
-				.create();
+	private void showSendPicDialog(String headTitle, String subTitle,
+			String otherSubTitle) {
+		final AlertDialog alg = new AlertDialog.Builder(
+				WriteReplyToComment.this).create();
 		alg.show();
 		Window window = alg.getWindow();
 		window.setContentView(R.layout.comment_dialog);
@@ -272,23 +303,58 @@ public class WriteReplyToComment extends AbstractAppActivity implements
 		txtHeadTitle.setText(headTitle);
 		txtChooicePic = (TextView) window.findViewById(R.id.txtreplycomment);
 		txtChooicePic.setText(subTitle);
-		txtCamera=(TextView) window.findViewById(R.id.txtdisplaycomment);
+		txtCamera = (TextView) window.findViewById(R.id.txtdisplaycomment);
 		txtCamera.setText(otherSubTitle);
+		// 拍照操作，打开照相
 		txtCamera.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				
+				String savePath = "";
+				// 判断是否挂载了SD卡
+				String storageState = Environment.getExternalStorageState();
+				if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+					savePath = Environment.getExternalStorageDirectory()
+							.getAbsolutePath() + "/szzyz/Camera/";// 存放照片的文件夹
+					File savedir = new File(savePath);
+					if (!savedir.exists()) {
+						savedir.mkdirs();
+					}
+				}
+
+				// 没有挂载SD卡，无法保存文件
+				if (TextUtils.isEmpty(savePath)) {
+					Utility.ToastMessage(WriteReplyToComment.this,
+							"无法保存照片，请检查SD卡是否挂载");
+					return;
+				}
+
+				String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss")
+						.format(new Date());
+				String fileName = "smartedu" + timeStamp + ".jpg";// 照片命名
+				File out = new File(savePath, fileName);
+				Uri uri = Uri.fromFile(out);
+
+				theLarge = savePath + fileName;// 该照片的绝对路径
+
+				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+				startActivityForResult(intent,
+						ImageUtils.REQUEST_CODE_GETIMAGE_BYCAMERA);
 
 			}
 		});
-		
+
 		txtChooicePic.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+				intent.addCategory(Intent.CATEGORY_OPENABLE);
+				intent.setType("image/*");
+				startActivityForResult(Intent.createChooser(intent, "选择图片"),
+						ImageUtils.REQUEST_CODE_GETIMAGE_BYSDCARD);
+
 			}
 		});
 	}

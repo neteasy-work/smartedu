@@ -101,7 +101,7 @@
                 android:id="@+id/content_pic"
                 android:layout_width="@dimen/timeline_pic_thumbnail_width"
                 android:layout_height="@dimen/timeline_pic_thumbnail_height"
-                android:visibility="gone"
+               
                 android:clickable="true"
                 android:padding="2dp"
                 android:scaleType="fitCenter"
