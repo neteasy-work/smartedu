@@ -101,24 +101,7 @@ public class WriteReplyToComment extends AbstractAppActivity implements
 
 		initFacePage();
 
-		/*
-		 * token = getIntent().getStringExtra("token"); if
-		 * (TextUtils.isEmpty(token)) token =
-		 * GlobalContext.getInstance().getSpecialToken();
-		 * 
-		 * bean = (CommentBean) getIntent().getSerializableExtra("msg"); if
-		 * (bean == null) { replyDraftBean = (ReplyDraftBean)
-		 * getIntent().getSerializableExtra("draft");
-		 * getEditTextView().setText(replyDraftBean.getContent()); bean =
-		 * replyDraftBean.getCommentBean(); }
-		 * 
-		 * getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "："
-		 * + bean.getText());
-		 * 
-		 * //this time menu item is null...omg fuck android if
-		 * (savedInstanceState != null) { savedEnableRepost =
-		 * savedInstanceState.getBoolean("repost"); }
-		 */
+	
 	}
 
 	@Override
@@ -302,9 +285,9 @@ public class WriteReplyToComment extends AbstractAppActivity implements
 				.findViewById(R.id.txt_info_header_title);
 		txtHeadTitle.setText(headTitle);
 		txtChooicePic = (TextView) window.findViewById(R.id.txtreplycomment);
-		txtChooicePic.setText(subTitle);
+		txtChooicePic.setText(otherSubTitle);
 		txtCamera = (TextView) window.findViewById(R.id.txtdisplaycomment);
-		txtCamera.setText(otherSubTitle);
+		txtCamera.setText(subTitle);
 		// 拍照操作，打开照相
 		txtCamera.setOnClickListener(new OnClickListener() {
 

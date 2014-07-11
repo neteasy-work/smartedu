@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,7 +49,9 @@ public class DynamicAdapter extends BaseAdapter {
 		public TextView date;
 		public TimeLineAvatarImageView face;
 		private TimeLineImageView contentPic;
+		private FrameLayout contentPicLayout;
 	}
+
 	/**
 	 * 实例化Adapter
 	 * 
@@ -56,17 +59,17 @@ public class DynamicAdapter extends BaseAdapter {
 	 * @param data
 	 * @param resource
 	 */
-	 public DynamicAdapter(Context context,List<DynamicBean> data,int resource) {
-		
-			this.context = context;
-			this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
-			this.itemViewResource = resource;
-			this.listItems = data;
+	public DynamicAdapter(Context context, List<DynamicBean> data, int resource) {
+
+		this.context = context;
+		this.listContainer = LayoutInflater.from(context); // 创建视图容器并设置上下文
+		this.itemViewResource = resource;
+		this.listItems = data;
 	}
 
 	@Override
 	public int getCount() {
-		
+
 		return listItems.size();
 	}
 
@@ -92,29 +95,29 @@ public class DynamicAdapter extends BaseAdapter {
 			convertView = listContainer.inflate(this.itemViewResource, null);
 
 			listItemView = new ListItemView();
-			// 获取控件对象 
+			// 获取控件对象
 			listItemView.userName = (TextView) convertView
 					.findViewById(R.id.username);
 
-			listItemView.date = (TextView) convertView
-					.findViewById(R.id.time);
+			listItemView.date = (TextView) convertView.findViewById(R.id.time);
 			listItemView.content = (TextView) convertView
 					.findViewById(R.id.content);
-			listItemView.face =  (TimeLineAvatarImageView) convertView
+			listItemView.face = (TimeLineAvatarImageView) convertView
 					.findViewById(R.id.avatar);
-			listItemView.contentPic=(TimeLineImageView) convertView.findViewById(R.id.content_pic);
-			
-		
+			listItemView.contentPic = (TimeLineImageView) convertView
+					.findViewById(R.id.content_pic);
+			listItemView.contentPicLayout = (FrameLayout) convertView
+					.findViewById(R.id.repost_and_pic);
 
 			// 设置控件集到convertView
 			convertView.setTag(listItemView);
 		} else {
 			listItemView = (ListItemView) convertView.getTag();
 		}
- 
+
 		// 设置文字和图片
 		// Messages message = listItems.get(position);
-		
+
 		DynamicBean dynamic = listItems.get(position);
 
 		listItemView.userName.setTag(dynamic);// 设置隐藏参数(实体类)
@@ -122,13 +125,19 @@ public class DynamicAdapter extends BaseAdapter {
 
 		listItemView.content.setText(dynamic.getContent());
 		// listItemView.author.setText(action.getArea());
-		listItemView.date.setText(TimeTool.getListTime(Long.valueOf(dynamic.getCreateDate())));
-		//listItemView.contentPic.setba
-		if(!dynamic.getThumbnail().equals(""))
-        //new BitmapManager().loadBitmap(dynamic.getThumbnail(), listItemView.contentPic);
-			listItemView.contentPic.setBackgroundResource(R.drawable.young);
-         
-		//listItemView.count.setText(holidays.getLeavetype());
+		listItemView.date.setText(TimeTool.getListTime(Long.valueOf(dynamic
+				.getCreateDate())));
+		// listItemView.contentPic.setba
+		if (!dynamic.getThumbnail().equals("")) {
+			new BitmapManager().loadBitmap(dynamic.getThumbnail(),
+					listItemView.contentPic);
+
+		} else {
+			listItemView.contentPicLayout.setVisibility(View.GONE);
+		}
+		// listItemView.contentPic.setBackgroundResource(R.drawable.young);
+
+		// listItemView.count.setText(holidays.getLeavetype());
 
 		// if(StringUtils.isToday(action.getApplytime()))
 		// if(listItemView.flag.VISIBLE==ImageView.VISIBLE)

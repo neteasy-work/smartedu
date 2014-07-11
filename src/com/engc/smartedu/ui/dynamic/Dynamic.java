@@ -97,6 +97,7 @@ public class Dynamic extends AbstractAppActivity {
 				intent.putExtra("userName", dynamic.getUserName());
 				intent.putExtra("content", dynamic.getContent());
 				intent.putExtra("date", dynamic.getCreateDate());
+				intent.putExtra("contentpic",dynamic.getThumbnail());
 				List<Comment> list=dynamic.getCommentList();
 				if(list!=null)
 				
@@ -137,7 +138,7 @@ public class Dynamic extends AbstractAppActivity {
 
 				adapter = new DynamicAdapter(Dynamic.this,
 						list.getDynamicList(),
-						R.layout.timeline_listview_item_layout);
+						R.layout.listview_item_univerl_layout);
 				prlDynamic.setAdapter(adapter);
 				adapter.notifyDataSetChanged();
 				prlDynamic.onRefreshComplete();

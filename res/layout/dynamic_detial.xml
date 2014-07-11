@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <include  layout="@layout/timeline_listview_item_layout" />
+    <include  layout="@layout/listview_item_univerl_layout" />
       <include  layout="@layout/comment_list" />
     
 

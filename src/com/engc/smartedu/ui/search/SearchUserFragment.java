@@ -1,5 +1,6 @@
 package com.engc.smartedu.ui.search;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import com.engc.smartedu.bean.UserBean;
@@ -40,7 +41,8 @@ public class SearchUserFragment extends AbstractUserListFragment {
     }
 
 
-    @Override
+    @SuppressLint("NewApi")
+	@Override
     protected UserListBean getDoInBackgroundNewData() throws WeiboException {
         page = 1;
         SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
@@ -49,7 +51,8 @@ public class SearchUserFragment extends AbstractUserListFragment {
         return result;
     }
 
-    @Override
+    @SuppressLint("NewApi")
+	@Override
     protected UserListBean getDoInBackgroundOldData() throws WeiboException {
         SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
         dao.setPage(String.valueOf(page + 1));

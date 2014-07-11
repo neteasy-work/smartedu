@@ -1,19 +1,27 @@
 package com.engc.smartedu.ui.basefragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.AbsListView;
 
 import com.engc.smartedu.bean.UserBean;
 import com.engc.smartedu.bean.UserListBean;
+import com.engc.smartedu.ui.adapter.ListViewHoildayRecordAdapter;
 import com.engc.smartedu.ui.interfaces.IUserInfo;
 
 import java.util.List;
 
 /**
- * User: qii
- * Date: 12-11-10
+ * 
+ * Copyright © 2014ENGC. All rights reserved.
+ * @Title: AbstractFriendsFanListFragment.java
+ * @Package: com.engc.smartedu.ui.basefragment
+ * @Description: TODO
+ * @author: Administrator  
+ * @date: 2014-7-7 下午4:27:18
  */
+@SuppressLint("NewApi")
 public abstract class AbstractFriendsFanListFragment extends AbstractUserListFragment {
 
     protected UserBean currentUser;

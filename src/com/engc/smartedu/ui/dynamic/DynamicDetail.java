@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,6 +26,8 @@ import android.widget.TextView;
 import com.engc.smartedu.R;
 import com.engc.smartedu.bean.Comment;
 import com.engc.smartedu.support.lib.TimeLineAvatarImageView;
+import com.engc.smartedu.support.lib.TimeLineImageView;
+import com.engc.smartedu.support.utils.BitmapManager;
 import com.engc.smartedu.support.utils.TimeTool;
 import com.engc.smartedu.ui.adapter.CommentAdapter;
 import com.engc.smartedu.ui.interfaces.AbstractAppActivity;
@@ -50,12 +54,14 @@ public class DynamicDetail extends AbstractAppActivity {
 	private ListView cListView;
 	private TextView txtHeadTitle, txtReplyComent;
 	private List<Comment> list;
+	private TimeLineImageView contentPic;
 
 	private MenuItem enableCommentOri;
 	private MenuItem enableRepost;
 
 	private boolean savedEnableCommentOri;
 	private boolean savedEnableRepost;
+	private FrameLayout contentPicLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +105,7 @@ public class DynamicDetail extends AbstractAppActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(
-				R.menu.actionbar_menu_browserweibomsgactivity, menu);
+				R.menu.actionbar_menu_dynamic_detail, menu);
 		/*
 		 * enableCommentOri = menu.findItem(R.id.menu_enable_ori_comment);
 		 * enableRepost = menu.findItem(R.id.menu_enable_repost);
@@ -117,19 +123,20 @@ public class DynamicDetail extends AbstractAppActivity {
 			finish();
 
 			break;
-		case R.id.menu_repost:
+		case R.id.menu_refresh: //刷新
 			Intent intent = new Intent(this, WriteRepostActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.menu_comment:
 
-			 intent = new Intent(this, WriteReplyToComment.class);
-		     intent.putExtra("content", content.getText().toString());
-		     intent.putExtra("dynamicId", getIntent().getStringExtra("dynamicId"));
-		     intent.putExtra("userName", getIntent().getStringExtra("userName"));
+			intent = new Intent(this, WriteReplyToComment.class);
+			intent.putExtra("content", content.getText().toString());
+			intent.putExtra("dynamicId", getIntent()
+					.getStringExtra("dynamicId"));
+			intent.putExtra("userName", getIntent().getStringExtra("userName"));
 			startActivity(intent);
 
-		break;
+			break;
 
 		default:
 			break;
@@ -145,8 +152,10 @@ public class DynamicDetail extends AbstractAppActivity {
 		userName = (TextView) findViewById(R.id.username);
 		content = (TextView) findViewById(R.id.content);
 		date = (TextView) findViewById(R.id.time);
+		contentPicLayout = (FrameLayout) findViewById(R.id.repost_and_pic);
 		imgFace = (TimeLineAvatarImageView) findViewById(R.id.avatar);
 		cListView = (ListView) findViewById(R.id.commentList);
+		contentPic = (TimeLineImageView) findViewById(R.id.content_pic);
 		cListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -167,6 +176,15 @@ public class DynamicDetail extends AbstractAppActivity {
 		content.setText(getIntent().getStringExtra("content"));
 		date.setText(TimeTool.getListTime(Long.valueOf(getIntent()
 				.getStringExtra("date"))));
+		String url = getIntent().getStringExtra("contentpic");
+		if (!"".equals(url)) {
+			//Bitmap bitmap = new BitmapManager().getBitmapFromCache(url);
+			new BitmapManager().loadBitmap(url, contentPic);
+
+		} else {
+			contentPicLayout.setVisibility(View.GONE);
+		}
+
 		imgFace.setBackgroundResource(R.drawable.honey_face);
 		list = (List<Comment>) getIntent().getSerializableExtra("commentList");
 		if (list != null)
